@@ -128,8 +128,8 @@ footer{background:#2c2318;color:#c9a96e;text-align:center;padding:13px;font-size
   <table id="TT" style="display:none">
     <thead><tr>
       <th>#</th><th>Fecha</th><th>SKUs</th><th>Cliente</th>
-      <th>Teléfono</th><th>Dirección</th><th>Precio</th>
-      <th>Pago</th><th>Estado</th><th>Notas</th><th></th>
+      <th>Teléfono</th><th>Email</th><th>Dirección</th><th>Precio</th>
+      <th>Origen</th><th>Pago</th><th>Estado</th><th>Notas</th><th></th>
     </tr></thead>
     <tbody id="TB"></tbody>
   </table>
@@ -356,7 +356,11 @@ function loadFromSheets(){
     for(var i=1;i<rows.length;i++){
       var r=rows[i];if(!r[0])continue;
       var skus=(r[2]+'').split(' | ').map(function(s){var p=s.trim().split(' x');return{sku:p[0].trim(),qty:p[1]?parseInt(p[1]):1};}).filter(function(s){return s.sku;});
-      orders.push({id:r[0]+'',dt:r[1]+'',skus:skus,cl:r[3]+'',ph:r[4]+'',ad:r[5]+'',pr:r[6]+'',pt:r[7]==='Manual'?'manual':'auto',pg:PGR[r[8]]||'0',st:STR[r[9]]||'P',no:r[10]+''});
+      var noFull=r[10]+'';
+      var emMatch=noFull.match(/Email:\s*([^\s|]+)/);
+      var em=emMatch?emMatch[1]:'';
+      var noClean=noFull.replace(/Email:\s*[^\s|]+\s*\|?\s*/,'').trim();
+      orders.push({id:r[0]+'',dt:r[1]+'',skus:skus,cl:r[3]+'',ph:r[4]+'',em:em,ad:r[5]+'',pr:r[6]+'',pt:r[7]==='Manual'?'manual':r[7]==='MercadoPago'?'mp':'auto',pg:PGR[r[8]]||'0',st:STR[r[9]]||'P',no:noClean});
     }
     showBanner(false);render();statsUpdate();
     showSync(orders.length+' pedidos cargados correctamente','#d5f5e3');
@@ -397,9 +401,18 @@ function hoy(){
   return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 }
 function fDate(s){
-  if(!s)return '-';
+  if(!s||s==='-')return '-';
+  // Handle ISO format: 2026-05-30T... or 30T04...
+  if(s.indexOf('T')>=0){ var d=new Date(s); if(!isNaN(d)) return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2); }
+  // Handle YYYY-MM-DD
   var p=s.split('-');
-  return p[2]+'/'+p[1]+'/'+p[0].slice(2);
+  if(p.length===3) return pad(parseInt(p[2]))+'/'+pad(parseInt(p[1]))+'/'+p[0].slice(2);
+  return s;
+}
+function origenBadge(pt){
+  if(pt==='mp'||pt==='MercadoPago')
+    return '<span style="background:#009ee3;color:#fff;font-size:.72rem;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap">💳 MercadoPago</span>';
+  return '<span style="background:#7d5a3c;color:#fff;font-size:.72rem;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap">✏️ Manual</span>';
 }
 function fPrice(v){
   if(!v||v==='0')return '-';
@@ -514,8 +527,10 @@ function render(){
       '<td>'+(o.skus||[{sku:o.sku||'',qty:1}]).map(function(s){return '<span class="skut">'+s.sku+(s.qty>1?' x'+s.qty:'')+'</span>';}).join(' ')+'</td>'+
       '<td style="font-weight:600">'+esc(o.cl)+'</td>'+
       '<td style="color:#888">'+esc(o.ph||'-')+'</td>'+
+      '<td style="font-size:.78rem;color:#888">'+esc(o.em||'-')+'</td>'+
       '<td style="max-width:130px;font-size:.78rem;color:#888">'+esc(o.ad||'-')+'</td>'+
       '<td style="font-weight:700">'+fPrice(o.pr)+'</td>'+
+      '<td>'+origenBadge(o.pt)+'</td>'+
       '<td><button class="pbadge '+(PGC[o.pg||'0'])+'" data-id="'+id+'" data-act="pay">'+(PGL[o.pg||'0'])+'</button></td>'+
       '<td><button class="badge '+STC[o.st]+'" data-id="'+id+'" data-act="adv">'+STL[o.st]+'</button></td>'+
       '<td style="max-width:100px;font-size:.78rem;color:#888">'+esc(o.no||'-')+'</td>'+
