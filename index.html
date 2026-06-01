@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Infinity – Pedidos</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Arial,sans-serif;background:#faf6f1;color:#2c2318;}
+header{background:#2c2318;padding:20px;text-align:center;}
+header h1{color:#fff;font-size:1.5rem;letter-spacing:2px;}
+header p{color:#c9a96e;font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;margin-top:4px;}
+
+.stats{display:flex;gap:10px;padding:14px;background:#e8ddd0;flex-wrap:wrap;}
+.sc{flex:1;min-width:80px;background:#fff;border-radius:6px;padding:10px;text-align:center;}
+.sc .n{font-size:1.5rem;font-weight:700;}
+.sc .l{font-size:0.62rem;color:#7a6a58;text-transform:uppercase;margin-top:2px;}
+.n-a{color:#2c2318;}.n-p{color:#e8a020;}.n-e{color:#3a7bd5;}.n-s{color:#8e44ad;}.n-d{color:#27ae60;}
+
+.toolbar{background:#fff;padding:12px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-bottom:1px solid #e8ddd0;}
+.toolbar input[type=text]{padding:8px 10px;border:1px solid #c9a96e;border-radius:4px;font-size:0.9rem;width:200px;outline:none;}
+.toolbar select{padding:8px 10px;border:1px solid #c9a96e;border-radius:4px;font-size:0.9rem;outline:none;background:#fff;}
+.ml{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;}
+.btn{padding:9px 16px;border:none;border-radius:4px;cursor:pointer;font-size:0.88rem;font-weight:700;}
+.btn-g{background:#c9a96e;color:#fff;}
+.btn-o{background:#fff;color:#2c2318;border:1px solid #c9a96e;}
+.btn-b{background:#2a6db5;color:#fff;}
+
+.banner{background:#fff8e1;border:1px solid #c9a96e;border-radius:5px;padding:10px 14px;margin:10px 14px;font-size:0.83rem;color:#7a4f00;display:none;align-items:center;gap:10px;flex-wrap:wrap;}
+
+.tw{padding:14px;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:7px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.09);min-width:650px;}
+th{background:#2c2318;color:#c9a96e;padding:10px 11px;text-align:left;font-size:0.77rem;white-space:nowrap;}
+td{padding:9px 11px;border-bottom:1px solid #f0e8de;font-size:0.85rem;vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#fdf9f5;}
+.skut{background:#e8ddd0;padding:2px 7px;border-radius:3px;font-size:0.77rem;font-weight:700;}
+.onum{color:#a07840;font-weight:700;}
+.badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:0.71rem;font-weight:700;cursor:pointer;border:none;text-transform:uppercase;font-family:Arial,sans-serif;}
+.bp{background:#fef3dc;color:#e8a020;}
+.be{background:#ddeeff;color:#3a7bd5;}
+.bs{background:#f0e6f8;color:#8e44ad;}
+.bd{background:#d5f5e3;color:#27ae60;}
+.abtn{display:flex;gap:4px;}
+.ibtn{background:none;border:1px solid #ddd;border-radius:3px;padding:4px 7px;cursor:pointer;font-size:0.8rem;}
+.ibtn:hover{background:#e8ddd0;}
+.ibtn.red:hover{background:#fde8e8;border-color:#e74c3c;}
+.empty{text-align:center;padding:40px;color:#7a6a58;}
+/* payment badges */
+.pay0{background:#fde8e8;color:#e74c3c;}
+.pay1{background:#fef3dc;color:#e8a020;}
+.pay2{background:#d5f5e3;color:#27ae60;}
+.pbadge{display:inline-block;padding:4px 9px;border-radius:20px;font-size:0.71rem;font-weight:700;cursor:pointer;border:none;font-family:Arial;white-space:nowrap;}
+/* sku panel */
+.skupanel{background:#f5f0ea;border:1px solid #ddd;border-radius:6px;padding:10px;margin-bottom:10px;}
+.skupanel .slbl{font-size:0.68rem;color:#7a6a58;text-transform:uppercase;letter-spacing:1px;font-weight:700;display:block;margin-bottom:6px;}
+.skurow{display:flex;gap:6px;align-items:center;margin-bottom:8px;flex-wrap:wrap;}
+.skurow select{flex:1;min-width:120px;padding:8px 10px;border:1.5px solid #ddd;border-radius:4px;font-size:0.88rem;background:#fff;color:#2c2318;}
+.skurow select:focus{border-color:#c9a96e;outline:none;}
+.skurow input[type=number]{width:60px;padding:8px;border:1.5px solid #ddd;border-radius:4px;font-size:0.88rem;text-align:center;}
+.skurow input:focus{border-color:#c9a96e;outline:none;}
+.skurow button{padding:8px 12px;background:#c9a96e;color:#fff;border:none;border-radius:4px;font-weight:700;cursor:pointer;white-space:nowrap;font-size:0.85rem;}
+.skutags{display:flex;flex-wrap:wrap;gap:5px;min-height:22px;}
+.stag{display:inline-flex;align-items:center;gap:4px;background:#2c2318;color:#fff;border-radius:4px;padding:4px 8px;font-size:0.78rem;}
+.stag .qty{background:#c9a96e;border-radius:3px;padding:1px 5px;font-size:0.68rem;font-weight:700;}
+.stag .rm{background:none;border:none;color:#c9a96e;cursor:pointer;font-size:0.95rem;padding:0 1px;line-height:1;font-family:Arial;}
+.stag .rm:hover{color:#fff;}
+.nosku{color:#bbb;font-size:0.82rem;font-style:italic;}
+/* sync bar */
+#SYNCBAR{display:none;padding:9px 16px;font-size:0.83rem;align-items:center;gap:10px;flex-wrap:wrap;border-left:4px solid #3a7bd5;background:#e8f4fd;}
+
+/* OVERLAY */
+#OV{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:9999;overflow-y:auto;}
+.MD{background:#fff;margin:30px auto;border-radius:10px;padding:24px;width:94%;max-width:490px;}
+.MD h2{font-size:1.1rem;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #c9a96e;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.g1{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:10px;}
+.fg{display:flex;flex-direction:column;gap:3px;}
+.fg label{font-size:0.68rem;color:#7a6a58;text-transform:uppercase;letter-spacing:1px;font-weight:700;}
+.fg input,.fg select,.fg textarea{padding:8px 10px;border:1.5px solid #ddd;border-radius:4px;font-size:0.9rem;color:#2c2318;width:100%;background:#fff;font-family:Arial,sans-serif;outline:none;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#c9a96e;}
+.fg textarea{min-height:52px;resize:vertical;}
+.mfoot{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid #e8ddd0;}
+
+footer{background:#2c2318;color:#c9a96e;text-align:center;padding:13px;font-size:0.73rem;letter-spacing:2px;margin-top:28px;}
+@media(max-width:520px){.g2{grid-template-columns:1fr;}.toolbar input[type=text]{width:100%;}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>INFINITY ACCESORIOS</h1>
+  <p>Gestión de Pedidos</p>
+</header>
+
+<div class="stats">
+  <div class="sc"><div class="n n-a" id="sA">0</div><div class="l">Total</div></div>
+  <div class="sc"><div class="n n-p" id="sP">0</div><div class="l">Pendiente</div></div>
+  <div class="sc"><div class="n n-e" id="sE">0</div><div class="l">En Prep</div></div>
+  <div class="sc"><div class="n n-s" id="sS">0</div><div class="l">Enviado</div></div>
+  <div class="sc"><div class="n n-d" id="sD">0</div><div class="l">Entregado</div></div>
+</div>
+
+<div class="banner" id="BN">
+  ⚠️ <strong>Guarda tus pedidos para no perderlos</strong>
+  <button class="btn btn-b" id="BNSV" style="margin-left:auto">☁️ Guardar en Sheets</button>
+</div>
+
+<div id="SYNCBAR"></div>
+<div class="toolbar">
+  <input type="text" id="QI" placeholder="Buscar cliente, SKU, teléfono..."/>
+  <select id="QS">
+    <option value="">Todos los estados</option>
+    <option value="P">Pendiente</option>
+    <option value="E">En preparación</option>
+    <option value="S">Enviado</option>
+    <option value="D">Entregado</option>
+  </select>
+  <div class="ml">
+    <button class="btn btn-o" id="BCLOUD">☁️ Cargar Sheets</button>
+    <button class="btn btn-o" id="BCSV">⬇ CSV</button>
+    <button class="btn btn-g" id="BNP">+ Nuevo Pedido</button>
+  </div>
+</div>
+
+<div class="tw">
+  <div class="empty" id="EM">No hay pedidos. Haz clic en <b>+ Nuevo Pedido</b> para comenzar.</div>
+  <table id="TT" style="display:none">
+    <thead><tr>
+      <th>#</th><th>Fecha Compra</th><th>Despacho Est.</th><th>SKUs</th><th>Cliente</th>
+      <th>Teléfono</th><th>Email</th><th>Dirección</th><th>Precio</th>
+      <th>Origen</th><th>Pago</th><th>Estado</th><th>Notas</th><th></th>
+    </tr></thead>
+    <tbody id="TB"></tbody>
+  </table>
+</div>
+
+<!-- MODAL -->
+<div id="OV">
+  <div class="MD">
+    <h2 id="MT">Nuevo Pedido</h2>
+    <div class="skupanel">
+      <span class="slbl">Productos del pedido *</span>
+      <div class="skurow">
+        <select id="MSKU"><option value="">Seleccionar SKU...</option>
+<option value="SKU-001">SKU-001</option>
+<option value="SKU-002">SKU-002</option>
+<option value="SKU-003">SKU-003</option>
+<option value="SKU-004">SKU-004</option>
+<option value="SKU-005">SKU-005</option>
+<option value="SKU-006">SKU-006</option>
+<option value="SKU-007">SKU-007</option>
+<option value="SKU-008">SKU-008</option>
+<option value="SKU-009">SKU-009</option>
+<option value="SKU-010">SKU-010</option>
+<option value="SKU-011">SKU-011</option>
+<option value="SKU-012">SKU-012</option>
+<option value="SKU-013">SKU-013</option>
+<option value="SKU-014">SKU-014</option>
+<option value="SKU-015">SKU-015</option>
+<option value="SKU-016">SKU-016</option>
+<option value="SKU-017">SKU-017</option>
+<option value="SKU-018">SKU-018</option>
+<option value="SKU-019">SKU-019</option>
+<option value="SKU-020">SKU-020</option>
+<option value="SKU-021">SKU-021</option>
+<option value="SKU-022">SKU-022</option>
+<option value="SKU-023">SKU-023</option>
+<option value="SKU-024">SKU-024</option>
+<option value="SKU-025">SKU-025</option>
+<option value="SKU-026">SKU-026</option>
+<option value="SKU-027">SKU-027</option>
+<option value="SKU-028">SKU-028</option>
+<option value="SKU-029">SKU-029</option>
+<option value="SKU-030">SKU-030</option>
+<option value="SKU-031">SKU-031</option>
+<option value="SKU-032">SKU-032</option>
+<option value="SKU-033">SKU-033</option>
+<option value="SKU-034">SKU-034</option>
+<option value="SKU-035">SKU-035</option>
+<option value="SKU-036">SKU-036</option>
+<option value="SKU-037">SKU-037</option>
+<option value="SKU-038">SKU-038</option>
+<option value="SKU-039">SKU-039</option>
+<option value="SKU-040">SKU-040</option>
+<option value="SKU-041">SKU-041</option>
+<option value="SKU-042">SKU-042</option>
+<option value="SKU-043">SKU-043</option>
+<option value="SKU-044">SKU-044</option>
+<option value="SKU-045">SKU-045</option>
+<option value="SKU-046">SKU-046</option>
+<option value="SKU-047">SKU-047</option>
+<option value="SKU-048">SKU-048</option>
+<option value="SKU-049">SKU-049</option>
+<option value="SKU-050">SKU-050</option>
+<option value="SKU-051">SKU-051</option>
+<option value="SKU-052">SKU-052</option>
+<option value="SKU-053">SKU-053</option>
+<option value="SKU-054">SKU-054</option>
+<option value="SKU-055">SKU-055</option>
+<option value="SKU-056">SKU-056</option>
+<option value="SKU-057">SKU-057</option>
+<option value="SKU-058">SKU-058</option>
+<option value="SKU-059">SKU-059</option>
+<option value="SKU-060">SKU-060</option>
+<option value="SKU-061">SKU-061</option>
+<option value="SKU-062">SKU-062</option>
+<option value="SKU-063">SKU-063</option>
+<option value="SKU-064">SKU-064</option>
+<option value="SKU-065">SKU-065</option>
+<option value="SKU-066">SKU-066</option>
+<option value="SKU-067">SKU-067</option>
+<option value="SKU-068">SKU-068</option>
+<option value="SKU-069">SKU-069</option>
+<option value="SKU-070">SKU-070</option>
+<option value="SKU-071">SKU-071</option>
+<option value="SKU-072">SKU-072</option>
+        </select>
+        <input type="number" id="MQTY" value="1" min="1" max="99"/>
+        <button id="BADD">+ Agregar</button>
+      </div>
+      <div class="skutags" id="STAGS"><span class="nosku">Sin productos agregados</span></div>
+    </div>
+    <div class="g2">
+      <div class="fg"><label>Estado</label>
+        <select id="MST">
+          <option value="P">Pendiente</option>
+          <option value="E">En preparación</option>
+          <option value="S">Enviado</option>
+          <option value="D">Entregado</option>
+        </select>
+      </div>
+      <div class="fg"><label>Estado de pago</label>
+        <select id="MPG">
+          <option value="0">Sin pago</option>
+          <option value="1">50% pagado (seña)</option>
+          <option value="2">Pagado completo</option>
+        </select>
+      </div>
+    </div>
+    <div class="g2">
+      <div class="fg"><label>Cliente *</label><input type="text" id="MCL" placeholder="Nombre completo"/></div>
+      <div class="fg"><label>Teléfono</label><input type="tel" id="MPH" placeholder="+56 9 XXXX XXXX"/></div>
+    </div>
+    <div class="g2">
+      <div class="fg"><label>Fecha</label><input type="date" id="MDT"/></div>
+      <div class="fg"><label>Tipo precio</label>
+        <select id="MTYPE">
+          <option value="auto">Automatico segun cantidad</option>
+          <option value="manual">Precio manual</option>
+        </select>
+      </div>
+    </div>
+    <div id="PRICE_BOX" style="background:#f5f0ea;border:1px solid #ddd;border-radius:6px;padding:12px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <div>
+          <div style="font-size:0.68rem;color:#7a6a58;text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:4px;">Precio calculado</div>
+          <div id="PRICE_DETAIL" style="font-size:0.82rem;color:#7a6a58;margin-bottom:4px;">Agrega productos para ver el precio</div>
+          <div id="PRICE_TOTAL" style="font-size:1.3rem;font-weight:700;color:#2c2318;">$0</div>
+        </div>
+        <div id="PRICE_BADGE" style="padding:6px 14px;border-radius:20px;font-size:0.75rem;font-weight:700;background:#e8ddd0;color:#2c2318;">Sin productos</div>
+      </div>
+      <input type="hidden" id="MPR" value="0"/>
+    </div>
+    <div id="MANUAL_BOX" style="display:none;margin-bottom:10px;">
+      <div class="fg"><label>Precio total manual (CLP)</label><input type="number" id="MPRM" placeholder="0" min="0" id="MPRM"/></div>
+    </div>
+    <div class="g1">
+      <div class="fg"><label>Email</label><input type="email" id="MEM" placeholder="correo@ejemplo.com"/></div>
+    </div>
+    <div class="g1">
+      <div class="fg"><label>Dirección</label><input type="text" id="MAD" placeholder="Calle, número, comuna"/></div>
+    </div>
+    <div class="g1">
+      <div class="fg"><label>Notas</label><textarea id="MNO" placeholder="Observaciones..."></textarea></div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-o" id="BCC">Cancelar</button>
+      <button class="btn btn-g" id="BSV">✔ Guardar</button>
+    </div>
+  </div>
+</div>
+
+<footer>INFINITY ACCESORIOS · Sistema de Gestión de Pedidos</footer>
+
+<script>
+var SHEET_URL = "https://script.google.com/macros/s/AKfycbwv_DcQ91r_J92_TDeREtj3zKDVm7PozWmvJ-P7C73KB5vuDmUcInOQszqZefOCkNeFlg/exec";
+var orders=[], editId=null, dirty=false, skuList=[];
+
+var SPECIAL_SKUS = {'SKU-001':true,'SKU-008':true};
+function unitPrice(sku){ return SPECIAL_SKUS[sku] ? 14990 : 10990; }
+
+function calcTotalConPromo(skuList){
+  /* SKU-001 y SKU-008: $14.990 fijo
+     Resto: pares = $19.990, sueltas = $10.990 */
+  var total = 0;
+  var unidadesPromo = 0;
+  for(var i=0;i<skuList.length;i++){
+    var s = skuList[i];
+    if(SPECIAL_SKUS[s.sku]){
+      total += 14990 * s.qty;
+    } else {
+      unidadesPromo += s.qty;
+    }
+  }
+  var pares   = Math.floor(unidadesPromo / 2);
+  var sueltas = unidadesPromo % 2;
+  total += pares * 19990 + sueltas * 10990;
+  return total;
+}
+
+function calcPrice(){
+  var type = $id('MTYPE').value;
+  $id('MANUAL_BOX').style.display = type==='manual'?'block':'none';
+  $id('PRICE_BOX').style.display  = type==='manual'?'none':'block';
+  if(type==='manual'){ $id('MPR').value=$id('MPRM')?$id('MPRM').value||'0':'0'; return; }
+  var totalQty=0;
+  for(var i=0;i<skuList.length;i++) totalQty+=skuList[i].qty;
+  var total = calcTotalConPromo(skuList);
+  var lines=[];
+  // Calcular unidades promo para mostrar detalle
+  var unidP=0;
+  for(var j=0;j<skuList.length;j++){
+    var s=skuList[j];
+    if(!SPECIAL_SKUS[s.sku]) unidP+=s.qty;
+    else lines.push(s.sku+(s.qty>1?' x'+s.qty:'')+': $'+(14990*s.qty).toLocaleString('es-CL'));
+  }
+  var pares=Math.floor(unidP/2), sueltas=unidP%2;
+  if(pares>0) lines.push(pares+' par'+(pares>1?'es':'')+' promo: $'+(pares*19990).toLocaleString('es-CL'));
+  if(sueltas>0) lines.push(sueltas+' suelta: $'+(sueltas*10990).toLocaleString('es-CL'));
+  $id('MPR').value=total;
+  $id('PRICE_TOTAL').textContent = total?'$'+total.toLocaleString('es-CL'):'$0';
+  if(!totalQty){
+    $id('PRICE_DETAIL').textContent='Agrega productos para ver el precio';
+    $id('PRICE_BADGE').textContent='Sin productos';
+    $id('PRICE_BADGE').style.background='#e8ddd0'; $id('PRICE_BADGE').style.color='#2c2318';
+  } else {
+    $id('PRICE_DETAIL').textContent=lines.join(' | ');
+    $id('PRICE_BADGE').textContent='PROMO 2x$19.990 · '+totalQty+' uds';
+    $id('PRICE_BADGE').style.background='#fde8d8';
+    $id('PRICE_BADGE').style.color='#c0392b';
+  }
+}
+
+function showSync(msg,color){
+  var el=$id('SYNCBAR');
+  el.style.display='flex';
+  el.style.background=color||'#e8f4fd';
+  el.style.borderLeftColor=color==='#d5f5e3'?'#27ae60':color==='#fde8e8'?'#e74c3c':'#3a7bd5';
+  el.innerHTML=msg;
+  if(color==='#d5f5e3') setTimeout(function(){el.style.display='none';},3000);
+}
+
+function jsonp(url, cb){
+  var name='cb_'+Date.now();
+  var s=document.createElement('script');
+  window[name]=function(d){delete window[name];document.body.removeChild(s);cb(null,d);};
+  s.onerror=function(){delete window[name];document.body.removeChild(s);cb(new Error('Error de conexion'));};
+  s.src=url+(url.indexOf('?')>=0?'&':'?')+'callback='+name;
+  document.body.appendChild(s);
+}
+
+function saveToSheets(){
+  showSync('Guardando en Google Sheets...','#e8f4fd');
+  var enc=encodeURIComponent(JSON.stringify(orders));
+  jsonp(SHEET_URL+'?action=save&orders='+enc,function(err,data){
+    if(err){showSync('Error: '+err.message,'#fde8e8');return;}
+    if(data&&data.ok){showBanner(false);showSync('Guardado correctamente en Google Sheets','#d5f5e3');}
+    else{showSync('Error al guardar','#fde8e8');}
+  });
+}
+
+function loadFromSheets(){
+  showSync('Cargando desde Google Sheets...','#e8f4fd');
+  jsonp(SHEET_URL+'?action=load',function(err,data){
+    if(err){showSync('Error: '+err.message,'#fde8e8');return;}
+    if(!data||!data.ok){showSync('No hay pedidos en Google Sheets','#fff8e1');return;}
+    var rows=data.rows;
+    if(!rows||rows.length<2){showSync('La planilla esta vacia','#fff8e1');return;}
+    orders=[];
+    var PGR={'Sin pago':'0','50% pagado':'1','Pagado':'2'};
+    var STR={'Pendiente':'P','En preparacion':'P','En preparacion':'P','En preparación':'E','Enviado':'S','Entregado':'D'};
+    for(var i=1;i<rows.length;i++){
+      var r=rows[i];if(!r[0])continue;
+      var skus=(r[2]+'').split(' | ').map(function(s){var p=s.trim().split(' x');return{sku:p[0].trim(),qty:p[1]?parseInt(p[1]):1};}).filter(function(s){return s.sku;});
+      var em=r[5]+'';
+      var noFull=r[11]+'';
+      var noClean=noFull.replace(/Email:\s*[^\s|]+\s*\|?\s*/,'').trim();
+      orders.push({id:r[0]+'',dt:r[1]+'',skus:skus,cl:r[3]+'',ph:r[4]+'',em:em,ad:r[6]+'',pr:r[7]+'',pt:r[8]==='Manual'?'manual':r[8]==='MercadoPago'?'mp':'auto',pg:PGR[r[9]]||'0',st:STR[r[10]]||'P',no:noClean});
+    }
+    showBanner(false);render();statsUpdate();
+    showSync(orders.length+' pedidos cargados correctamente','#d5f5e3');
+  });
+}
+
+function renderTags(){
+  var c=$id('STAGS');
+  c.innerHTML='';
+  if(skuList.length===0){c.innerHTML='<span class="nosku">Sin productos agregados</span>';return;}
+  for(var i=0;i<skuList.length;i++){
+    (function(idx){
+      var d=document.createElement('div');d.className='stag';
+      d.innerHTML='<span>'+skuList[idx].sku+'</span><span class="qty">x'+skuList[idx].qty+'</span>';
+      var b=document.createElement('button');b.type='button';b.className='rm';b.textContent='✕';
+      b.onclick=function(){skuList.splice(idx,1);renderTags();calcPrice();};
+      d.appendChild(b);c.appendChild(d);
+    })(i);
+  }
+}
+
+function addSku(){
+  var sku=$id('MSKU').value, qty=parseInt($id('MQTY').value)||1;
+  if(!sku){alert('Selecciona un SKU');return;}
+  for(var i=0;i<skuList.length;i++){if(skuList[i].sku===sku){skuList[i].qty+=qty;renderTags();calcPrice();$id('MSKU').value='';$id('MQTY').value='1';return;}}
+  skuList.push({sku:sku,qty:qty});renderTags();calcPrice();
+  $id('MSKU').value='';$id('MQTY').value='1';
+}
+
+var PGL={'0':'Sin pago','1':'50% pagado','2':'Pagado'};
+var PGC={'0':'pay0','1':'pay1','2':'pay2'};
+var PGFLOW=['0','1','2'];
+
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function pad(n){ return n<10?'0'+n:''+n; }
+function hoy(){
+  var d=new Date();
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+}
+function horaActual(){
+  var d=new Date();
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes());
+}
+function add10DiasHabiles(fechaStr){
+  if(!fechaStr||fechaStr==='-') return '-';
+  // Parse date
+  var parts = fechaStr.split(/[-\/T ]/);
+  var d;
+  if(parts.length>=3){
+    // Try YYYY-MM-DD or DD-MM-YYYY
+    if(parts[0].length===4) d = new Date(parts[0],parts[1]-1,parts[2]);
+    else d = new Date(parts[2],parts[1]-1,parts[0]);
+  } else { return '-'; }
+  if(isNaN(d)) return '-';
+  var count=0;
+  while(count<10){
+    d.setDate(d.getDate()+1);
+    var dow=d.getDay();
+    if(dow!==0&&dow!==6) count++; // skip weekends
+  }
+  return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2);
+}
+function fDate(s){
+  if(!s||s==='-')return '-';
+  // Handle ISO format: 2026-05-30T... or 30T04...
+  if(s.indexOf('T')>=0){ var d=new Date(s); if(!isNaN(d)) return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2); }
+  // Handle YYYY-MM-DD
+  var p=s.split('-');
+  if(p.length===3) return pad(parseInt(p[2]))+'/'+pad(parseInt(p[1]))+'/'+p[0].slice(2);
+  return s;
+}
+function origenBadge(pt){
+  if(pt==='mp'||pt==='MercadoPago')
+    return '<span style="background:#009ee3;color:#fff;font-size:.72rem;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap">💳 MercadoPago</span>';
+  return '<span style="background:#7d5a3c;color:#fff;font-size:.72rem;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap">✏️ Manual</span>';
+}
+function fPrice(v){
+  if(!v||v==='0')return '-';
+  return '$'+parseInt(v).toLocaleString('es-CL');
+}
+var STC={ P:'bp', E:'be', S:'bs', D:'bd' };
+var STL={ P:'Pendiente', E:'En preparación', S:'Enviado', D:'Entregado' };
+var FLOW=['P','E','S','D'];
+
+function $id(id){ return document.getElementById(id); }
+function gv(id){ return $id(id).value; }
+function sv(id,v){ $id(id).value=v||''; }
+
+function showBanner(v){
+  $id('BN').style.display=v?'flex':'none';
+  dirty=v;
+}
+
+function findOrder(id){
+  for(var i=0;i<orders.length;i++) if(orders[i].id===id) return orders[i];
+  return null;
+}
+
+function openModal(id){
+  editId=id||null;
+  $id('MT').textContent=id?'Editar Pedido':'Nuevo Pedido';
+  var o=id?findOrder(id):null;
+  skuList=o&&o.skus?JSON.parse(JSON.stringify(o.skus)):[];
+  renderTags();
+  sv('MST', o?o.st:'P');
+  sv('MPG', o?o.pg:'0');
+  sv('MCL', o?o.cl:'');
+  sv('MPH', o?o.ph:'');
+  sv('MDT', o?o.dt:horaActual());
+  sv('MAD', o?o.ad:'');
+  sv('MEM', o?o.em:'');
+  sv('MNO', o?o.no:'');
+  sv('MTYPE', o?o.pt:'auto');
+  $id('MSKU').value='';$id('MQTY').value='1';
+  calcPrice();
+  $id('OV').style.display='block';
+}
+
+function closeModal(){
+  $id('OV').style.display='none';
+  editId=null;skuList=[];
+}
+
+function saveOrder(){
+  if(skuList.length===0){alert('Agrega al menos un SKU');return;}
+  var cl=gv('MCL').trim();
+  if(!cl){alert('Ingresa el nombre del cliente');return;}
+  var pr=gv('MTYPE')==='manual'?($id('MPRM')?$id('MPRM').value||'0':'0'):gv('MPR');
+  var o={
+    id:editId||uid(),
+    skus:JSON.parse(JSON.stringify(skuList)),
+    st:gv('MST'), pg:gv('MPG'), cl:cl,
+    ph:gv('MPH').trim(), em:gv('MEM').trim(), pr:pr,
+    pt:'manual', dt:gv('MDT')||horaActual(),
+    ad:gv('MAD').trim(), no:gv('MNO').trim()
+  };
+  if(editId){
+    for(var i=0;i<orders.length;i++) if(orders[i].id===editId){ orders[i]=o; break; }
+  } else {
+    orders.unshift(o);
+  }
+  showBanner(true);
+  closeModal();
+  render();
+  statsUpdate();
+}
+
+function delOrder(id){
+  if(!confirm('¿Eliminar este pedido? Se borrará del panel y de Google Sheets.')) return;
+  // Remove from local list
+  orders=orders.filter(function(o){ return o.id!==id; });
+  render(); statsUpdate();
+  // Delete from Sheets
+  var cbName='cb_del_'+Date.now();
+  window[cbName]=function(d){ delete window[cbName]; };
+  var s=document.createElement('script');
+  s.src=SHEET_URL+'?action=delete&id='+encodeURIComponent(id)+'&callback='+cbName;
+  document.head.appendChild(s);
+}
+
+function advancePay(id){
+  var o=findOrder(id);if(!o)return;
+  var i=PGFLOW.indexOf(o.pg||'0');
+  if(i<PGFLOW.length-1){o.pg=PGFLOW[i+1];showBanner(true);render();statsUpdate();}
+}
+function advance(id){
+  var o=findOrder(id); if(!o) return;
+  var i=FLOW.indexOf(o.st);
+  if(i<FLOW.length-1){ o.st=FLOW[i+1]; showBanner(true); render(); statsUpdate(); }
+}
+
+function esc(s){
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function render(){
+  var q=$id('QI').value.toLowerCase();
+  var fs=$id('QS').value;
+  var list=orders.filter(function(o){
+    var mq=!q||esc(o.cl).toLowerCase().indexOf(q)>=0
+              ||(o.skus||[{sku:o.sku||''}]).map(function(s){return s.sku;}).join(' ').toLowerCase().indexOf(q)>=0
+              ||(o.ph||'').indexOf(q)>=0
+              ||(o.ad||'').toLowerCase().indexOf(q)>=0;
+    return mq&&(!fs||o.st===fs);
+  });
+  var em=$id('EM'), tt=$id('TT'), tb=$id('TB');
+  if(list.length===0){ tb.innerHTML=''; em.style.display='block'; tt.style.display='none'; return; }
+  em.style.display='none'; tt.style.display='table';
+  var h='';
+  for(var j=0;j<list.length;j++){
+    var o=list[j], id=o.id, num=pad(list.length-j);
+    h+='<tr>'+
+      '<td class="onum">#'+num+'</td>'+
+      '<td style="white-space:nowrap;color:#888;font-size:.78rem">'+fDate(o.dt)+'</td>'+
+      '<td style="color:#2d6a4f;font-size:.78rem;font-weight:600;white-space:nowrap">'+add10DiasHabiles(o.dt)+'</td>'+
+      '<td>'+(o.skus||[{sku:o.sku||'',qty:1}]).map(function(s){return '<span class="skut">'+s.sku+(s.qty>1?' x'+s.qty:'')+'</span>';}).join(' ')+'</td>'+
+      '<td style="font-weight:600">'+esc(o.cl)+'</td>'+
+      '<td style="color:#888">'+esc(o.ph||'-')+'</td>'+
+      '<td style="font-size:.78rem;color:#888">'+esc(o.em||'-')+'</td>'+
+      '<td style="max-width:130px;font-size:.78rem;color:#888">'+esc(o.ad||'-')+'</td>'+
+      '<td style="font-weight:700">'+fPrice(o.pr)+'</td>'+
+      '<td>'+origenBadge(o.pt)+'</td>'+
+      '<td><button class="pbadge '+(PGC[o.pg||'0'])+'" data-id="'+id+'" data-act="pay">'+(PGL[o.pg||'0'])+'</button></td>'+
+      '<td><button class="badge '+STC[o.st]+'" data-id="'+id+'" data-act="adv">'+STL[o.st]+'</button></td>'+
+      '<td style="max-width:100px;font-size:.78rem;color:#888">'+esc(o.no||'-')+'</td>'+
+      '<td><div class="abtn">'+
+        '<button class="ibtn" data-id="'+id+'" data-act="edt">✏️</button>'+
+        '<button class="ibtn red" data-id="'+id+'" data-act="del">🗑️</button>'+
+      '</div></td>'+
+    '</tr>';
+  }
+  tb.innerHTML=h;
+}
+
+$id('TB').addEventListener('click',function(e){
+  var b=e.target;
+  while(b&&b.tagName!=='BUTTON') b=b.parentNode;
+  if(!b||!b.dataset.act) return;
+  var id=b.dataset.id, act=b.dataset.act;
+  if(act==='adv') advance(id);
+  if(act==='pay') advancePay(id);
+  if(act==='edt') openModal(id);
+  if(act==='del') delOrder(id);
+});
+
+function statsUpdate(){
+  var p=0,e=0,s=0,d=0;
+  for(var i=0;i<orders.length;i++){
+    var st=orders[i].st;
+    if(st==='P')p++; else if(st==='E')e++; else if(st==='S')s++; else if(st==='D')d++;
+  }
+  $id('sA').textContent=orders.length;
+  $id('sP').textContent=p; $id('sE').textContent=e;
+  $id('sS').textContent=s; $id('sD').textContent=d;
+}
+
+
+
+
+
+function exportCSV(){
+  if(!orders.length){ alert('Sin pedidos'); return; }
+  var rows=[['#','Fecha','SKUs','Cliente','Telefono','Direccion','Precio','Tipo','Pago','Estado','Notas']];
+  for(var i=0;i<orders.length;i++){
+    var o=orders[i];
+    var ss=(o.skus||[{sku:o.sku||'',qty:1}]).map(function(s){return s.sku+(s.qty>1?' x'+s.qty:'');}).join(' | ');
+    rows.push([orders.length-i,o.dt||'',ss,o.cl,o.ph||'',(o.ad||'').replace(/,/g,' '),o.pr||'0',o.pt==='manual'?'Manual':'Auto',PGL[o.pg||'0'],STL[o.st],(o.no||'').replace(/,/g,' ')]);
+  }
+  var csv=rows.map(function(r){return r.map(function(v){return '"'+(''+v).replace(/"/g,'""')+'"';}).join(',');}).join('\r\n');
+  var b=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  var u=URL.createObjectURL(b);
+  var a=document.createElement('a');
+  a.href=u; a.download='pedidos_'+hoy()+'.csv';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(u);
+}
+
+$id('BNP').addEventListener('click',  function(){ openModal(null); });
+$id('BADD').addEventListener('click', function(){ addSku(); });
+$id('BCLOUD').addEventListener('click', function(){ loadFromSheets(); });
+$id('MTYPE').addEventListener('change', function(){ calcPrice(); });
+$id('BCC').addEventListener('click',  function(){ closeModal(); });
+$id('BSV').addEventListener('click',  function(){ saveOrder(); });
+$id('BCSV').addEventListener('click', function(){ exportCSV(); });
+$id('BNSV').addEventListener('click', function(){ saveToSheets(); });
+$id('QI').addEventListener('input',   function(){ render(); });
+$id('QS').addEventListener('change',  function(){ render(); });
+$id('OV').addEventListener('click',   function(e){ if(e.target===$id('OV')) closeModal(); });
+document.addEventListener('keydown',  function(e){ if(e.key==='Escape') closeModal(); });
+window.addEventListener('beforeunload',function(e){ if(dirty){e.preventDefault();e.returnValue='';} });
+
+render(); statsUpdate();
+</script>
+</body>
+</html>
