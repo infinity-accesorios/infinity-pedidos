@@ -87,6 +87,23 @@ tr:hover td{background:#fdf9f5;}
 footer{background:#2c2318;color:#c9a96e;text-align:center;padding:13px;font-size:0.73rem;letter-spacing:2px;margin-top:28px;}
 @media(max-width:520px){.g2{grid-template-columns:1fr;}.toolbar input[type=text]{width:100%;}}
 </style>
+
+<style>
+@media print {
+  body > *:not(#printArea) { display: none !important; }
+  #printArea { display: block !important; }
+  .ticket-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 8px; }
+  .ticket { border: 1px solid #333; padding: 10px; font-family: Arial, sans-serif; font-size: 10px; break-inside: avoid; }
+  .ticket-header { text-align: center; border-bottom: 2px dashed #333; padding-bottom: 6px; margin-bottom: 6px; }
+  .ticket-logo { font-size: 13px; font-weight: bold; letter-spacing: 1px; }
+  .ticket-row { display: flex; justify-content: space-between; margin: 2px 0; font-size: 10px; }
+  .ticket-label { color: #555; }
+  .ticket-skus { margin: 5px 0; padding: 5px; border: 1px dashed #999; }
+  .ticket-sku { font-weight: bold; font-size: 11px; }
+  .ticket-footer { text-align: center; border-top: 2px dashed #333; padding-top: 6px; margin-top: 6px; font-size: 9px; }
+}
+#printArea { display: none; }
+</style>
 </head>
 <body>
 
@@ -121,6 +138,7 @@ footer{background:#2c2318;color:#c9a96e;text-align:center;padding:13px;font-size
   <div class="ml">
     <button class="btn btn-o" id="BCLOUD">☁️ Cargar Sheets</button>
     <button class="btn btn-o" id="BCSV">⬇ CSV</button>
+    <button class="btn" id="BPRT" onclick="printAllPrep()" style="background:#8e44ad;color:#fff">🖨️ Imprimir En Prep</button>
     <button class="btn btn-g" id="BNP">+ Nuevo Pedido</button>
   </div>
 </div>
@@ -418,7 +436,7 @@ function loadFromSheets(){
       var em=r[5]+'';
       var noFull=r[11]+'';
       var noClean=noFull.replace(/Email:\s*[^\s|]+\s*\|?\s*/,'').trim();
-      orders.push({id:rowId,dt:r[1]+'',skus:skus,cl:r[3]+'',ph:r[4]+'',em:em,ad:r[6]+'',pr:r[7]+'',pt:r[8]==='Manual'||r[8]==='manual'?'manual':r[8]==='MercadoPago'||r[8]==='mp'?'mp':'auto',pg:PGR[r[9]]||'0',st:STR[r[10]]||'P',no:noClean,canal:r[8]||''});
+      orders.push({id:rowId,dt:r[1]+'',skus:skus,cl:r[3]+'',ph:r[4]+'',em:em,ad:r[6]+'',pr:r[7]+'',pt:r[8]==='Manual'||r[8]==='manual'?'manual':r[8]==='MercadoPago'||r[8]==='mp'?'mp':r[8]==='pagina_web'||r[8]==='web'?'pagina_web':'auto',pg:PGR[r[9]]||'0',st:STR[r[10]]||'P',no:noClean,canal:r[8]||''});
     }
     showBanner(false);render();statsUpdate();
     showSync(orders.length+' pedidos cargados correctamente','#d5f5e3');
@@ -508,6 +526,8 @@ function origenBadge(pt){
     return '<span style="background:#25d366;color:#fff;font-size:.72rem;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap">💬 WhatsApp</span>';
   if(p==='manual')
     return '<span style="background:#7d5a3c;color:#fff;font-size:.72rem;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap">✏️ Manual</span>';
+  if(p==='pagina_web'||p==='web')
+    return '<span style="background:#6c3483;color:#fff;font-size:.72rem;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap">🌐 Web</span>';
   return '<span style="background:#888;color:#fff;font-size:.72rem;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap">'+pt+'</span>';
 }
 function fPrice(v){
@@ -643,6 +663,7 @@ function render(){
       '<td style="max-width:100px;font-size:.78rem;color:#888">'+esc(o.no||'-')+'</td>'+
       '<td><div class="abtn">'+
         '<button class="ibtn grn" data-id="'+id+'" data-act="wsp">💬</button>'+
+        '<button class="ibtn" data-id="'+id+'" data-act="prt">🖨️</button>'+
         '<button class="ibtn" data-id="'+id+'" data-act="edt">✏️</button>'+
         '<button class="ibtn red" data-id="'+id+'" data-act="del">🗑️</button>'+
       '</div></td>'+
@@ -661,6 +682,7 @@ $id('TB').addEventListener('click',function(e){
   if(act==='edt') openModal(id);
   if(act==='del') delOrder(id);
   if(act==='wsp') sendWhatsApp(id);
+  if(act==='prt') printTicket(id);
 });
 
 function sendWhatsApp(id){
@@ -742,6 +764,69 @@ document.addEventListener('keydown',  function(e){ if(e.key==='Escape') closeMod
 window.addEventListener('beforeunload',function(e){ if(dirty){e.preventDefault();e.returnValue='';} });
 
 render(); statsUpdate();
+
+function buildTicketHTML(o, num){
+  var skus = (o.skus||[]).map(function(s){ return s.sku + (s.qty>1?' x'+s.qty:''); }).join(' | ');
+  var pago = o.pg==='2'?'Pagado':o.pg==='1'?'50% pagado':'Sin pago';
+  var estado = o.st==='E'?'EN PREPARACIÓN':o.st==='S'?'ENVIADO':o.st==='D'?'ENTREGADO':'PENDIENTE';
+  var fecha = o.dt ? fDate(o.dt) : '-';
+  var despacho = o.dt ? add10HabilesStr(o.dt) : '-';
+  return '<div class="ticket">'+
+    '<div class="ticket-header">'+
+      '<div class="ticket-logo">✦ INFINITY ACCESORIOS ✦</div>'+
+      '<div style="font-size:11px;margin-top:4px">ORDEN DE PREPARACIÓN</div>'+
+    '</div>'+
+    '<div class="ticket-row"><span class="ticket-label">Pedido:</span><span><strong>#'+num+'</strong></span></div>'+
+    '<div class="ticket-row"><span class="ticket-label">Cliente:</span><span>'+esc(o.cl||'-')+'</span></div>'+
+    '<div class="ticket-row"><span class="ticket-label">Teléfono:</span><span>'+(o.ph||'-')+'</span></div>'+
+    '<div class="ticket-row"><span class="ticket-label">Fecha compra:</span><span>'+fecha+'</span></div>'+
+    '<div class="ticket-row"><span class="ticket-label">Despacho est.:</span><span>'+despacho+'</span></div>'+
+    '<div class="ticket-row"><span class="ticket-label">Pago:</span><span>'+pago+'</span></div>'+
+    '<div class="ticket-row"><span class="ticket-label">Estado:</span><span><strong>'+estado+'</strong></span></div>'+
+    '<div class="ticket-skus">'+
+      '<div style="font-size:10px;color:#666;margin-bottom:4px">PRODUCTOS:</div>'+
+      (o.skus||[]).map(function(s){ return '<div class="ticket-sku">▸ '+s.sku+(s.qty>1?' × '+s.qty:'')+'</div>'; }).join('')+
+    '</div>'+
+    (o.ad&&o.ad!=='-'?'<div class="ticket-row"><span class="ticket-label">Dirección:</span><span style="max-width:150px;text-align:right">'+esc(o.ad)+'</span></div>':'')+
+    (o.no&&o.no!=='-'?'<div style="margin-top:6px;padding:6px;border:1px dashed #999;font-size:11px"><strong>Notas:</strong> '+esc(o.no)+'</div>':'')+
+    '<div class="ticket-footer">'+
+      '$'+parseInt(o.pr||0).toLocaleString('es-CL')+' · '+new Date().toLocaleDateString('es-CL')+
+    '</div>'+
+  '</div>';
+}
+
+function printTicket(id){
+  var o = findOrder(id);
+  if(!o) return;
+  var num = '?';
+  for(var i=0;i<orders.length;i++){
+    if(orders[i].id===id){ num=pad(orders.length-i); break; }
+  }
+  var html = '<div class="ticket-grid">'+buildTicketHTML(o,num)+'</div>';
+  document.getElementById('printArea').innerHTML = html;
+  window.print();
+  document.getElementById('printArea').innerHTML = '';
+}
+
+function printAllPrep(){
+  var prep = orders.filter(function(o){ return o.st==='E'; });
+  if(prep.length===0){ alert('No hay pedidos En Preparación'); return; }
+  var html = '<div class="ticket-grid">';
+  prep.forEach(function(o){
+    var num = '?';
+    for(var j=0;j<orders.length;j++){
+      if(orders[j].id===o.id){ num=pad(orders.length-j); break; }
+    }
+    html += buildTicketHTML(o, num);
+  });
+  html += '</div>';
+  document.getElementById('printArea').innerHTML = html;
+  window.print();
+  document.getElementById('printArea').innerHTML = '';
+}
 </script>
+
+<!-- PRINT AREA -->
+<div id="printArea"></div>
 </body>
 </html>
