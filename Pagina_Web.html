@@ -471,6 +471,29 @@ const PRODUCTOS = [
 
 ];
 
+// ── INTEGRACIÓN CON IMÁGENES DE GITHUB ───────────────────────────────────────
+// Si existe img/SKU-001.jpg (etc.) en el repositorio, la usa en vez del base64.
+// El panel admin (admin-imagenes-sku.html) sube/borra esas imágenes directo a GitHub.
+(function() {
+  var BASE = 'img/';
+  var EXTS = ['jpg', 'png', 'webp'];
+  PRODUCTOS.forEach(function(p) {
+    // Crear un Image para detectar si existe la imagen en GitHub
+    // Se intenta cargar: primero jpg, si falla queda el base64 original
+    var img = new Image();
+    var sku = p.sku;
+    var ext = 'jpg';
+    img.onload = function() {
+      // La imagen existe en GitHub → actualizar el src en el DOM
+      var domImgs = document.querySelectorAll('img[alt="' + sku + '"]');
+      domImgs.forEach(function(el) { el.src = BASE + sku + '.' + ext + '?t=' + Date.now(); });
+      p.img = BASE + sku + '.' + ext;
+    };
+    img.src = BASE + sku + '.' + ext + '?t=' + Date.now();
+  });
+})();
+// ─────────────────────────────────────────────────────────────────────────────
+
 const prodMap = Object.fromEntries(PRODUCTOS.map(p => [p.sku, p]));
 let carrito = {};
 

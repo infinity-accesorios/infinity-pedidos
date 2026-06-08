@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infinity — Admin Imágenes</title>
+<style>
+  :root {
+    --bg: #0f0e0c;
+    --surface: #1a1814;
+    --surface2: #242018;
+    --border: #2e2a24;
+    --gold: #c9a96e;
+    --gold-dim: #7a6440;
+    --text: #e8ddd0;
+    --text-muted: #7a6a58;
+    --red: #c0392b;
+    --green: #2ecc71;
+    --radius: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  .logo span { font-size: 18px; font-weight: 600; color: var(--gold); letter-spacing: 0.05em; }
+  .logo small { font-size: 12px; color: var(--text-muted); display: block; }
+  .connected-badge { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--green); }
+  .connected-badge::before { content: ''; width: 7px; height: 7px; background: var(--green); border-radius: 50%; }
+
+  #setupPanel {
+    max-width: 520px; margin: 60px auto; padding: 32px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  }
+  #setupPanel h2 { font-size: 20px; color: var(--gold); margin-bottom: 8px; }
+  #setupPanel p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; }
+  .step { display: flex; gap: 10px; margin-bottom: 10px; }
+  .step-n { background: #7a644020; color: var(--gold); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .step p { font-size: 13px; color: var(--text-muted); margin: 0; }
+  .step a { color: var(--gold); }
+
+  .inp { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; color: var(--text); font-size: 14px; outline: none; }
+  .inp:focus { border-color: var(--gold-dim); }
+  label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .form-group { margin-bottom: 14px; }
+
+  .btn { padding: 10px 20px; border-radius: 6px; border: none; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .btn-gold { background: var(--gold); color: #1a1814; }
+  .btn-gold:hover { background: #e0bd84; }
+  .btn-gold:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .status-msg { font-size: 12px; margin-top: 8px; padding: 8px 12px; border-radius: 5px; display: none; }
+  .status-msg.ok { background: #2ecc7115; color: var(--green); border: 1px solid #2ecc7130; display: block; }
+  .status-msg.err { background: #c0392b15; color: #e74c3c; border: 1px solid #c0392b30; display: block; }
+  .status-msg.loading { background: #c9a96e10; color: var(--gold); border: 1px solid var(--gold-dim); display: block; }
+
+  #mainPanel { display: none; }
+
+  .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; padding: 20px 24px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+  .stat .n { font-size: 28px; font-weight: 700; color: var(--gold); }
+  .stat .l { font-size: 11px; color: var(--text-muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  .upload-section { padding: 0 24px 20px; }
+  .upload-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .upload-card-header { padding: 14px 20px; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 600; color: var(--gold); }
+  .upload-body { padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  .drop-area {
+    border: 2px dashed var(--border); border-radius: 8px;
+    padding: 32px 20px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--surface2);
+  }
+  .drop-area:hover, .drop-area.drag-over { border-color: var(--gold-dim); background: #c9a96e08; }
+  .drop-area .icon { font-size: 36px; margin-bottom: 10px; }
+  .drop-area p { font-size: 13px; color: var(--text-muted); }
+  .drop-area p strong { color: var(--gold); }
+  #fileInput { display: none; }
+  .preview-wrap { margin-top: 12px; }
+  .preview-wrap img { width: 100%; max-height: 180px; object-fit: contain; border-radius: 6px; border: 1px solid var(--border); }
+
+  .gallery-section { padding: 0 24px 40px; }
+  .gallery-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+  .gallery-header h3 { font-size: 13px; font-weight: 600; color: var(--gold); }
+  .controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .search { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 7px 12px; color: var(--text); font-size: 13px; width: 180px; outline: none; }
+  .filter-btn { padding: 6px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; font-size: 12px; color: var(--text-muted); cursor: pointer; }
+  .filter-btn.active { background: var(--gold); color: #1a1814; border-color: var(--gold); font-weight: 600; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  .sku-card { background: var(--surface); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); transition: transform 0.15s; }
+  .sku-card.has-img { border-color: #2ecc7125; }
+  .sku-card.no-img { border-color: #c0392b18; }
+  .sku-card:hover { transform: translateY(-2px); }
+  .card-img-area { width: 100%; aspect-ratio: 3/4; overflow: hidden; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--text-muted); }
+  .card-img-area img { width: 100%; height: 100%; object-fit: cover; }
+  .card-info { padding: 8px 10px; }
+  .card-sku { font-size: 11px; font-weight: 700; color: var(--gold); }
+  .card-status { font-size: 10px; margin-top: 2px; }
+  .ok { color: var(--green); }
+  .miss { color: #e74c3c; }
+  .card-actions { display: flex; gap: 4px; margin-top: 6px; }
+  .card-btn { flex: 1; padding: 5px; font-size: 10px; border-radius: 4px; border: none; cursor: pointer; font-weight: 600; transition: all 0.15s; }
+  .card-btn.up { background: #7a644020; color: var(--gold); }
+  .card-btn.up:hover { background: var(--gold); color: #1a1814; }
+  .card-btn.del { background: #c0392b18; color: #e74c3c; }
+  .card-btn.del:hover { background: #c0392b; color: white; }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; align-items: center; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; width: 340px; max-width: 95vw; }
+  .modal h3 { color: var(--gold); margin-bottom: 16px; font-size: 16px; }
+  .modal img { width: 100%; border-radius: 6px; margin-bottom: 14px; max-height: 240px; object-fit: contain; border: 1px solid var(--border); }
+  .modal-btns { display: flex; gap: 8px; }
+  .btn-del { flex:1; padding:8px; background:#c0392b18; color:#e74c3c; border:1px solid #c0392b30; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; }
+  .btn-del:hover { background:#c0392b; color:#fff; }
+  .btn-cancel { flex:1; padding:8px; background:var(--surface2); color:var(--text-muted); border:1px solid var(--border); border-radius:6px; font-size:13px; cursor:pointer; }
+
+  .toast { position: fixed; bottom: 20px; right: 20px; background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 10px 16px; border-radius: 8px; font-size: 13px; z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+
+  @media(max-width:600px) { .upload-body { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span>✦ Infinity Admin</span>
+    <small>Panel de imágenes SKU · GitHub</small>
+  </div>
+  <div id="connectedBadge" style="display:none" class="connected-badge">
+    Conectado a GitHub
+    <button onclick="desconectar()" style="margin-left:10px;background:transparent;border:1px solid var(--border);color:var(--text-muted);padding:4px 10px;font-size:11px;border-radius:4px;cursor:pointer">Cambiar token</button>
+  </div>
+</header>
+
+<!-- SETUP -->
+<div id="setupPanel">
+  <h2>Conectar con GitHub</h2>
+  <p>Este panel sube y borra imágenes directo en tu repositorio <strong style="color:var(--gold)">infinity-accesorios/infinity-pedidos</strong>. Solo necesitas un token de acceso.</p>
+  <div style="margin-bottom:20px">
+    <div class="step"><div class="step-n">1</div><p>Ve a <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a></p></div>
+    <div class="step"><div class="step-n">2</div><p>Nombre: <strong>infinity-admin</strong> · Marca solo ✅ <strong>repo</strong></p></div>
+    <div class="step"><div class="step-n">3</div><p>Clic en <strong>Generate token</strong> y cópialo abajo</p></div>
+  </div>
+  <div class="form-group">
+    <label>Token de GitHub</label>
+    <input class="inp" type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxxxxxx">
+  </div>
+  <div id="setupStatus" class="status-msg"></div>
+  <button class="btn btn-gold" style="width:100%;margin-top:8px" onclick="conectar()">Conectar →</button>
+</div>
+
+<!-- MAIN -->
+<div id="mainPanel">
+  <div class="stats">
+    <div class="stat"><div class="n" id="statTotal">78</div><div class="l">SKUs totales</div></div>
+    <div class="stat"><div class="n" id="statWith" style="color:var(--green)">—</div><div class="l">Con imagen</div></div>
+    <div class="stat"><div class="n" id="statWithout" style="color:#e74c3c">—</div><div class="l">Sin imagen</div></div>
+  </div>
+
+  <div class="upload-section">
+    <div class="upload-card">
+      <div class="upload-card-header">📤 Subir imagen a un SKU</div>
+      <div class="upload-body">
+        <div>
+          <div class="form-group">
+            <label>SKU de destino</label>
+            <select class="inp" id="skuSelect"></select>
+          </div>
+          <div id="uploadStatus" class="status-msg"></div>
+          <button class="btn btn-gold" style="width:100%;margin-top:12px" id="saveBtn" disabled onclick="subirImagen()">↑ Subir a GitHub</button>
+        </div>
+        <div>
+          <div class="drop-area" id="dropArea" onclick="document.getElementById('fileInput').click()">
+            <div class="icon">🖼️</div>
+            <p><strong>Clic</strong> o arrastra una imagen aquí</p>
+            <p style="margin-top:4px;font-size:11px">JPG, PNG, WEBP · máx. 5MB</p>
+            <input type="file" id="fileInput" accept="image/*">
+          </div>
+          <div class="preview-wrap" id="previewWrap" style="display:none">
+            <img id="previewImg" src="" alt="preview">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-section">
+    <div class="gallery-header">
+      <h3>📋 Galería de SKUs</h3>
+      <div class="controls">
+        <input class="search" type="text" id="searchInput" placeholder="Buscar SKU..." oninput="renderGrid()">
+        <button class="filter-btn active" onclick="setFilter('all',this)">Todos</button>
+        <button class="filter-btn" onclick="setFilter('has',this)">Con imagen</button>
+        <button class="filter-btn" onclick="setFilter('none',this)">Sin imagen</button>
+      </div>
+    </div>
+    <div class="grid" id="skuGrid"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3 id="modalTitle"></h3>
+    <img id="modalImg" src="" alt="">
+    <div id="modalStatus" class="status-msg"></div>
+    <div class="modal-btns">
+      <button class="btn-del" onclick="borrarImagen()">🗑 Borrar de GitHub</button>
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const REPO = 'infinity-accesorios/infinity-pedidos';
+const BRANCH = 'main';
+const IMG_FOLDER = 'img';
+const SKUS = Array.from({length:78}, (_,i) => `SKU-${String(i+1).padStart(3,'0')}`);
+
+let token = '';
+let imgMap = {};
+let pendingFile = null;
+let currentFilter = 'all';
+let modalSKU = null;
+
+function loadToken() {
+  const t = localStorage.getItem('gh_token_infinity');
+  if (t) { token = t; return true; }
+  return false;
+}
+function desconectar() {
+  localStorage.removeItem('gh_token_infinity');
+  token = ''; imgMap = {};
+  document.getElementById('mainPanel').style.display = 'none';
+  document.getElementById('setupPanel').style.display = 'block';
+  document.getElementById('connectedBadge').style.display = 'none';
+  document.getElementById('tokenInput').value = '';
+}
+
+async function conectar() {
+  const t = document.getElementById('tokenInput').value.trim();
+  if (!t) { showStatus('setupStatus', 'Ingresa el token', 'err'); return; }
+  showStatus('setupStatus', 'Verificando…', 'loading');
+  try {
+    const r = await ghFetch(`https://api.github.com/repos/${REPO}`, t);
+    if (!r.ok) throw new Error('Token inválido o sin acceso al repositorio');
+    localStorage.setItem('gh_token_infinity', t);
+    token = t;
+    await iniciar();
+  } catch(e) {
+    showStatus('setupStatus', '❌ ' + e.message, 'err');
+  }
+}
+
+async function ghFetch(url, tok, opts={}) {
+  return fetch(url, {
+    ...opts,
+    headers: {
+      'Authorization': `token ${tok || token}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json',
+      ...(opts.headers||{})
+    }
+  });
+}
+
+async function cargarImagenes() {
+  imgMap = {};
+  try {
+    const r = await ghFetch(`https://api.github.com/repos/${REPO}/contents/${IMG_FOLDER}?ref=${BRANCH}`);
+    if (r.status === 404) return;
+    if (!r.ok) return;
+    const files = await r.json();
+    files.forEach(f => {
+      const match = f.name.match(/^(SKU-\d{3})\.(jpg|jpeg|png|webp)$/i);
+      if (match) {
+        imgMap[match[1].toUpperCase()] = {
+          sha: f.sha,
+          name: f.name,
+          url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${IMG_FOLDER}/${f.name}?t=${Date.now()}`
+        };
+      }
+    });
+  } catch(e) { console.warn(e); }
+}
+
+async function iniciar() {
+  document.getElementById('setupPanel').style.display = 'none';
+  document.getElementById('mainPanel').style.display = 'block';
+  document.getElementById('connectedBadge').style.display = 'flex';
+  const sel = document.getElementById('skuSelect');
+  sel.innerHTML = SKUS.map(s => `<option value="${s}">${s}</option>`).join('');
+  showToast('Cargando imágenes desde GitHub…');
+  await cargarImagenes();
+  updateStats();
+  renderGrid();
+  showToast('✓ Listo');
+}
+
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = e => res(e.target.result.split(',')[1]);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+async function subirImagen() {
+  if (!pendingFile) return;
+  const sku = document.getElementById('skuSelect').value;
+  const ext = pendingFile.name.split('.').pop().toLowerCase().replace('jpeg','jpg');
+  const filename = `${sku}.${ext}`;
+  const path = `${IMG_FOLDER}/${filename}`;
+
+  showStatus('uploadStatus', 'Subiendo a GitHub…', 'loading');
+  document.getElementById('saveBtn').disabled = true;
+
+  try {
+    const b64 = await fileToBase64(pendingFile);
+    let sha = imgMap[sku]?.sha;
+
+    // Si hay imagen con otra extensión, buscar su sha
+    if (!sha) {
+      const check = await ghFetch(`https://api.github.com/repos/${REPO}/contents/${path}`);
+      if (check.ok) { const d = await check.json(); sha = d.sha; }
+    }
+
+    // Si tiene imagen con extensión distinta, borrarla primero
+    if (imgMap[sku] && imgMap[sku].name !== filename) {
+      await ghFetch(`https://api.github.com/repos/${REPO}/contents/${IMG_FOLDER}/${imgMap[sku].name}`, null, {
+        method: 'DELETE',
+        body: JSON.stringify({ message: `Admin: reemplazar imagen ${sku}`, sha: imgMap[sku].sha, branch: BRANCH })
+      });
+      sha = undefined;
+    }
+
+    const body = { message: `Admin: imagen ${sku}`, content: b64, branch: BRANCH, ...(sha ? {sha} : {}) };
+    const r = await ghFetch(`https://api.github.com/repos/${REPO}/contents/${path}`, null, {
+      method: 'PUT', body: JSON.stringify(body)
+    });
+
+    if (!r.ok) { const err = await r.json(); throw new Error(err.message || 'Error al subir'); }
+    const data = await r.json();
+
+    imgMap[sku] = {
+      sha: data.content.sha,
+      name: filename,
+      url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${path}?t=${Date.now()}`
+    };
+
+    showStatus('uploadStatus', `✓ Imagen subida a GitHub`, 'ok');
+    showToast(`✓ ${sku} actualizado`);
+    pendingFile = null;
+    document.getElementById('previewWrap').style.display = 'none';
+    document.getElementById('previewImg').src = '';
+    document.getElementById('fileInput').value = '';
+    updateStats();
+    renderGrid();
+  } catch(e) {
+    showStatus('uploadStatus', '❌ ' + e.message, 'err');
+  } finally {
+    document.getElementById('saveBtn').disabled = !pendingFile;
+  }
+}
+
+async function borrarImagen() {
+  if (!modalSKU || !imgMap[modalSKU]) return;
+  showStatus('modalStatus', 'Borrando…', 'loading');
+  try {
+    const { sha, name } = imgMap[modalSKU];
+    const r = await ghFetch(`https://api.github.com/repos/${REPO}/contents/${IMG_FOLDER}/${name}`, null, {
+      method: 'DELETE',
+      body: JSON.stringify({ message: `Admin: borrar imagen ${modalSKU}`, sha, branch: BRANCH })
+    });
+    if (!r.ok) { const e = await r.json(); throw new Error(e.message); }
+    delete imgMap[modalSKU];
+    showToast(`✓ Imagen de ${modalSKU} eliminada`);
+    closeModal();
+    updateStats();
+    renderGrid();
+  } catch(e) {
+    showStatus('modalStatus', '❌ ' + e.message, 'err');
+  }
+}
+
+// Drag & Drop
+const dropArea = document.getElementById('dropArea');
+const fileInput = document.getElementById('fileInput');
+dropArea.addEventListener('dragover', e => { e.preventDefault(); dropArea.classList.add('drag-over'); });
+dropArea.addEventListener('dragleave', () => dropArea.classList.remove('drag-over'));
+dropArea.addEventListener('drop', e => { e.preventDefault(); dropArea.classList.remove('drag-over'); if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change', () => { if(fileInput.files[0]) handleFile(fileInput.files[0]); });
+
+function handleFile(file) {
+  if (!file.type.startsWith('image/')) { showToast('Solo se permiten imágenes'); return; }
+  if (file.size > 5*1024*1024) { showToast('La imagen supera 5MB'); return; }
+  pendingFile = file;
+  const r = new FileReader();
+  r.onload = e => {
+    document.getElementById('previewImg').src = e.target.result;
+    document.getElementById('previewWrap').style.display = 'block';
+    document.getElementById('saveBtn').disabled = false;
+    showStatus('uploadStatus','','');
+  };
+  r.readAsDataURL(file);
+}
+
+function renderGrid() {
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  const grid = document.getElementById('skuGrid');
+  grid.innerHTML = '';
+  let count = 0;
+  SKUS.forEach(sku => {
+    const hasImg = !!imgMap[sku];
+    if (currentFilter==='has' && !hasImg) return;
+    if (currentFilter==='none' && hasImg) return;
+    if (query && !sku.toLowerCase().includes(query)) return;
+    count++;
+    const card = document.createElement('div');
+    card.className = `sku-card ${hasImg?'has-img':'no-img'}`;
+    card.innerHTML = `
+      <div class="card-img-area">
+        ${hasImg ? `<img src="${imgMap[sku].url}" alt="${sku}" loading="lazy">` : '<span>Sin imagen</span>'}
+      </div>
+      <div class="card-info">
+        <div class="card-sku">${sku}</div>
+        <div class="card-status ${hasImg?'ok':'miss'}">${hasImg?'✓ En GitHub':'✗ Sin imagen'}</div>
+        <div class="card-actions">
+          <button class="card-btn up" onclick="seleccionarSKU('${sku}')">↑ Subir</button>
+          ${hasImg?`<button class="card-btn del" onclick="openModal('${sku}')">✕</button>`:''}
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+  if (!count) grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px">No hay SKUs que coincidan</div>';
+}
+
+function seleccionarSKU(sku) {
+  document.getElementById('skuSelect').value = sku;
+  document.querySelector('.upload-section').scrollIntoView({behavior:'smooth'});
+  showToast(`SKU seleccionado: ${sku}`);
+}
+function setFilter(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid();
+}
+function openModal(sku) {
+  modalSKU = sku;
+  document.getElementById('modalTitle').textContent = sku;
+  document.getElementById('modalImg').src = imgMap[sku]?.url || '';
+  document.getElementById('modalStatus').className = 'status-msg';
+  document.getElementById('modalStatus').textContent = '';
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); modalSKU = null; }
+document.getElementById('modalOverlay').addEventListener('click', e => { if(e.target===document.getElementById('modalOverlay')) closeModal(); });
+function updateStats() {
+  const w = SKUS.filter(s=>imgMap[s]).length;
+  document.getElementById('statWith').textContent = w;
+  document.getElementById('statWithout').textContent = SKUS.length - w;
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+function showStatus(id, msg, type) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = 'status-msg' + (type ? ' '+type : '');
+}
+
+if (loadToken()) iniciar();
+</script>
+</body>
+</html>
