@@ -249,10 +249,7 @@ header p.subtitle {
   border-color: var(--brown-dark);
 }
 .filter-btn.special-btn.active { background: var(--special); border-color: var(--special); }
-.count-label {
-  font-size: 0.78rem; color: var(--text-light); letter-spacing: 0.06em; white-space: nowrap;
-}
-#count-num { color: var(--gold-dark); font-weight: 600; }
+
 
 /* ── GRID ── */
 .grid-wrap { padding: 28px 20px 56px; max-width: 1400px; margin: 0 auto; }
@@ -938,7 +935,6 @@ function renderGrid() {
   const prods = todosSkus
     .map(sku => prodMap[sku])
     .filter(p => !q || p.sku.toLowerCase().includes(q));
-  document.getElementById('count-num').textContent = prods.length;
   document.getElementById('grid').innerHTML = prods.map(p => {
     const cant = carrito[p.sku] || 1;
     const enCar = !!carrito[p.sku];
