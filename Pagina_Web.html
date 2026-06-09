@@ -866,25 +866,24 @@ PRODUCTOS.forEach(p => {
 let carrito = {};
 
 // ── Cargar productos extra desde GitHub ──────────────────────────────────
-(async function() {
+async function cargarExtrasYRenderizar() {
   try {
-    const BASE = 'https://raw.githubusercontent.com/infinity-accesorios/infinity-pedidos/main/';
-    const r = await fetch(BASE + 'productos-extra.json?t=' + Date.now());
-    if (!r.ok) return;
-    const extras = await r.json();
-    extras.forEach(p => {
-      if (!prodMap[p.sku]) {
-        prodMap[p.sku] = { sku: p.sku, especial: p.especial, img: '' };
-        // Intentar cargar imagen desde GitHub
-        const imgUrl = BASE + 'img/' + p.sku + '.jpg';
-        const img = new Image();
-        img.onload = () => { prodMap[p.sku].img = imgUrl; renderGrid(); };
-        img.src = imgUrl;
-      }
-    });
-    renderGrid();
-  } catch(e) { /* Sin productos extra */ }
-})();
+    const r = await fetch(BASE_RAW + 'productos-extra.json?t=' + Date.now());
+    if (r.ok) {
+      const extras = await r.json();
+      extras.forEach(p => {
+        if (!prodMap[p.sku]) {
+          prodMap[p.sku] = {
+            sku: p.sku,
+            especial: p.especial,
+            img: BASE_RAW + 'img/' + p.sku + '.jpg'
+          };
+        }
+      });
+    }
+  } catch(e) { /* Sin extras */ }
+  renderGrid();
+}
 // ─────────────────────────────────────────────────────────────────────────
 
 function getPrecioBase(sku) {
