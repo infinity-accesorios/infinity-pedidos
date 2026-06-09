@@ -930,7 +930,11 @@ function getPrecioEfectivo(sku) {
 
 function renderGrid() {
   const q = document.getElementById('buscar').value.toLowerCase();
-  const prods = PRODUCTOS.filter(p => !q || p.sku.toLowerCase().includes(q));
+  // Incluir TODOS los productos: los 78 base + los extras del prodMap
+  const todosSkus = Object.keys(prodMap).sort();
+  const prods = todosSkus
+    .map(sku => prodMap[sku])
+    .filter(p => !q || p.sku.toLowerCase().includes(q));
   document.getElementById('count-num').textContent = prods.length;
   document.getElementById('grid').innerHTML = prods.map(p => {
     const cant = carrito[p.sku] || 1;
