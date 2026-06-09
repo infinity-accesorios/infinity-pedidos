@@ -17,222 +17,127 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--cream); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
 
-/* ── HEADER ── */
+/* HEADER */
 header {
-  background: var(--nude);
-  border-bottom: 1px solid rgba(122,85,53,0.12);
-  padding: 0 28px;
-  height: 62px;
+  background: var(--nude); border-bottom: 1px solid rgba(122,85,53,0.12);
+  padding: 0 24px; height: 60px;
   display: flex; align-items: center; justify-content: space-between;
   position: sticky; top: 0; z-index: 50;
 }
 .h-brand { display: flex; align-items: center; gap: 10px; }
-.h-brand-symbol {
-  width: 36px; height: 36px; border-radius: 50%;
+.h-symbol {
+  width: 34px; height: 34px; border-radius: 50%;
   background: var(--brown-dark);
   display: flex; align-items: center; justify-content: center;
-  font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--gold);
+  font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--gold);
 }
-.h-brand-text span { font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--brown-dark); letter-spacing: 0.04em; display: block; line-height: 1.1; }
-.h-brand-text small { font-size: 10px; color: var(--text-light); letter-spacing: 0.16em; text-transform: uppercase; }
+.h-texts span { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: var(--brown-dark); display: block; line-height: 1.1; }
+.h-texts small { font-size: 10px; color: var(--text-light); letter-spacing: 0.15em; text-transform: uppercase; }
 .h-right { display: flex; align-items: center; gap: 10px; }
-.h-user { font-size: 12px; color: var(--text-light); letter-spacing: 0.05em; }
-.btn-logout {
-  background: transparent; border: 1px solid var(--border);
-  color: var(--text-mid); padding: 5px 14px; border-radius: 20px;
-  font-size: 11px; cursor: pointer; font-family: 'DM Sans', sans-serif;
-  letter-spacing: 0.04em; transition: all 0.2s;
-}
-.btn-logout:hover { border-color: var(--red); color: var(--red); }
+.h-user { font-size: 12px; color: var(--text-light); }
+.btn-out { background: none; border: 1px solid var(--border); color: var(--text-mid); padding: 5px 14px; border-radius: 20px; font-size: 11px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+.btn-out:hover { border-color: var(--red); color: var(--red); }
 
-/* ── LOGIN ── */
-#loginPanel {
-  min-height: calc(100vh - 62px);
-  display: flex; align-items: center; justify-content: center;
-  padding: 24px 16px;
-}
-.login-card {
-  background: white; border: 1px solid var(--border);
-  border-radius: 20px; width: 100%; max-width: 400px;
-  overflow: hidden; box-shadow: 0 8px 40px rgba(44,31,18,0.1);
-}
-.login-hero {
-  background: var(--brown-dark);
-  padding: 36px 32px 28px; text-align: center;
-}
-.login-hero-symbol {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 52px; color: var(--gold); line-height: 1;
-  display: block; margin-bottom: 8px;
-}
-.login-hero p { font-size: 11px; color: rgba(212,208,204,0.5); letter-spacing: 0.22em; text-transform: uppercase; }
-.login-body { padding: 32px; }
-.login-body h2 {
-  font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500;
-  color: var(--text); margin-bottom: 6px;
-}
-.login-body > p { font-size: 13px; color: var(--text-mid); margin-bottom: 24px; line-height: 1.6; }
-.field { margin-bottom: 14px; }
-.field label { display: block; font-size: 11px; color: var(--text-light); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
-.inp {
-  width: 100%; background: var(--cream); border: 1.5px solid var(--border);
-  border-radius: 8px; padding: 11px 14px; color: var(--text); font-size: 14px;
-  outline: none; font-family: 'DM Sans', sans-serif; transition: border-color 0.2s;
-}
+/* LOGIN */
+#loginPanel { min-height: calc(100vh - 60px); display: flex; align-items: center; justify-content: center; padding: 24px 16px; }
+.login-card { background: white; border: 1px solid var(--border); border-radius: 20px; width: 100%; max-width: 380px; overflow: hidden; box-shadow: 0 8px 40px rgba(44,31,18,0.1); }
+.login-hero { background: var(--brown-dark); padding: 32px; text-align: center; }
+.login-symbol { font-family: 'Cormorant Garamond', serif; font-size: 48px; color: var(--gold); display: block; margin-bottom: 6px; }
+.login-hero p { font-size: 10px; color: rgba(212,208,204,0.5); letter-spacing: 0.22em; text-transform: uppercase; }
+.login-body { padding: 28px; }
+.login-body h2 { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 500; margin-bottom: 4px; }
+.login-body > p { font-size: 12px; color: var(--text-mid); margin-bottom: 20px; }
+.field { margin-bottom: 12px; }
+.field label { display: block; font-size: 10px; color: var(--text-light); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 5px; }
+.inp { width: 100%; background: var(--cream); border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 13px; color: var(--text); font-size: 13px; outline: none; font-family: 'DM Sans', sans-serif; transition: border-color 0.2s; }
 .inp:focus { border-color: var(--brown-mid); }
-.status-msg { font-size: 12px; padding: 9px 13px; border-radius: 7px; margin-top: 8px; display: none; }
-.status-msg.ok  { background: #4a7c5915; color: var(--green); border: 1px solid #4a7c5930; display: block; }
-.status-msg.err { background: #8b3a2a12; color: var(--red); border: 1px solid #8b3a2a25; display: block; }
-.status-msg.loading { background: var(--warm); color: var(--brown-mid); border: 1px solid var(--border); display: block; }
-.btn-primary {
-  width: 100%; background: var(--brown-dark); color: var(--silver);
-  border: none; border-radius: 8px; padding: 13px;
-  font-size: 14px; font-weight: 500; cursor: pointer;
-  font-family: 'DM Sans', sans-serif; margin-top: 12px;
-  transition: all 0.2s; letter-spacing: 0.04em;
-}
-.btn-primary:hover { background: var(--brown); }
-.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+select.inp { cursor: pointer; }
+.msg { font-size: 12px; padding: 9px 13px; border-radius: 7px; margin-top: 8px; display: none; }
+.msg.ok  { background: #4a7c5915; color: var(--green); border: 1px solid #4a7c5930; display: block; }
+.msg.err { background: #8b3a2a12; color: var(--red); border: 1px solid #8b3a2a25; display: block; }
+.msg.loading { background: var(--warm); color: var(--brown-mid); border: 1px solid var(--border); display: block; }
+.btn-main { width: 100%; background: var(--brown-dark); color: var(--silver); border: none; border-radius: 8px; padding: 12px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 10px; transition: all 0.2s; letter-spacing: 0.04em; }
+.btn-main:hover { background: var(--brown); }
+.btn-main:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* ── MAIN PANEL ── */
-#mainPanel { display: none; padding: 28px 24px 60px; max-width: 1100px; margin: 0 auto; }
+/* MAIN */
+#mainPanel { display: none; max-width: 960px; margin: 0 auto; padding: 28px 20px 60px; }
 
 /* Stats */
-.stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 28px; }
-.stat-card {
-  background: white; border: 1px solid var(--border-light);
-  border-radius: var(--radius); padding: 20px; position: relative; overflow: hidden;
-}
-.stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: var(--warm); }
-.stat-card.green::before { background: linear-gradient(90deg,#4a7c59,#6aad7a); }
-.stat-card.red::before   { background: linear-gradient(90deg,#8b3a2a,#c0522a); }
-.stat-n { font-size: 32px; font-weight: 300; font-family: 'Cormorant Garamond', serif; color: var(--text); }
-.stat-l { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
+.stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 28px; }
+.stat { background: white; border: 1px solid var(--border-light); border-radius: var(--radius); padding: 18px 20px; position: relative; overflow: hidden; }
+.stat::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: var(--warm); }
+.stat.g::before { background: linear-gradient(90deg,#4a7c59,#6aad7a); }
+.stat.r::before { background: linear-gradient(90deg,#8b3a2a,#c0522a); }
+.stat-n { font-size: 30px; font-weight: 300; font-family: 'Cormorant Garamond', serif; }
+.stat-l { font-size: 10px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
 
-/* Upload */
-.section-title {
-  font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 500;
-  color: var(--text); margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
-}
-.section-title::after { content:''; flex:1; height:1px; background: var(--border-light); }
-.upload-card {
-  background: white; border: 1px solid var(--border);
-  border-radius: var(--radius); overflow: hidden; margin-bottom: 28px;
-}
-.upload-grid { display: grid; grid-template-columns: 1fr 1fr; }
-.upload-left { padding: 24px; border-right: 1px solid var(--border-light); }
-.upload-right { padding: 24px; }
-.field-label { font-size: 11px; color: var(--text-light); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; display: block; }
-.drop-zone {
-  border: 2px dashed var(--border); border-radius: 10px;
-  padding: 32px 20px; text-align: center; cursor: pointer;
-  transition: all 0.2s; background: var(--cream);
-}
+/* Formulario principal */
+.sec-title { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 500; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+.sec-title::after { content:''; flex:1; height:1px; background: var(--border-light); }
+.form-card { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 28px; }
+.form-row { display: grid; grid-template-columns: 140px 140px 1fr; gap: 16px; align-items: end; margin-bottom: 16px; }
+.sku-input-wrap { display: flex; align-items: center; gap: 6px; }
+.sku-prefix { font-size: 12px; color: var(--text-mid); white-space: nowrap; }
+.drop-zone { border: 2px dashed var(--border); border-radius: 10px; padding: 28px 20px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--cream); }
 .drop-zone:hover, .drop-zone.over { border-color: var(--brown-mid); background: var(--warm); }
-.drop-icon { font-size: 28px; margin-bottom: 8px; }
-.drop-zone p { font-size: 13px; color: var(--text-mid); line-height: 1.6; }
-.drop-zone input[type=file] { display: none; }
-.preview-wrap { display: none; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
-.preview-wrap img { width: 100%; max-height: 220px; object-fit: contain; background: var(--warm); display: block; }
-.btn-upload {
-  width: 100%; background: var(--brown-dark); color: var(--silver);
-  border: none; border-radius: 8px; padding: 12px;
-  font-size: 13px; font-weight: 500; cursor: pointer;
-  font-family: 'DM Sans', sans-serif; margin-top: 14px;
-  transition: all 0.2s; letter-spacing: 0.04em;
-}
-.btn-upload:hover:not(:disabled) { background: var(--brown); }
-.btn-upload:disabled { opacity: 0.45; cursor: not-allowed; }
+.drop-icon { font-size: 26px; margin-bottom: 6px; }
+.drop-zone p { font-size: 12px; color: var(--text-mid); line-height: 1.6; }
+.drop-zone input { display: none; }
+.preview-wrap { display: none; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: var(--warm); }
+.preview-wrap img { width: 100%; max-height: 200px; object-fit: contain; display: block; }
+.preview-name { font-size: 11px; color: var(--text-light); padding: 6px 10px; text-align: center; }
+.btn-cambiar { background: none; border: none; font-size: 11px; color: var(--brown); cursor: pointer; text-decoration: underline; display: block; margin: 4px auto 0; font-family: 'DM Sans', sans-serif; }
+.form-actions { display: flex; gap: 10px; align-items: center; margin-top: 4px; }
+.btn-subir { flex: 1; background: var(--brown-dark); color: var(--silver); border: none; border-radius: 8px; padding: 12px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; letter-spacing: 0.04em; }
+.btn-subir:hover:not(:disabled) { background: var(--brown); }
+.btn-subir:disabled { opacity: 0.45; cursor: not-allowed; }
 
-/* Gallery */
-.gallery-controls {
-  display: flex; gap: 12px; align-items: center;
-  flex-wrap: wrap; margin-bottom: 16px;
-}
-.search-inp {
-  flex: 1; min-width: 160px; max-width: 280px;
-  background: white; border: 1.5px solid var(--border);
-  border-radius: 8px; padding: 8px 14px; color: var(--text);
-  font-size: 13px; font-family: 'DM Sans', sans-serif; outline: none;
-  transition: border-color 0.2s;
-}
+/* Galería */
+.gallery-controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+.search-inp { flex:1; min-width:140px; max-width:260px; background: white; border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 13px; font-size: 12px; font-family: 'DM Sans', sans-serif; outline: none; color: var(--text); transition: border-color 0.2s; }
 .search-inp:focus { border-color: var(--gold); }
 .filters { display: flex; gap: 6px; }
-.f-btn {
-  padding: 6px 14px; border-radius: 20px;
-  border: 1.5px solid var(--border); background: var(--cream);
-  font-size: 11px; letter-spacing: 0.06em; cursor: pointer;
-  color: var(--text-mid); font-family: 'DM Sans', sans-serif; transition: all 0.2s;
-}
+.f-btn { padding: 6px 13px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--cream); font-size: 11px; letter-spacing: 0.05em; cursor: pointer; color: var(--text-mid); font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
 .f-btn:hover, .f-btn.active { background: var(--brown-dark); color: var(--silver); border-color: var(--brown-dark); }
-.sku-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px;
-}
-.sku-card {
-  background: white; border: 1px solid var(--border-light);
-  border-radius: var(--radius); overflow: hidden; transition: box-shadow 0.2s;
-}
-.sku-card:hover { box-shadow: 0 4px 20px rgba(44,31,18,0.1); }
+.sku-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 12px; }
+.sku-card { background: white; border: 1px solid var(--border-light); border-radius: var(--radius); overflow: hidden; transition: box-shadow 0.2s; }
+.sku-card:hover { box-shadow: 0 4px 18px rgba(44,31,18,0.1); }
 .sku-card.has { border-color: #4a7c5930; }
-.card-img {
-  aspect-ratio: 3/4; background: var(--warm);
-  display: flex; align-items: center; justify-content: center; overflow: hidden;
-}
-.card-img img { width: 100%; height: 100%; object-fit: cover; }
-.card-img span { font-size: 11px; color: var(--text-light); }
-.card-body { padding: 10px 12px 12px; }
-.card-sku { font-size: 12px; font-weight: 500; color: var(--text); letter-spacing: 0.06em; }
-.card-status { font-size: 10px; margin-top: 2px; margin-bottom: 8px; }
-.card-status.ok   { color: var(--green); }
+.card-img { aspect-ratio: 3/4; background: var(--warm); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.card-img img { width:100%; height:100%; object-fit: cover; }
+.card-img span { font-size: 10px; color: var(--text-light); }
+.card-body { padding: 9px 11px 11px; }
+.card-sku { font-size: 11px; font-weight: 500; letter-spacing: 0.05em; }
+.card-status { font-size: 10px; margin: 2px 0 7px; }
+.card-status.ok { color: var(--green); }
 .card-status.miss { color: var(--text-light); }
-.card-acts { display: flex; gap: 6px; }
-.c-btn {
-  flex: 1; padding: 5px 0; border-radius: 6px; border: 1.5px solid var(--border);
-  font-size: 11px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s;
-  background: var(--cream); color: var(--text-mid);
-}
+.card-acts { display: flex; gap: 5px; }
+.c-btn { flex:1; padding: 5px 0; border-radius: 6px; border: 1.5px solid var(--border); font-size: 10px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; background: var(--cream); color: var(--text-mid); }
 .c-btn.up:hover { background: var(--brown-dark); color: var(--silver); border-color: var(--brown-dark); }
 .c-btn.del:hover { background: var(--red); color: white; border-color: var(--red); }
 
 /* Modal */
-.modal-bg {
-  display: none; position: fixed; inset: 0;
-  background: rgba(44,31,18,0.55); z-index: 200;
-  align-items: center; justify-content: center;
-  backdrop-filter: blur(4px);
-}
-.modal-bg.open { display: flex; }
-.modal-box {
-  background: white; border-radius: 16px; padding: 28px;
-  width: 340px; max-width: 94vw;
-  box-shadow: 0 24px 48px rgba(44,31,18,0.2);
-}
-.modal-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 500; color: var(--text); margin-bottom: 14px; }
-.modal-box img { width: 100%; border-radius: 8px; margin-bottom: 14px; max-height: 240px; object-fit: contain; background: var(--warm); border: 1px solid var(--border); }
+.modal-bg { display:none; position:fixed; inset:0; background: rgba(44,31,18,0.55); z-index:200; align-items:center; justify-content:center; backdrop-filter: blur(4px); }
+.modal-bg.open { display:flex; }
+.modal-box { background: white; border-radius: 16px; padding: 24px; width: 320px; max-width: 94vw; box-shadow: 0 24px 48px rgba(44,31,18,0.2); }
+.modal-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 500; margin-bottom: 12px; }
+.modal-box img { width:100%; border-radius: 8px; margin-bottom: 12px; max-height: 220px; object-fit: contain; background: var(--warm); border: 1px solid var(--border); }
 .modal-btns { display: flex; gap: 8px; }
-.btn-del { flex:1; padding:10px; border:none; border-radius:8px; background: var(--red); color:white; font-size:13px; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif; }
-.btn-cancel { flex:1; padding:10px; border:1.5px solid var(--border); border-radius:8px; background:white; color:var(--text-mid); font-size:13px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+.btn-del { flex:1; padding:10px; border:none; border-radius:8px; background: var(--red); color:white; font-size:12px; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif; }
+.btn-cancel { flex:1; padding:10px; border:1.5px solid var(--border); border-radius:8px; background:white; color:var(--text-mid); font-size:12px; cursor:pointer; font-family:'DM Sans',sans-serif; }
 
 /* Toast */
-.toast {
-  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-  background: var(--brown-dark); color: var(--silver);
-  padding: 10px 22px; border-radius: 24px; font-size: 13px;
-  z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none;
-  box-shadow: 0 6px 20px rgba(44,31,18,0.25); white-space: nowrap;
-  font-family: 'DM Sans', sans-serif;
-}
+.toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background: var(--brown-dark); color: var(--silver); padding: 9px 20px; border-radius: 20px; font-size: 12px; z-index:999; opacity:0; transition: opacity 0.3s; pointer-events:none; box-shadow: 0 4px 16px rgba(44,31,18,0.25); white-space:nowrap; font-family:'DM Sans',sans-serif; }
 .toast.show { opacity: 1; }
 
-@media(max-width:600px) {
-  #nuevoProductoCard > div { grid-template-columns: 1fr 1fr !important; }
-  #nuevoProductoCard > div > div:last-child { grid-column: 1/-1; }
-  #mainPanel { padding: 18px 12px 48px; }
-  .stats-row { grid-template-columns: repeat(3,1fr); gap: 8px; }
+@media(max-width:600px){
+  .form-row { grid-template-columns: 1fr 1fr; }
+  .form-row > div:last-child { grid-column: 1/-1; }
+  .stats { gap: 8px; }
   .stat-n { font-size: 24px; }
-  .upload-grid { grid-template-columns: 1fr; }
-  .upload-left { border-right: none; border-bottom: 1px solid var(--border-light); }
-  .sku-grid { grid-template-columns: repeat(2,1fr); gap: 10px; }
+  .sku-grid { grid-template-columns: repeat(2,1fr); gap: 8px; }
+  #mainPanel { padding: 16px 12px 48px; }
 }
 </style>
 </head>
@@ -240,28 +145,28 @@ header {
 
 <header>
   <div class="h-brand">
-    <div class="h-brand-symbol">∞</div>
-    <div class="h-brand-text">
+    <div class="h-symbol">∞</div>
+    <div class="h-texts">
       <span>Infinity Javiera</span>
       <small>Panel de imágenes</small>
     </div>
   </div>
   <div class="h-right" id="hRight" style="display:none">
     <span class="h-user" id="hUser"></span>
-    <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
+    <button class="btn-out" onclick="logout()">Cerrar sesión</button>
   </div>
 </header>
 
-<!-- ── LOGIN ── -->
+<!-- LOGIN -->
 <div id="loginPanel">
   <div class="login-card">
     <div class="login-hero">
-      <span class="login-hero-symbol">∞</span>
+      <span class="login-symbol">∞</span>
       <p>Administración · Infinity Javiera</p>
     </div>
     <div class="login-body">
       <h2>Ingresar al panel</h2>
-      <p>Ingresa tus datos para administrar las imágenes de la tienda.</p>
+      <p>Ingresa tus datos para continuar.</p>
       <div class="field">
         <label>Correo</label>
         <input class="inp" type="email" id="loginEmail" placeholder="correo@ejemplo.com" autocomplete="email">
@@ -271,98 +176,71 @@ header {
         <input class="inp" type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password"
           onkeydown="if(event.key==='Enter') doLogin()">
       </div>
-      <div id="loginStatus" class="status-msg"></div>
-      <button class="btn-primary" id="loginBtn" onclick="doLogin()">Ingresar →</button>
+      <div id="loginMsg" class="msg"></div>
+      <button class="btn-main" id="loginBtn" onclick="doLogin()">Ingresar →</button>
     </div>
   </div>
 </div>
 
-<!-- ── MAIN PANEL ── -->
+<!-- MAIN -->
 <div id="mainPanel">
 
-  <!-- Stats -->
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-n" id="statTotal">78</div>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-n" id="statTotal">—</div>
       <div class="stat-l">SKUs totales</div>
     </div>
-    <div class="stat-card green">
+    <div class="stat g">
       <div class="stat-n" id="statWith">—</div>
       <div class="stat-l">Con imagen</div>
     </div>
-    <div class="stat-card red">
+    <div class="stat r">
       <div class="stat-n" id="statWithout">—</div>
       <div class="stat-l">Sin imagen</div>
     </div>
   </div>
 
-  <!-- Subir imagen -->
-  <div class="section-title">Subir imagen</div>
-  <div class="upload-card">
-    <div class="upload-grid">
-      <div class="upload-left">
-        <div class="field">
-          <label class="field-label">SKU de destino</label>
-          <select class="inp" id="skuSelect" onchange="toggleNuevoSKU()"></select>
+  <!-- Formulario único -->
+  <div class="sec-title">Subir imagen</div>
+  <div class="form-card">
+    <div class="form-row">
+      <div>
+        <label class="field" style="display:block;font-size:10px;color:var(--text-light);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">SKU</label>
+        <div class="sku-input-wrap">
+          <span class="sku-prefix">SKU-</span>
+          <input class="inp" type="text" id="fSkuNum" placeholder="001" style="max-width:80px"
+            oninput="this.value=this.value.replace(/[^0-9]/g,'')">
         </div>
-        <div class="field" id="nuevoSkuWrap" style="display:none">
-          <label class="field-label">Número del nuevo SKU</label>
-          <div style="display:flex;gap:8px;align-items:center">
-            <span style="font-size:13px;color:var(--text-mid);white-space:nowrap;font-family:'DM Sans',sans-serif">SKU-</span>
-            <input class="inp" type="number" id="nuevoSkuNum" min="79" max="999" placeholder="079" style="max-width:110px">
-          </div>
-          <div id="nuevoSkuStatus" class="status-msg" style="margin-top:6px"></div>
-        </div>
-        <div id="uploadStatus" class="status-msg"></div>
-        <button class="btn-upload" id="saveBtn" disabled onclick="subirImagen()">↑ Subir imagen</button>
       </div>
-      <div class="upload-right">
-        <label class="field-label">Imagen</label>
+      <div>
+        <label class="field" style="display:block;font-size:10px;color:var(--text-light);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">Precio</label>
+        <select class="inp" id="fPrecio">
+          <option value="10990">$10.990 — Normal</option>
+          <option value="14990">$14.990 — Especial</option>
+        </select>
+      </div>
+      <div>
+        <label class="field" style="display:block;font-size:10px;color:var(--text-light);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">Foto</label>
         <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
           <div class="drop-icon">🖼️</div>
-          <p><strong>Clic</strong> o arrastra aquí<br>JPG, PNG, WEBP · máx. 5MB</p>
+          <p><strong>Clic</strong> o arrastra aquí<br>JPG, PNG · máx. 5MB</p>
           <input type="file" id="fileInput" accept="image/*">
         </div>
         <div class="preview-wrap" id="previewWrap">
           <img id="previewImg" src="" alt="">
+          <div class="preview-name" id="previewName"></div>
+          <button class="btn-cambiar" onclick="cambiarFoto()">Cambiar foto</button>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Nuevo Producto -->
-  <div class="section-title" id="secNuevoProducto">Agregar producto nuevo</div>
-  <div class="upload-card" id="nuevoProductoCard">
-    <div style="padding:24px;display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:16px;align-items:end">
-      <div class="field">
-        <label class="field-label">SKU</label>
-        <div style="display:flex;align-items:center;gap:6px">
-          <span style="font-size:13px;color:var(--text-mid);font-family:'DM Sans',sans-serif;white-space:nowrap">SKU-</span>
-          <input class="inp" type="number" id="npSkuNum" min="79" max="999" placeholder="079" style="max-width:90px">
-        </div>
-      </div>
-      <div class="field">
-        <label class="field-label">Precio ($)</label>
-        <input class="inp" type="number" id="npPrecio" placeholder="10990" value="10990">
-      </div>
-      <div class="field">
-        <label class="field-label">Tipo</label>
-        <select class="inp" id="npEspecial">
-          <option value="false">Normal — $10.990</option>
-          <option value="true">Especial — $14.990</option>
-        </select>
-      </div>
-      <div>
-        <button class="btn-upload" style="margin-top:0;width:auto;padding:11px 20px" onclick="agregarProducto()">
-          + Agregar SKU
-        </button>
-      </div>
+    <div id="formMsg" class="msg"></div>
+    <div class="form-actions">
+      <button class="btn-subir" id="btnSubir" disabled onclick="subirImagen()">↑ Subir a la tienda</button>
     </div>
-    <div id="npStatus" class="status-msg" style="margin:0 24px 16px"></div>
   </div>
 
   <!-- Galería -->
-  <div class="section-title" id="secGaleria">Galería de SKUs</div>
+  <div class="sec-title">Productos en la tienda</div>
   <div class="gallery-controls">
     <input class="search-inp" type="text" id="searchInput" placeholder="Buscar SKU…" oninput="renderGrid()">
     <div class="filters">
@@ -375,12 +253,12 @@ header {
 
 </div>
 
-<!-- Modal confirmación borrar -->
+<!-- Modal borrar -->
 <div class="modal-bg" id="modalBg">
   <div class="modal-box">
     <h3 id="modalTitle"></h3>
     <img id="modalImg" src="" alt="">
-    <div id="modalStatus" class="status-msg"></div>
+    <div id="modalMsg" class="msg"></div>
     <div class="modal-btns">
       <button class="btn-del" onclick="borrarImagen()">🗑 Eliminar imagen</button>
       <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
@@ -391,65 +269,59 @@ header {
 <div class="toast" id="toast"></div>
 
 <script>
-const REPO      = 'infinity-accesorios/infinity-pedidos';
-const BRANCH    = 'main';
-const IMG_FOLDER = 'img';
-const SKUS = Array.from({length:78}, (_,i) => `SKU-${String(i+1).padStart(3,'0')}`);
+const REPO    = 'infinity-accesorios/infinity-pedidos';
+const BRANCH  = 'main';
+const IMG_DIR = 'img';
+const BASE_RAW = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/`;
+const BASE_SKUS = Array.from({length:78}, (_,i) => `SKU-${String(i+1).padStart(3,'0')}`);
 
-// ── Credenciales ─────────────────────────────────────────────────────────
 const _t = () => String.fromCharCode(103,104,112,95,99,110,113,51,121,67,77,87,56,98,119,108,70,70,119,112,117,67,70,102,108,110,111,88,66,77,48,68,70,99,48,65,109,111,72,51);
 const USUARIOS = {
   'infinityjaviera@gmail.com': { pass: 'Infinity2026', nombre: 'Javiera', token: _t() }
 };
-// ─────────────────────────────────────────────────────────────────────────
 
-let token = '', imgMap = {}, pendingFile = null, currentFilter = 'all', modalSKU = null;
+let token = '', imgMap = {}, extraSKUs = [], pendingFile = null, modalSKU = null, currentFilter = 'all';
 
 // ── LOGIN ──
 function doLogin() {
   const email = document.getElementById('loginEmail').value.trim().toLowerCase();
   const pass  = document.getElementById('loginPass').value;
   const btn   = document.getElementById('loginBtn');
-  if (!email || !pass) { showStatus('loginStatus','Completa todos los campos','err'); return; }
-  const user = USUARIOS[email];
+  if (!email || !pass) { showMsg('loginMsg','Completa todos los campos','err'); return; }
+  const user  = USUARIOS[email];
   if (!user || user.pass !== pass) {
-    showStatus('loginStatus','❌ Correo o contraseña incorrectos','err');
+    showMsg('loginMsg','❌ Correo o contraseña incorrectos','err');
     document.getElementById('loginPass').value = '';
     return;
   }
   btn.disabled = true; btn.textContent = 'Verificando...';
-  showStatus('loginStatus','Conectando…','loading');
+  showMsg('loginMsg','Conectando…','loading');
   ghFetch(`https://api.github.com/repos/${REPO}`, user.token)
     .then(r => {
       if (!r.ok) throw new Error('Sin acceso al repositorio');
       token = user.token;
-      sessionStorage.setItem('inf_session', JSON.stringify({email, nombre: user.nombre}));
+      sessionStorage.setItem('inf_s', JSON.stringify({email, nombre: user.nombre}));
       mostrarPanel(user.nombre);
     })
     .catch(e => {
-      showStatus('loginStatus','❌ ' + e.message,'err');
+      showMsg('loginMsg','❌ ' + e.message,'err');
       btn.disabled = false; btn.textContent = 'Ingresar →';
     });
 }
 
-
 function mostrarPanel(nombre) {
-  document.getElementById('loginPanel').style.display = 'none';
-  document.getElementById('mainPanel').style.display  = 'block';
-  document.getElementById('hRight').style.display     = 'flex';
-  document.getElementById('hUser').textContent        = nombre;
+  document.getElementById('loginPanel').style.display  = 'none';
+  document.getElementById('mainPanel').style.display   = 'block';
+  document.getElementById('hRight').style.display      = 'flex';
+  document.getElementById('hUser').textContent         = nombre;
   iniciar();
 }
 
-function logout() {
-  sessionStorage.removeItem('inf_session');
-  token = ''; imgMap = {};
-  location.reload(); // Recarga limpia la sesión
-}
+function logout() { sessionStorage.removeItem('inf_s'); location.reload(); }
 
-// Restaurar sesión si ya estaba logueado (misma pestaña)
-(function() {
-  const s = sessionStorage.getItem('inf_session');
+// Restaurar sesión
+(function(){
+  const s = sessionStorage.getItem('inf_s');
   if (!s) return;
   const {email, nombre} = JSON.parse(s);
   const user = USUARIOS[email];
@@ -460,115 +332,49 @@ function logout() {
 
 // ── GITHUB ──
 async function ghFetch(url, tok, opts={}) {
-  return fetch(url, {
-    ...opts,
-    headers: {
-      'Authorization': `token ${tok || token}`,
-      'Accept': 'application/vnd.github.v3+json',
-      'Content-Type': 'application/json',
-      ...(opts.headers || {})
-    }
-  });
+  return fetch(url, { ...opts, headers: {
+    'Authorization': `token ${tok || token}`,
+    'Accept': 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json',
+    ...(opts.headers||{})
+  }});
+}
+
+async function iniciar() {
+  await Promise.all([cargarImagenes(), cargarExtras()]);
+  updateStats(); renderGrid();
 }
 
 async function cargarImagenes() {
   try {
-    const r = await ghFetch(`https://api.github.com/repos/${REPO}/contents/${IMG_FOLDER}`);
+    const r = await ghFetch(`https://api.github.com/repos/${REPO}/contents/${IMG_DIR}`);
     if (!r.ok) { imgMap = {}; return; }
     const files = await r.json();
     imgMap = {};
     files.forEach(f => {
       const sku = f.name.replace(/\.[^.]+$/, '').toUpperCase();
-      if (SKUS.includes(sku)) {
-        imgMap[sku] = {
-          sha: f.sha, name: f.name,
-          url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${IMG_FOLDER}/${f.name}?t=${Date.now()}`
-        };
-      }
+      imgMap[sku] = { sha: f.sha, name: f.name, url: BASE_RAW + IMG_DIR + '/' + f.name + '?t=' + Date.now() };
     });
   } catch(e) { imgMap = {}; }
 }
 
-async function iniciar() {
-  // Poblar select de SKUs
-  const sel = document.getElementById('skuSelect');
-  sel.innerHTML = SKUS.map(s => `<option value="${s}">${s}</option>`).join('') +
-    '<option value="__nuevo__" style="font-weight:600;color:#4a7c59">+ Nuevo SKU</option>';
-  await cargarImagenes();
-  updateStats(); renderGrid();
-}
-
-async function agregarProducto() {
-  const numStr = document.getElementById('npSkuNum').value.trim();
-  if (!numStr || isNaN(numStr)) { showStatus('npStatus','Ingresa un número de SKU válido','err'); return; }
-  const sku = 'SKU-' + String(parseInt(numStr)).padStart(3,'0');
-  if (SKUS.includes(sku)) { showStatus('npStatus', sku + ' ya existe en la tienda','err'); return; }
-  const especial = document.getElementById('npEspecial').value === 'true';
-  showStatus('npStatus','Guardando en GitHub…','loading');
+async function cargarExtras() {
   try {
-    // Leer productos-extra.json si existe
-    let extras = [];
-    let sha = null;
     const r = await ghFetch(`https://api.github.com/repos/${REPO}/contents/productos-extra.json`);
-    if (r.ok) {
-      const d = await r.json();
-      sha = d.sha;
-      extras = JSON.parse(atob(d.content.replace(/\n/g,'')));
-    }
-    // Agregar nuevo producto
-    if (extras.find(p => p.sku === sku)) { showStatus('npStatus', sku + ' ya está en la lista extra','err'); return; }
-    extras.push({ sku, especial });
-    // Guardar productos-extra.json
-    const body = {
-      message: `Admin: agregar ${sku}`,
-      content: btoa(JSON.stringify(extras, null, 2)),
-      branch: BRANCH,
-      ...(sha ? {sha} : {})
-    };
-    const rPut = await ghFetch(`https://api.github.com/repos/${REPO}/contents/productos-extra.json`, null, {
-      method: 'PUT', body: JSON.stringify(body)
-    });
-    if (!rPut.ok) { const e = await rPut.json(); throw new Error(e.message); }
-    // Agregar a la lista local
-    SKUS.push(sku); SKUS.sort();
-    // Agregar al select
-    const sel = document.getElementById('skuSelect');
-    const opt = document.createElement('option');
-    opt.value = sku; opt.textContent = sku;
-    sel.insertBefore(opt, sel.lastElementChild);
-    showStatus('npStatus', '✓ ' + sku + ' agregado — sube una imagen para verlo en la tienda','ok');
-    showToast('✓ ' + sku + ' creado');
-    document.getElementById('npSkuNum').value = '';
-    updateStats(); renderGrid();
-  } catch(e) {
-    showStatus('npStatus','❌ ' + e.message,'err');
-  }
+    if (!r.ok) { extraSKUs = []; return; }
+    const d = await r.json();
+    extraSKUs = JSON.parse(atob(d.content.replace(/\n/g,'')));
+  } catch(e) { extraSKUs = []; }
 }
 
-function toggleNuevoSKU() {
-  const val = document.getElementById('skuSelect').value;
-  document.getElementById('nuevoSkuWrap').style.display = val === '__nuevo__' ? 'block' : 'none';
-  document.getElementById('nuevoSkuStatus').className = 'status-msg';
+function todosLosSKUs() {
+  const extras = extraSKUs.map(p => p.sku);
+  return [...new Set([...BASE_SKUS, ...extras])].sort();
 }
 
-function getSKUSeleccionado() {
-  const val = document.getElementById('skuSelect').value;
-  if (val !== '__nuevo__') return { sku: val, valido: true };
-  const num = document.getElementById('nuevoSkuNum').value.trim();
-  if (!num || isNaN(num) || parseInt(num) < 1) {
-    showStatus('nuevoSkuStatus', 'Ingresa un número válido', 'err');
-    return { valido: false };
-  }
-  const sku = 'SKU-' + String(parseInt(num)).padStart(3, '0');
-  if (SKUS.includes(sku)) {
-    showStatus('nuevoSkuStatus', `${sku} ya existe — selecciónalo en la lista`, 'err');
-    return { valido: false };
-  }
-  return { sku, valido: true, esNuevo: true };
-}
-
+// ── SUBIR ──
 function fileToBase64(file) {
-  return new Promise((res, rej) => {
+  return new Promise((res,rej) => {
     const r = new FileReader();
     r.onload = () => res(r.result.split(',')[1]);
     r.onerror = rej;
@@ -578,138 +384,157 @@ function fileToBase64(file) {
 
 async function subirImagen() {
   if (!pendingFile) return;
-  const { sku, valido, esNuevo } = getSKUSeleccionado();
-  if (!valido) return;
-  const ext = pendingFile.name.split('.').pop().toLowerCase().replace('jpeg','jpg');
+  const numStr = document.getElementById('fSkuNum').value.trim();
+  if (!numStr) { showMsg('formMsg','Ingresa el número de SKU','err'); return; }
+  const sku    = 'SKU-' + String(parseInt(numStr)).padStart(3,'0');
+  const precio = parseInt(document.getElementById('fPrecio').value);
+  const especial = precio >= 14990;
+  const ext    = pendingFile.name.split('.').pop().toLowerCase().replace('jpeg','jpg');
   const filename = `${sku}.${ext}`;
-  const path = `${IMG_FOLDER}/${filename}`;
-  showStatus('uploadStatus','Subiendo imagen…','loading');
-  document.getElementById('saveBtn').disabled = true;
+  const path     = `${IMG_DIR}/${filename}`;
+
+  document.getElementById('btnSubir').disabled = true;
+  showMsg('formMsg','Subiendo imagen…','loading');
+
   try {
     const b64 = await fileToBase64(pendingFile);
+
+    // SHA si ya existe
     let sha = imgMap[sku]?.sha;
     if (!sha) {
       const check = await ghFetch(`https://api.github.com/repos/${REPO}/contents/${path}`);
       if (check.ok) { const d = await check.json(); sha = d.sha; }
     }
+    // Borrar imagen anterior si cambió extensión
     if (imgMap[sku] && imgMap[sku].name !== filename) {
-      await ghFetch(`https://api.github.com/repos/${REPO}/contents/${IMG_FOLDER}/${imgMap[sku].name}`, null, {
-        method:'DELETE', body: JSON.stringify({message:`Admin: reemplazar ${sku}`, sha: imgMap[sku].sha, branch: BRANCH})
+      await ghFetch(`https://api.github.com/repos/${REPO}/contents/${IMG_DIR}/${imgMap[sku].name}`, null, {
+        method:'DELETE', body: JSON.stringify({message:`Reemplazar ${sku}`, sha: imgMap[sku].sha, branch: BRANCH})
       });
       sha = undefined;
     }
-    const body = {message:`Admin: imagen ${sku}`, content: b64, branch: BRANCH, ...(sha ? {sha} : {})};
-    const r = await ghFetch(`https://api.github.com/repos/${REPO}/contents/${path}`, null, {
-      method:'PUT', body: JSON.stringify(body)
+
+    // Subir imagen
+    const rImg = await ghFetch(`https://api.github.com/repos/${REPO}/contents/${path}`, null, {
+      method:'PUT', body: JSON.stringify({message:`Imagen ${sku}`, content: b64, branch: BRANCH, ...(sha?{sha}:{})})
     });
-    if (!r.ok) { const err = await r.json(); throw new Error(err.message || 'Error al subir'); }
-    const data = await r.json();
-    imgMap[sku] = {sha: data.content.sha, name: filename, url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${path}?t=${Date.now()}`};
-    showStatus('uploadStatus','✓ Imagen subida correctamente','ok');
-    showToast(`✓ ${sku} actualizado`);
-    if (esNuevo) {
-      SKUS.push(sku); SKUS.sort();
-      const sel = document.getElementById('skuSelect');
-      const opt = document.createElement('option');
-      opt.value = sku; opt.textContent = sku;
-      sel.insertBefore(opt, sel.lastElementChild); // antes de "+ Nuevo SKU"
-      sel.value = sku;
-      document.getElementById('nuevoSkuWrap').style.display = 'none';
+    if (!rImg.ok) { const e = await rImg.json(); throw new Error(e.message); }
+    const dataImg = await rImg.json();
+    imgMap[sku] = { sha: dataImg.content.sha, name: filename, url: BASE_RAW + path + '?t=' + Date.now() };
+
+    // Si es SKU nuevo (no en BASE_SKUS), guardarlo en productos-extra.json
+    if (!BASE_SKUS.includes(sku)) {
+      let extras = [...extraSKUs];
+      let extraSha = null;
+      const rEx = await ghFetch(`https://api.github.com/repos/${REPO}/contents/productos-extra.json`);
+      if (rEx.ok) { const d = await rEx.json(); extraSha = d.sha; extras = JSON.parse(atob(d.content.replace(/\n/g,''))); }
+      if (!extras.find(p => p.sku === sku)) extras.push({sku, especial});
+      const rPut = await ghFetch(`https://api.github.com/repos/${REPO}/contents/productos-extra.json`, null, {
+        method:'PUT', body: JSON.stringify({message:`Agregar ${sku}`, content: btoa(JSON.stringify(extras,null,2)), branch: BRANCH, ...(extraSha?{sha:extraSha}:{})})
+      });
+      if (!rPut.ok) { const e = await rPut.json(); throw new Error(e.message); }
+      extraSKUs = extras;
     }
+
+    showMsg('formMsg','✓ ' + sku + ' subido correctamente — ya aparece en la tienda','ok');
+    showToast('✓ ' + sku + ' actualizado');
+    // Limpiar formulario
     pendingFile = null;
+    document.getElementById('fSkuNum').value = '';
     document.getElementById('previewWrap').style.display = 'none';
-    document.getElementById('previewImg').src = '';
-    document.getElementById('fileInput').value = '';
+    document.getElementById('dropZone').style.display    = 'block';
+    document.getElementById('btnSubir').disabled = true;
     updateStats(); renderGrid();
+
   } catch(e) {
-    showStatus('uploadStatus','❌ ' + e.message,'err');
-  } finally {
-    document.getElementById('saveBtn').disabled = !pendingFile;
+    showMsg('formMsg','❌ ' + e.message,'err');
+    document.getElementById('btnSubir').disabled = false;
   }
 }
 
 async function borrarImagen() {
   if (!modalSKU || !imgMap[modalSKU]) return;
-  showStatus('modalStatus','Eliminando…','loading');
+  showMsg('modalMsg','Eliminando…','loading');
   try {
     const {sha, name} = imgMap[modalSKU];
-    const r = await ghFetch(`https://api.github.com/repos/${REPO}/contents/${IMG_FOLDER}/${name}`, null, {
-      method:'DELETE', body: JSON.stringify({message:`Admin: borrar ${modalSKU}`, sha, branch: BRANCH})
+    const r = await ghFetch(`https://api.github.com/repos/${REPO}/contents/${IMG_DIR}/${name}`, null, {
+      method:'DELETE', body: JSON.stringify({message:`Borrar ${modalSKU}`, sha, branch: BRANCH})
     });
     if (!r.ok) { const e = await r.json(); throw new Error(e.message); }
     delete imgMap[modalSKU];
-    showToast(`✓ Imagen de ${modalSKU} eliminada`);
+    showToast('✓ Imagen eliminada');
     closeModal(); updateStats(); renderGrid();
-  } catch(e) {
-    showStatus('modalStatus','❌ ' + e.message,'err');
-  }
+  } catch(e) { showMsg('modalMsg','❌ ' + e.message,'err'); }
 }
 
-// ── Drag & Drop ──
+// ── DRAG & DROP ──
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
 dropZone.addEventListener('dragover',  e => { e.preventDefault(); dropZone.classList.add('over'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('over'));
-dropZone.addEventListener('drop', e => {
-  e.preventDefault(); dropZone.classList.remove('over');
-  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
-});
-fileInput.addEventListener('change', () => { if (fileInput.files[0]) handleFile(fileInput.files[0]); });
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('over'); if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change', () => { if(fileInput.files[0]) handleFile(fileInput.files[0]); });
 
 function handleFile(file) {
-  if (!file.type.startsWith('image/')) { showToast('Solo imágenes (JPG, PNG, WEBP)'); return; }
+  if (!file.type.startsWith('image/')) { showToast('Solo imágenes JPG o PNG'); return; }
   if (file.size > 5*1024*1024) { showToast('La imagen supera 5MB'); return; }
   pendingFile = file;
   const r = new FileReader();
   r.onload = e => {
     document.getElementById('previewImg').src = e.target.result;
+    document.getElementById('previewName').textContent = file.name;
     document.getElementById('previewWrap').style.display = 'block';
     document.getElementById('dropZone').style.display    = 'none';
-    document.getElementById('saveBtn').disabled = false;
-    showStatus('uploadStatus','','');
+    document.getElementById('btnSubir').disabled = false;
+    showMsg('formMsg','','');
   };
   r.readAsDataURL(file);
 }
 
-// ── Grid ──
+function cambiarFoto() {
+  pendingFile = null;
+  document.getElementById('previewWrap').style.display = 'none';
+  document.getElementById('dropZone').style.display    = 'block';
+  document.getElementById('btnSubir').disabled = true;
+  fileInput.value = '';
+}
+
+// ── GALERÍA ──
 function renderGrid() {
   const q    = document.getElementById('searchInput').value.toLowerCase();
   const grid = document.getElementById('skuGrid');
+  const skus = todosLosSKUs();
   grid.innerHTML = '';
   let n = 0;
-  SKUS.forEach(sku => {
+  skus.forEach(sku => {
     const has = !!imgMap[sku];
-    if (currentFilter === 'has'  && !has) return;
-    if (currentFilter === 'none' &&  has) return;
+    if (currentFilter==='has'  && !has) return;
+    if (currentFilter==='none' &&  has) return;
     if (q && !sku.toLowerCase().includes(q)) return;
     n++;
     const card = document.createElement('div');
-    card.className = `sku-card ${has ? 'has' : 'none'}`;
+    card.className = `sku-card ${has?'has':'none'}`;
     card.innerHTML = `
       <div class="card-img">
-        ${has ? `<img src="${imgMap[sku].url}" alt="${sku}" loading="lazy">` : '<span>Sin imagen</span>'}
+        ${has?`<img src="${imgMap[sku].url}" alt="${sku}" loading="lazy">`:'<span>Sin imagen</span>'}
       </div>
       <div class="card-body">
         <div class="card-sku">${sku}</div>
-        <div class="card-status ${has ? 'ok' : 'miss'}">${has ? '✓ Subida' : 'Sin imagen'}</div>
+        <div class="card-status ${has?'ok':'miss'}">${has?'✓ En tienda':'Sin imagen'}</div>
         <div class="card-acts">
-          <button class="c-btn up" onclick="selSKU('${sku}')">↑ Subir</button>
-          ${has ? `<button class="c-btn del" onclick="openModal('${sku}')">✕</button>` : ''}
+          <button class="c-btn up" onclick="seleccionar('${sku}')">↑ Cambiar</button>
+          ${has?`<button class="c-btn del" onclick="openModal('${sku}')">✕</button>`:''}
         </div>
       </div>`;
     grid.appendChild(card);
   });
-  if (!n) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-light);font-size:13px">No hay SKUs que coincidan</div>';
+  if (!n) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-light);font-size:12px">No hay resultados</div>';
 }
 
-function selSKU(sku) {
-  document.getElementById('skuSelect').value = sku;
-  document.getElementById('dropZone').style.display    = 'block';
-  document.getElementById('previewWrap').style.display = 'none';
-  document.getElementById('saveBtn').disabled = true;
-  pendingFile = null;
-  document.querySelector('.upload-card').scrollIntoView({behavior:'smooth', block:'start'});
-  showToast(`SKU seleccionado: ${sku}`);
+function seleccionar(sku) {
+  const num = sku.replace('SKU-','');
+  document.getElementById('fSkuNum').value = parseInt(num).toString();
+  document.querySelector('.form-card').scrollIntoView({behavior:'smooth', block:'start'});
+  showToast('SKU ' + sku + ' seleccionado — ahora sube la foto');
 }
 
 function setFilter(t, btn) {
@@ -722,26 +547,29 @@ function openModal(sku) {
   modalSKU = sku;
   document.getElementById('modalTitle').textContent = sku;
   document.getElementById('modalImg').src = imgMap[sku]?.url || '';
-  document.getElementById('modalStatus').className = 'status-msg';
+  document.getElementById('modalMsg').className = 'msg';
   document.getElementById('modalBg').classList.add('open');
 }
 function closeModal() { document.getElementById('modalBg').classList.remove('open'); modalSKU = null; }
-document.getElementById('modalBg').addEventListener('click', e => { if (e.target === document.getElementById('modalBg')) closeModal(); });
+document.getElementById('modalBg').addEventListener('click', e => { if(e.target===document.getElementById('modalBg')) closeModal(); });
 
 function updateStats() {
-  const w = SKUS.filter(s => imgMap[s]).length;
+  const skus = todosLosSKUs();
+  const w = skus.filter(s => imgMap[s]).length;
+  document.getElementById('statTotal').textContent   = skus.length;
   document.getElementById('statWith').textContent    = w;
-  document.getElementById('statWithout').textContent = SKUS.length - w;
+  document.getElementById('statWithout').textContent = skus.length - w;
 }
+
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3000);
 }
-function showStatus(id, msg, type) {
+function showMsg(id, msg, type) {
   const el = document.getElementById(id);
   el.textContent = msg;
-  el.className = 'status-msg' + (type ? ' '+type : '');
+  el.className = 'msg' + (type?' '+type:'');
 }
 </script>
 </body>
