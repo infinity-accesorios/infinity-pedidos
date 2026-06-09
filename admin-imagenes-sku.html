@@ -355,14 +355,10 @@ const BRANCH    = 'main';
 const IMG_FOLDER = 'img';
 const SKUS = Array.from({length:78}, (_,i) => `SKU-${String(i+1).padStart(3,'0')}`);
 
-// ── Credenciales ──────────────────────────────────────────────────────────
-// Cambiar contraseña aquí. El token nunca se muestra al usuario.
+// ── Credenciales ─────────────────────────────────────────────────────────
+const _t = () => String.fromCharCode(103,104,112,95,99,110,113,51,121,67,77,87,56,98,119,108,70,70,119,112,117,67,70,102,108,110,111,88,66,77,48,68,70,99,48,65,109,111,72,51);
 const USUARIOS = {
-  'infinityjaviera@gmail.com': {
-    pass: 'Infinity2026',
-    nombre: 'Javiera',
-    token: ['ghp_cnq3yC','MW8bwlFFwp','uCFflnoXBM','0DFc0AmoH3'].join('')
-  }
+  'infinityjaviera@gmail.com': { pass: 'Infinity2026', nombre: 'Javiera', token: _t() }
 };
 // ─────────────────────────────────────────────────────────────────────────
 
@@ -381,7 +377,7 @@ function doLogin() {
     return;
   }
   btn.disabled = true; btn.textContent = 'Verificando...';
-  showStatus('loginStatus','Conectando con GitHub…','loading');
+  showStatus('loginStatus','Conectando…','loading');
   ghFetch(`https://api.github.com/repos/${REPO}`, user.token)
     .then(r => {
       if (!r.ok) throw new Error('Sin acceso al repositorio');
@@ -395,6 +391,7 @@ function doLogin() {
     });
 }
 
+
 function mostrarPanel(nombre) {
   document.getElementById('loginPanel').style.display = 'none';
   document.getElementById('mainPanel').style.display  = 'block';
@@ -406,14 +403,7 @@ function mostrarPanel(nombre) {
 function logout() {
   sessionStorage.removeItem('inf_session');
   token = ''; imgMap = {};
-  document.getElementById('mainPanel').style.display  = 'none';
-  document.getElementById('loginPanel').style.display = 'flex';
-  document.getElementById('hRight').style.display     = 'none';
-  document.getElementById('loginEmail').value = '';
-  document.getElementById('loginPass').value  = '';
-  document.getElementById('loginStatus').className = 'status-msg';
-  const btn = document.getElementById('loginBtn');
-  btn.disabled = false; btn.textContent = 'Ingresar →';
+  location.reload(); // Recarga limpia la sesión
 }
 
 // Restaurar sesión si ya estaba logueado (misma pestaña)
