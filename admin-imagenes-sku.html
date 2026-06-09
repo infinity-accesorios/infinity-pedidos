@@ -3,79 +3,77 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Infinity — Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Great+Vibes&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Infinity · Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --cream: #faf6f0;
-  --warm: #f0e8dc;
-  --brown: #6b4c35;
-  --brown-dark: #3d2a1a;
-  --brown-mid: #8b6347;
-  --silver: #d4d0cc;
-  --silver-bright: #f0eeeb;
-  --text: #2c1f12;
-  --text-mid: #7a6050;
-  --text-light: #b09880;
-  --border: #ddd5c8;
-  --border-light: #ede5da;
-  --green: #4a7c59;
-  --red: #8b3a2a;
-  --radius: 12px;
+  --cream: #faf6f0; --warm: #f0e8dc; --nude: #f9e9da;
+  --brown: #6b4c35; --brown-dark: #3d2a1a; --brown-mid: #8b6347;
+  --silver: #d4d0cc; --gold: #c9a96e;
+  --text: #2c1f12; --text-mid: #7a6050; --text-light: #b09880;
+  --border: #ddd5c8; --border-light: #ede5da;
+  --green: #4a7c59; --red: #8b3a2a; --radius: 12px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--cream); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
 
-/* HEADER */
+/* ── HEADER ── */
 header {
-  background: var(--brown-dark);
-  padding: 0 32px;
+  background: var(--nude);
+  border-bottom: 1px solid rgba(122,85,53,0.12);
+  padding: 0 28px;
+  height: 62px;
   display: flex; align-items: center; justify-content: space-between;
-  height: 72px;
   position: sticky; top: 0; z-index: 50;
-  border-bottom: 1px solid rgba(212,208,204,0.15);
 }
-.logo-area { display: flex; align-items: center; gap: 14px; }
-.logo-circle {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: var(--warm);
+.h-brand { display: flex; align-items: center; gap: 10px; }
+.h-brand-symbol {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--brown-dark);
   display: flex; align-items: center; justify-content: center;
-  overflow: hidden; flex-shrink: 0;
-  border: 1.5px solid rgba(212,208,204,0.3);
+  font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--gold);
 }
-.logo-circle img { width: 100%; height: 100%; object-fit: cover; }
-.logo-text { display: flex; flex-direction: column; }
-.logo-text span { font-family: 'Great Vibes', cursive; font-size: 22px; color: var(--silver); line-height: 1; }
-.logo-text small { font-size: 10px; color: rgba(212,208,204,0.5); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 2px; }
-.header-right { display: flex; align-items: center; gap: 12px; }
-.conn-dot { width: 7px; height: 7px; border-radius: 50%; background: #4a7c59; flex-shrink: 0; }
-.conn-label { font-size: 12px; color: rgba(212,208,204,0.6); }
-.btn-link { background: transparent; border: 1px solid rgba(212,208,204,0.2); color: rgba(212,208,204,0.5); padding: 5px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
-.btn-link:hover { border-color: rgba(212,208,204,0.5); color: var(--silver); }
+.h-brand-text span { font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--brown-dark); letter-spacing: 0.04em; display: block; line-height: 1.1; }
+.h-brand-text small { font-size: 10px; color: var(--text-light); letter-spacing: 0.16em; text-transform: uppercase; }
+.h-right { display: flex; align-items: center; gap: 10px; }
+.h-user { font-size: 12px; color: var(--text-light); letter-spacing: 0.05em; }
+.btn-logout {
+  background: transparent; border: 1px solid var(--border);
+  color: var(--text-mid); padding: 5px 14px; border-radius: 20px;
+  font-size: 11px; cursor: pointer; font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0.04em; transition: all 0.2s;
+}
+.btn-logout:hover { border-color: var(--red); color: var(--red); }
 
-/* SETUP */
-#setupPanel {
-  max-width: 500px; margin: 64px auto; padding: 0 16px;
+/* ── LOGIN ── */
+#loginPanel {
+  min-height: calc(100vh - 62px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px 16px;
 }
-.setup-card {
-  background: white; border: 1px solid var(--border); border-radius: 16px;
-  overflow: hidden;
+.login-card {
+  background: white; border: 1px solid var(--border);
+  border-radius: 20px; width: 100%; max-width: 400px;
+  overflow: hidden; box-shadow: 0 8px 40px rgba(44,31,18,0.1);
 }
-.setup-hero {
-  background: var(--brown-dark); padding: 36px 32px; text-align: center;
+.login-hero {
+  background: var(--brown-dark);
+  padding: 36px 32px 28px; text-align: center;
 }
-.setup-hero .logo-big { font-family: 'Great Vibes', cursive; font-size: 42px; color: var(--silver); display: block; }
-.setup-hero p { font-size: 12px; color: rgba(212,208,204,0.5); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 4px; }
-.setup-body { padding: 32px; }
-.setup-body h2 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
-.setup-body > p { font-size: 13px; color: var(--text-mid); margin-bottom: 24px; line-height: 1.6; }
-.steps { background: var(--warm); border-radius: 10px; padding: 16px; margin-bottom: 20px; }
-.step { display: flex; gap: 10px; align-items: flex-start; }
-.step + .step { margin-top: 10px; }
-.step-n { width: 20px; height: 20px; border-radius: 50%; background: var(--brown-dark); color: var(--silver); font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
-.step p { font-size: 12px; color: var(--text-mid); margin: 0; line-height: 1.5; }
-.step a { color: var(--brown); font-weight: 500; }
-label { display: block; font-size: 11px; color: var(--text-light); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+.login-hero-symbol {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 52px; color: var(--gold); line-height: 1;
+  display: block; margin-bottom: 8px;
+}
+.login-hero p { font-size: 11px; color: rgba(212,208,204,0.5); letter-spacing: 0.22em; text-transform: uppercase; }
+.login-body { padding: 32px; }
+.login-body h2 {
+  font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500;
+  color: var(--text); margin-bottom: 6px;
+}
+.login-body > p { font-size: 13px; color: var(--text-mid); margin-bottom: 24px; line-height: 1.6; }
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 11px; color: var(--text-light); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
 .inp {
   width: 100%; background: var(--cream); border: 1.5px solid var(--border);
   border-radius: 8px; padding: 11px 14px; color: var(--text); font-size: 14px;
@@ -83,198 +81,204 @@ label { display: block; font-size: 11px; color: var(--text-light); letter-spacin
 }
 .inp:focus { border-color: var(--brown-mid); }
 .status-msg { font-size: 12px; padding: 9px 13px; border-radius: 7px; margin-top: 8px; display: none; }
-.status-msg.ok { background: #4a7c5915; color: var(--green); border: 1px solid #4a7c5930; display: block; }
+.status-msg.ok  { background: #4a7c5915; color: var(--green); border: 1px solid #4a7c5930; display: block; }
 .status-msg.err { background: #8b3a2a12; color: var(--red); border: 1px solid #8b3a2a25; display: block; }
 .status-msg.loading { background: var(--warm); color: var(--brown-mid); border: 1px solid var(--border); display: block; }
 .btn-primary {
   width: 100%; background: var(--brown-dark); color: var(--silver);
-  border: none; border-radius: 8px; padding: 12px; font-size: 14px;
-  font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif;
-  margin-top: 12px; transition: all 0.2s; letter-spacing: 0.03em;
+  border: none; border-radius: 8px; padding: 13px;
+  font-size: 14px; font-weight: 500; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; margin-top: 12px;
+  transition: all 0.2s; letter-spacing: 0.04em;
 }
 .btn-primary:hover { background: var(--brown); }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* MAIN */
-#mainPanel { display: none; }
+/* ── MAIN PANEL ── */
+#mainPanel { display: none; padding: 28px 24px 60px; max-width: 1100px; margin: 0 auto; }
 
-/* STATS */
-.stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; padding: 24px 28px 0; }
+/* Stats */
+.stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 28px; }
 .stat-card {
-  background: white; border: 1px solid var(--border-light); border-radius: var(--radius);
-  padding: 20px; position: relative; overflow: hidden;
+  background: white; border: 1px solid var(--border-light);
+  border-radius: var(--radius); padding: 20px; position: relative; overflow: hidden;
 }
-.stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--warm); }
-.stat-card.green::before { background: linear-gradient(90deg, #4a7c59, #6aad7a); }
-.stat-card.red::before { background: linear-gradient(90deg, #8b3a2a, #c0522a); }
+.stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: var(--warm); }
+.stat-card.green::before { background: linear-gradient(90deg,#4a7c59,#6aad7a); }
+.stat-card.red::before   { background: linear-gradient(90deg,#8b3a2a,#c0522a); }
 .stat-n { font-size: 32px; font-weight: 300; font-family: 'Cormorant Garamond', serif; color: var(--text); }
 .stat-l { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
 
-/* UPLOAD */
-.section { padding: 20px 28px; }
+/* Upload */
 .section-title {
-  font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 500;
-  color: var(--text); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 500;
+  color: var(--text); margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
 }
-.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border-light); }
-.upload-card { background: white; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-.upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.section-title::after { content:''; flex:1; height:1px; background: var(--border-light); }
+.upload-card {
+  background: white; border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden; margin-bottom: 28px;
+}
+.upload-grid { display: grid; grid-template-columns: 1fr 1fr; }
 .upload-left { padding: 24px; border-right: 1px solid var(--border-light); }
 .upload-right { padding: 24px; }
-.form-group { margin-bottom: 16px; }
-select.inp { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238b6347' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
-
+.field-label { font-size: 11px; color: var(--text-light); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; display: block; }
 .drop-zone {
   border: 2px dashed var(--border); border-radius: 10px;
-  padding: 36px 20px; text-align: center; cursor: pointer;
+  padding: 32px 20px; text-align: center; cursor: pointer;
   transition: all 0.2s; background: var(--cream);
-  min-height: 160px; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 8px;
 }
 .drop-zone:hover, .drop-zone.over { border-color: var(--brown-mid); background: var(--warm); }
-.drop-icon { font-size: 32px; opacity: 0.6; }
-.drop-zone p { font-size: 13px; color: var(--text-light); }
-.drop-zone p strong { color: var(--brown); }
-#fileInput { display: none; }
-.preview-wrap { margin-top: 12px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
-.preview-wrap img { width: 100%; max-height: 180px; object-fit: contain; background: var(--warm); display: block; }
-
+.drop-icon { font-size: 28px; margin-bottom: 8px; }
+.drop-zone p { font-size: 13px; color: var(--text-mid); line-height: 1.6; }
+.drop-zone input[type=file] { display: none; }
+.preview-wrap { display: none; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+.preview-wrap img { width: 100%; max-height: 220px; object-fit: contain; background: var(--warm); display: block; }
 .btn-upload {
-  width: 100%; background: var(--brown-dark); color: var(--silver-bright);
-  border: none; border-radius: 8px; padding: 12px; font-size: 13px;
-  font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif;
-  margin-top: 12px; transition: all 0.2s; letter-spacing: 0.05em;
+  width: 100%; background: var(--brown-dark); color: var(--silver);
+  border: none; border-radius: 8px; padding: 12px;
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; margin-top: 14px;
+  transition: all 0.2s; letter-spacing: 0.04em;
 }
-.btn-upload:hover { background: var(--brown); }
+.btn-upload:hover:not(:disabled) { background: var(--brown); }
 .btn-upload:disabled { opacity: 0.45; cursor: not-allowed; }
 
-/* GALLERY */
+/* Gallery */
 .gallery-controls {
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 10px; margin-bottom: 14px;
+  display: flex; gap: 12px; align-items: center;
+  flex-wrap: wrap; margin-bottom: 16px;
 }
 .search-inp {
-  background: white; border: 1px solid var(--border); border-radius: 8px;
-  padding: 8px 14px; font-size: 13px; color: var(--text); width: 200px;
-  outline: none; font-family: 'DM Sans', sans-serif;
+  flex: 1; min-width: 160px; max-width: 280px;
+  background: white; border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 8px 14px; color: var(--text);
+  font-size: 13px; font-family: 'DM Sans', sans-serif; outline: none;
+  transition: border-color 0.2s;
 }
-.search-inp:focus { border-color: var(--brown-mid); }
+.search-inp:focus { border-color: var(--gold); }
 .filters { display: flex; gap: 6px; }
 .f-btn {
-  padding: 7px 16px; background: white; border: 1px solid var(--border);
-  border-radius: 20px; font-size: 12px; color: var(--text-mid); cursor: pointer;
-  font-family: 'DM Sans', sans-serif; transition: all 0.15s;
+  padding: 6px 14px; border-radius: 20px;
+  border: 1.5px solid var(--border); background: var(--cream);
+  font-size: 11px; letter-spacing: 0.06em; cursor: pointer;
+  color: var(--text-mid); font-family: 'DM Sans', sans-serif; transition: all 0.2s;
 }
-.f-btn.active { background: var(--brown-dark); color: var(--silver); border-color: var(--brown-dark); }
-
-.sku-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.f-btn:hover, .f-btn.active { background: var(--brown-dark); color: var(--silver); border-color: var(--brown-dark); }
+.sku-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px;
+}
 .sku-card {
-  background: white; border: 1px solid var(--border-light); border-radius: var(--radius);
-  overflow: hidden; transition: all 0.2s; cursor: default;
+  background: white; border: 1px solid var(--border-light);
+  border-radius: var(--radius); overflow: hidden; transition: box-shadow 0.2s;
 }
-.sku-card:hover { box-shadow: 0 4px 16px rgba(44,31,18,0.1); transform: translateY(-2px); }
+.sku-card:hover { box-shadow: 0 4px 20px rgba(44,31,18,0.1); }
 .sku-card.has { border-color: #4a7c5930; }
-.sku-card.none { border-color: #ddd5c8; }
 .card-img {
-  width: 100%; aspect-ratio: 3/4; background: var(--warm);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; color: var(--text-light); overflow: hidden;
+  aspect-ratio: 3/4; background: var(--warm);
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
 }
 .card-img img { width: 100%; height: 100%; object-fit: cover; }
-.card-body { padding: 10px 12px; }
-.card-sku { font-size: 11px; font-weight: 600; color: var(--brown-dark); letter-spacing: 0.05em; }
-.card-status { font-size: 10px; margin-top: 2px; }
-.card-status.ok { color: var(--green); }
+.card-img span { font-size: 11px; color: var(--text-light); }
+.card-body { padding: 10px 12px 12px; }
+.card-sku { font-size: 12px; font-weight: 500; color: var(--text); letter-spacing: 0.06em; }
+.card-status { font-size: 10px; margin-top: 2px; margin-bottom: 8px; }
+.card-status.ok   { color: var(--green); }
 .card-status.miss { color: var(--text-light); }
-.card-acts { display: flex; gap: 5px; margin-top: 8px; }
+.card-acts { display: flex; gap: 6px; }
 .c-btn {
-  flex: 1; padding: 6px; font-size: 10px; border-radius: 6px;
-  border: none; cursor: pointer; font-weight: 500; transition: all 0.15s;
-  font-family: 'DM Sans', sans-serif; letter-spacing: 0.03em;
+  flex: 1; padding: 5px 0; border-radius: 6px; border: 1.5px solid var(--border);
+  font-size: 11px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s;
+  background: var(--cream); color: var(--text-mid);
 }
-.c-btn.up { background: var(--warm); color: var(--brown); }
-.c-btn.up:hover { background: var(--brown-dark); color: var(--silver); }
-.c-btn.del { background: #8b3a2a10; color: #8b3a2a; }
-.c-btn.del:hover { background: #8b3a2a; color: white; }
+.c-btn.up:hover { background: var(--brown-dark); color: var(--silver); border-color: var(--brown-dark); }
+.c-btn.del:hover { background: var(--red); color: white; border-color: var(--red); }
 
-/* MODAL */
-.modal-bg { display: none; position: fixed; inset: 0; background: rgba(44,31,18,0.6); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+/* Modal */
+.modal-bg {
+  display: none; position: fixed; inset: 0;
+  background: rgba(44,31,18,0.55); z-index: 200;
+  align-items: center; justify-content: center;
+  backdrop-filter: blur(4px);
+}
 .modal-bg.open { display: flex; }
-.modal-box { background: white; border-radius: 16px; padding: 28px; width: 360px; max-width: 94vw; box-shadow: 0 24px 48px rgba(44,31,18,0.2); }
-.modal-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 500; color: var(--text); margin-bottom: 16px; }
-.modal-box img { width: 100%; border-radius: 8px; margin-bottom: 14px; max-height: 260px; object-fit: contain; background: var(--warm); border: 1px solid var(--border); }
+.modal-box {
+  background: white; border-radius: 16px; padding: 28px;
+  width: 340px; max-width: 94vw;
+  box-shadow: 0 24px 48px rgba(44,31,18,0.2);
+}
+.modal-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 500; color: var(--text); margin-bottom: 14px; }
+.modal-box img { width: 100%; border-radius: 8px; margin-bottom: 14px; max-height: 240px; object-fit: contain; background: var(--warm); border: 1px solid var(--border); }
 .modal-btns { display: flex; gap: 8px; }
-.btn-del { flex:1; padding:10px; background:#8b3a2a10; color:#8b3a2a; border:1px solid #8b3a2a25; border-radius:8px; font-size:13px; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s; }
-.btn-del:hover { background:#8b3a2a; color:white; }
-.btn-cancel { flex:1; padding:10px; background:var(--warm); color:var(--text-mid); border:1px solid var(--border); border-radius:8px; font-size:13px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+.btn-del { flex:1; padding:10px; border:none; border-radius:8px; background: var(--red); color:white; font-size:13px; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif; }
+.btn-cancel { flex:1; padding:10px; border:1.5px solid var(--border); border-radius:8px; background:white; color:var(--text-mid); font-size:13px; cursor:pointer; font-family:'DM Sans',sans-serif; }
 
-/* TOAST */
+/* Toast */
 .toast {
-  position: fixed; bottom: 24px; right: 24px;
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
   background: var(--brown-dark); color: var(--silver);
-  padding: 12px 20px; border-radius: 10px; font-size: 13px;
+  padding: 10px 22px; border-radius: 24px; font-size: 13px;
   z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none;
-  box-shadow: 0 8px 24px rgba(44,31,18,0.25); max-width: 300px;
+  box-shadow: 0 6px 20px rgba(44,31,18,0.25); white-space: nowrap;
+  font-family: 'DM Sans', sans-serif;
 }
 .toast.show { opacity: 1; }
 
-@media(max-width:640px) {
+@media(max-width:600px) {
+  #mainPanel { padding: 18px 12px 48px; }
+  .stats-row { grid-template-columns: repeat(3,1fr); gap: 8px; }
+  .stat-n { font-size: 24px; }
   .upload-grid { grid-template-columns: 1fr; }
   .upload-left { border-right: none; border-bottom: 1px solid var(--border-light); }
-  .stats-row { grid-template-columns: 1fr 1fr 1fr; }
-  .stat-n { font-size: 24px; }
-  header { padding: 0 16px; }
-  .section { padding: 16px; }
-  .stats-row { padding: 16px 16px 0; }
+  .sku-grid { grid-template-columns: repeat(2,1fr); gap: 10px; }
 }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo-area">
-    <div class="logo-circle" id="logoCircle">
-      <span style="font-family:'Great Vibes',cursive;font-size:18px;color:var(--brown-dark)">∞</span>
-    </div>
-    <div class="logo-text">
-      <span>Infinity</span>
-      <small>Admin · Imágenes SKU</small>
+  <div class="h-brand">
+    <div class="h-brand-symbol">∞</div>
+    <div class="h-brand-text">
+      <span>Infinity Javiera</span>
+      <small>Panel de imágenes</small>
     </div>
   </div>
-  <div class="header-right" id="headerRight" style="display:none">
-    <div class="conn-dot"></div>
-    <span class="conn-label">Conectado a GitHub</span>
-    <button class="btn-link" onclick="desconectar()">Cambiar token</button>
+  <div class="h-right" id="hRight" style="display:none">
+    <span class="h-user" id="hUser"></span>
+    <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
   </div>
 </header>
 
-<!-- SETUP -->
-<div id="setupPanel">
-  <div class="setup-card">
-    <div class="setup-hero">
-      <span class="logo-big">Infinity</span>
-      <p>Panel de administración · Imágenes SKU</p>
+<!-- ── LOGIN ── -->
+<div id="loginPanel">
+  <div class="login-card">
+    <div class="login-hero">
+      <span class="login-hero-symbol">∞</span>
+      <p>Administración · Infinity Javiera</p>
     </div>
-    <div class="setup-body">
-      <h2>Conectar con GitHub</h2>
-      <p>Este panel sube y borra imágenes directo en tu repositorio <strong>infinity-accesorios/infinity-pedidos</strong>. Solo necesitas un token de acceso personal.</p>
-      <div class="steps">
-        <div class="step"><div class="step-n">1</div><p>Ve a <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a></p></div>
-        <div class="step"><div class="step-n">2</div><p>Nombre: <strong>infinity-admin</strong> · Marca solo ✅ <strong>repo</strong> · Sin fecha de expiración</p></div>
-        <div class="step"><div class="step-n">3</div><p>Clic en <strong>Generate token</strong> y pégalo abajo</p></div>
+    <div class="login-body">
+      <h2>Ingresar al panel</h2>
+      <p>Ingresa tus datos para administrar las imágenes de la tienda.</p>
+      <div class="field">
+        <label>Correo</label>
+        <input class="inp" type="email" id="loginEmail" placeholder="correo@ejemplo.com" autocomplete="email">
       </div>
-      <div class="form-group">
-        <label>Token de GitHub</label>
-        <input class="inp" type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxxxxxx">
+      <div class="field">
+        <label>Contraseña</label>
+        <input class="inp" type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password"
+          onkeydown="if(event.key==='Enter') doLogin()">
       </div>
-      <div id="setupStatus" class="status-msg"></div>
-      <button class="btn-primary" onclick="conectar()">Conectar →</button>
+      <div id="loginStatus" class="status-msg"></div>
+      <button class="btn-primary" id="loginBtn" onclick="doLogin()">Ingresar →</button>
     </div>
   </div>
 </div>
 
-<!-- MAIN -->
+<!-- ── MAIN PANEL ── -->
 <div id="mainPanel">
+
+  <!-- Stats -->
   <div class="stats-row">
     <div class="stat-card">
       <div class="stat-n" id="statTotal">78</div>
@@ -290,55 +294,54 @@ select.inp { appearance: none; background-image: url("data:image/svg+xml,%3Csvg 
     </div>
   </div>
 
-  <div class="section">
-    <div class="section-title">Subir imagen</div>
-    <div class="upload-card">
-      <div class="upload-grid">
-        <div class="upload-left">
-          <div class="form-group">
-            <label>SKU de destino</label>
-            <select class="inp" id="skuSelect"></select>
-          </div>
-          <div id="uploadStatus" class="status-msg"></div>
-          <button class="btn-upload" id="saveBtn" disabled onclick="subirImagen()">↑ Subir a GitHub</button>
+  <!-- Subir imagen -->
+  <div class="section-title">Subir imagen</div>
+  <div class="upload-card">
+    <div class="upload-grid">
+      <div class="upload-left">
+        <div class="field">
+          <label class="field-label">SKU de destino</label>
+          <select class="inp" id="skuSelect"></select>
         </div>
-        <div class="upload-right">
-          <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
-            <div class="drop-icon">🖼️</div>
-            <p><strong>Clic</strong> o arrastra aquí</p>
-            <p>JPG, PNG, WEBP · máx. 5MB</p>
-            <input type="file" id="fileInput" accept="image/*">
-          </div>
-          <div class="preview-wrap" id="previewWrap" style="display:none">
-            <img id="previewImg" src="" alt="">
-          </div>
+        <div id="uploadStatus" class="status-msg"></div>
+        <button class="btn-upload" id="saveBtn" disabled onclick="subirImagen()">↑ Subir imagen</button>
+      </div>
+      <div class="upload-right">
+        <label class="field-label">Imagen</label>
+        <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+          <div class="drop-icon">🖼️</div>
+          <p><strong>Clic</strong> o arrastra aquí<br>JPG, PNG, WEBP · máx. 5MB</p>
+          <input type="file" id="fileInput" accept="image/*">
+        </div>
+        <div class="preview-wrap" id="previewWrap">
+          <img id="previewImg" src="" alt="">
         </div>
       </div>
     </div>
   </div>
 
-  <div class="section">
-    <div class="section-title">Galería de SKUs</div>
-    <div class="gallery-controls">
-      <input class="search-inp" type="text" id="searchInput" placeholder="Buscar SKU…" oninput="renderGrid()">
-      <div class="filters">
-        <button class="f-btn active" onclick="setFilter('all',this)">Todos</button>
-        <button class="f-btn" onclick="setFilter('has',this)">Con imagen</button>
-        <button class="f-btn" onclick="setFilter('none',this)">Sin imagen</button>
-      </div>
+  <!-- Galería -->
+  <div class="section-title">Galería de SKUs</div>
+  <div class="gallery-controls">
+    <input class="search-inp" type="text" id="searchInput" placeholder="Buscar SKU…" oninput="renderGrid()">
+    <div class="filters">
+      <button class="f-btn active" onclick="setFilter('all',this)">Todos</button>
+      <button class="f-btn" onclick="setFilter('has',this)">Con imagen</button>
+      <button class="f-btn" onclick="setFilter('none',this)">Sin imagen</button>
     </div>
-    <div class="sku-grid" id="skuGrid"></div>
   </div>
+  <div class="sku-grid" id="skuGrid"></div>
+
 </div>
 
-<!-- MODAL -->
+<!-- Modal confirmación borrar -->
 <div class="modal-bg" id="modalBg">
   <div class="modal-box">
     <h3 id="modalTitle"></h3>
     <img id="modalImg" src="" alt="">
     <div id="modalStatus" class="status-msg"></div>
     <div class="modal-btns">
-      <button class="btn-del" onclick="borrarImagen()">🗑 Borrar de GitHub</button>
+      <button class="btn-del" onclick="borrarImagen()">🗑 Eliminar imagen</button>
       <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
     </div>
   </div>
@@ -347,90 +350,126 @@ select.inp { appearance: none; background-image: url("data:image/svg+xml,%3Csvg 
 <div class="toast" id="toast"></div>
 
 <script>
-const REPO = 'infinity-accesorios/infinity-pedidos';
-const BRANCH = 'main';
+const REPO      = 'infinity-accesorios/infinity-pedidos';
+const BRANCH    = 'main';
 const IMG_FOLDER = 'img';
 const SKUS = Array.from({length:78}, (_,i) => `SKU-${String(i+1).padStart(3,'0')}`);
 
+// ── Credenciales ──────────────────────────────────────────────────────────
+// Cambiar contraseña aquí. El token nunca se muestra al usuario.
+const USUARIOS = {
+  'infinityjaviera@gmail.com': {
+    pass: 'Infinity2026',
+    nombre: 'Javiera',
+    token: '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'
+  }
+};
+// ─────────────────────────────────────────────────────────────────────────
+
 let token = '', imgMap = {}, pendingFile = null, currentFilter = 'all', modalSKU = null;
 
-function loadToken() {
-  const t = localStorage.getItem('gh_token_infinity');
-  if (t) { token = t; return true; }
-  return false;
-}
-
-function desconectar() {
-  localStorage.removeItem('gh_token_infinity');
-  token = ''; imgMap = {};
-  document.getElementById('mainPanel').style.display = 'none';
-  document.getElementById('setupPanel').style.display = 'block';
-  document.getElementById('headerRight').style.display = 'none';
-  document.getElementById('tokenInput').value = '';
-}
-
-async function conectar() {
-  const t = document.getElementById('tokenInput').value.trim();
-  if (!t) { showStatus('setupStatus','Ingresa el token','err'); return; }
-  showStatus('setupStatus','Verificando…','loading');
-  try {
-    const r = await ghFetch(`https://api.github.com/repos/${REPO}`, t);
-    if (!r.ok) throw new Error('Token inválido o sin acceso al repositorio');
-    localStorage.setItem('gh_token_infinity', t);
-    token = t;
-    await iniciar();
-  } catch(e) {
-    showStatus('setupStatus','❌ ' + e.message,'err');
+// ── LOGIN ──
+function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pass  = document.getElementById('loginPass').value;
+  const btn   = document.getElementById('loginBtn');
+  if (!email || !pass) { showStatus('loginStatus','Completa todos los campos','err'); return; }
+  const user = USUARIOS[email];
+  if (!user || user.pass !== pass) {
+    showStatus('loginStatus','❌ Correo o contraseña incorrectos','err');
+    document.getElementById('loginPass').value = '';
+    return;
   }
+  btn.disabled = true; btn.textContent = 'Verificando...';
+  showStatus('loginStatus','Conectando con GitHub…','loading');
+  ghFetch(`https://api.github.com/repos/${REPO}`, user.token)
+    .then(r => {
+      if (!r.ok) throw new Error('Sin acceso al repositorio');
+      token = user.token;
+      sessionStorage.setItem('inf_session', JSON.stringify({email, nombre: user.nombre}));
+      mostrarPanel(user.nombre);
+    })
+    .catch(e => {
+      showStatus('loginStatus','❌ ' + e.message,'err');
+      btn.disabled = false; btn.textContent = 'Ingresar →';
+    });
 }
 
+function mostrarPanel(nombre) {
+  document.getElementById('loginPanel').style.display = 'none';
+  document.getElementById('mainPanel').style.display  = 'block';
+  document.getElementById('hRight').style.display     = 'flex';
+  document.getElementById('hUser').textContent        = nombre;
+  iniciar();
+}
+
+function logout() {
+  sessionStorage.removeItem('inf_session');
+  token = ''; imgMap = {};
+  document.getElementById('mainPanel').style.display  = 'none';
+  document.getElementById('loginPanel').style.display = 'flex';
+  document.getElementById('hRight').style.display     = 'none';
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPass').value  = '';
+  document.getElementById('loginStatus').className = 'status-msg';
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = false; btn.textContent = 'Ingresar →';
+}
+
+// Restaurar sesión si ya estaba logueado (misma pestaña)
+(function() {
+  const s = sessionStorage.getItem('inf_session');
+  if (!s) return;
+  const {email, nombre} = JSON.parse(s);
+  const user = USUARIOS[email];
+  if (!user) return;
+  token = user.token;
+  mostrarPanel(nombre);
+})();
+
+// ── GITHUB ──
 async function ghFetch(url, tok, opts={}) {
   return fetch(url, {
     ...opts,
     headers: {
-      'Authorization': `token ${tok||token}`,
+      'Authorization': `token ${tok || token}`,
       'Accept': 'application/vnd.github.v3+json',
       'Content-Type': 'application/json',
-      ...(opts.headers||{})
+      ...(opts.headers || {})
     }
   });
 }
 
 async function cargarImagenes() {
-  imgMap = {};
   try {
-    const r = await ghFetch(`https://api.github.com/repos/${REPO}/contents/${IMG_FOLDER}?ref=${BRANCH}`);
-    if (r.status === 404) return;
-    if (!r.ok) return;
+    const r = await ghFetch(`https://api.github.com/repos/${REPO}/contents/${IMG_FOLDER}`);
+    if (!r.ok) { imgMap = {}; return; }
     const files = await r.json();
+    imgMap = {};
     files.forEach(f => {
-      const match = f.name.match(/^(SKU-\d{3})\.(jpg|jpeg|png|webp)$/i);
-      if (match) {
-        imgMap[match[1].toUpperCase()] = {
+      const sku = f.name.replace(/\.[^.]+$/, '').toUpperCase();
+      if (SKUS.includes(sku)) {
+        imgMap[sku] = {
           sha: f.sha, name: f.name,
           url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${IMG_FOLDER}/${f.name}?t=${Date.now()}`
         };
       }
     });
-  } catch(e) { console.warn(e); }
+  } catch(e) { imgMap = {}; }
 }
 
 async function iniciar() {
-  document.getElementById('setupPanel').style.display = 'none';
-  document.getElementById('mainPanel').style.display = 'block';
-  document.getElementById('headerRight').style.display = 'flex';
+  // Poblar select de SKUs
   const sel = document.getElementById('skuSelect');
-  sel.innerHTML = SKUS.map(s=>`<option value="${s}">${s}</option>`).join('');
-  showToast('Cargando imágenes…');
+  sel.innerHTML = SKUS.map(s => `<option value="${s}">${s}</option>`).join('');
   await cargarImagenes();
   updateStats(); renderGrid();
-  showToast('✓ Listo');
 }
 
 function fileToBase64(file) {
-  return new Promise((res,rej) => {
+  return new Promise((res, rej) => {
     const r = new FileReader();
-    r.onload = e => res(e.target.result.split(',')[1]);
+    r.onload = () => res(r.result.split(',')[1]);
     r.onerror = rej;
     r.readAsDataURL(file);
   });
@@ -442,7 +481,7 @@ async function subirImagen() {
   const ext = pendingFile.name.split('.').pop().toLowerCase().replace('jpeg','jpg');
   const filename = `${sku}.${ext}`;
   const path = `${IMG_FOLDER}/${filename}`;
-  showStatus('uploadStatus','Subiendo a GitHub…','loading');
+  showStatus('uploadStatus','Subiendo imagen…','loading');
   document.getElementById('saveBtn').disabled = true;
   try {
     const b64 = await fileToBase64(pendingFile);
@@ -453,19 +492,19 @@ async function subirImagen() {
     }
     if (imgMap[sku] && imgMap[sku].name !== filename) {
       await ghFetch(`https://api.github.com/repos/${REPO}/contents/${IMG_FOLDER}/${imgMap[sku].name}`, null, {
-        method:'DELETE', body:JSON.stringify({message:`Admin: reemplazar ${sku}`, sha:imgMap[sku].sha, branch:BRANCH})
+        method:'DELETE', body: JSON.stringify({message:`Admin: reemplazar ${sku}`, sha: imgMap[sku].sha, branch: BRANCH})
       });
       sha = undefined;
     }
-    const body = {message:`Admin: imagen ${sku}`, content:b64, branch:BRANCH, ...(sha?{sha}:{})};
+    const body = {message:`Admin: imagen ${sku}`, content: b64, branch: BRANCH, ...(sha ? {sha} : {})};
     const r = await ghFetch(`https://api.github.com/repos/${REPO}/contents/${path}`, null, {
-      method:'PUT', body:JSON.stringify(body)
+      method:'PUT', body: JSON.stringify(body)
     });
-    if (!r.ok) { const err=await r.json(); throw new Error(err.message||'Error al subir'); }
+    if (!r.ok) { const err = await r.json(); throw new Error(err.message || 'Error al subir'); }
     const data = await r.json();
-    imgMap[sku] = { sha:data.content.sha, name:filename, url:`https://raw.githubusercontent.com/${REPO}/${BRANCH}/${path}?t=${Date.now()}` };
-    showStatus('uploadStatus',`✓ Imagen subida correctamente`,'ok');
-    showToast(`✓ ${sku} actualizado en GitHub`);
+    imgMap[sku] = {sha: data.content.sha, name: filename, url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${path}?t=${Date.now()}`};
+    showStatus('uploadStatus','✓ Imagen subida correctamente','ok');
+    showToast(`✓ ${sku} actualizado`);
     pendingFile = null;
     document.getElementById('previewWrap').style.display = 'none';
     document.getElementById('previewImg').src = '';
@@ -480,13 +519,13 @@ async function subirImagen() {
 
 async function borrarImagen() {
   if (!modalSKU || !imgMap[modalSKU]) return;
-  showStatus('modalStatus','Borrando…','loading');
+  showStatus('modalStatus','Eliminando…','loading');
   try {
     const {sha, name} = imgMap[modalSKU];
     const r = await ghFetch(`https://api.github.com/repos/${REPO}/contents/${IMG_FOLDER}/${name}`, null, {
-      method:'DELETE', body:JSON.stringify({message:`Admin: borrar ${modalSKU}`, sha, branch:BRANCH})
+      method:'DELETE', body: JSON.stringify({message:`Admin: borrar ${modalSKU}`, sha, branch: BRANCH})
     });
-    if (!r.ok) { const e=await r.json(); throw new Error(e.message); }
+    if (!r.ok) { const e = await r.json(); throw new Error(e.message); }
     delete imgMap[modalSKU];
     showToast(`✓ Imagen de ${modalSKU} eliminada`);
     closeModal(); updateStats(); renderGrid();
@@ -495,13 +534,16 @@ async function borrarImagen() {
   }
 }
 
-// Drag & drop
+// ── Drag & Drop ──
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
-dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('over'); });
+dropZone.addEventListener('dragover',  e => { e.preventDefault(); dropZone.classList.add('over'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('over'));
-dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('over'); if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
-fileInput.addEventListener('change', () => { if(fileInput.files[0]) handleFile(fileInput.files[0]); });
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('over');
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', () => { if (fileInput.files[0]) handleFile(fileInput.files[0]); });
 
 function handleFile(file) {
   if (!file.type.startsWith('image/')) { showToast('Solo imágenes (JPG, PNG, WEBP)'); return; }
@@ -511,35 +553,37 @@ function handleFile(file) {
   r.onload = e => {
     document.getElementById('previewImg').src = e.target.result;
     document.getElementById('previewWrap').style.display = 'block';
+    document.getElementById('dropZone').style.display    = 'none';
     document.getElementById('saveBtn').disabled = false;
     showStatus('uploadStatus','','');
   };
   r.readAsDataURL(file);
 }
 
+// ── Grid ──
 function renderGrid() {
-  const q = document.getElementById('searchInput').value.toLowerCase();
+  const q    = document.getElementById('searchInput').value.toLowerCase();
   const grid = document.getElementById('skuGrid');
   grid.innerHTML = '';
   let n = 0;
   SKUS.forEach(sku => {
     const has = !!imgMap[sku];
-    if (currentFilter==='has' && !has) return;
-    if (currentFilter==='none' && has) return;
+    if (currentFilter === 'has'  && !has) return;
+    if (currentFilter === 'none' &&  has) return;
     if (q && !sku.toLowerCase().includes(q)) return;
     n++;
     const card = document.createElement('div');
-    card.className = `sku-card ${has?'has':'none'}`;
+    card.className = `sku-card ${has ? 'has' : 'none'}`;
     card.innerHTML = `
       <div class="card-img">
-        ${has?`<img src="${imgMap[sku].url}" alt="${sku}" loading="lazy">`:'<span>Sin imagen</span>'}
+        ${has ? `<img src="${imgMap[sku].url}" alt="${sku}" loading="lazy">` : '<span>Sin imagen</span>'}
       </div>
       <div class="card-body">
         <div class="card-sku">${sku}</div>
-        <div class="card-status ${has?'ok':'miss'}">${has?'✓ En GitHub':'Sin imagen'}</div>
+        <div class="card-status ${has ? 'ok' : 'miss'}">${has ? '✓ Subida' : 'Sin imagen'}</div>
         <div class="card-acts">
           <button class="c-btn up" onclick="selSKU('${sku}')">↑ Subir</button>
-          ${has?`<button class="c-btn del" onclick="openModal('${sku}')">✕</button>`:''}
+          ${has ? `<button class="c-btn del" onclick="openModal('${sku}')">✕</button>` : ''}
         </div>
       </div>`;
     grid.appendChild(card);
@@ -549,40 +593,45 @@ function renderGrid() {
 
 function selSKU(sku) {
   document.getElementById('skuSelect').value = sku;
-  document.querySelector('.upload-card').scrollIntoView({behavior:'smooth'});
+  document.getElementById('dropZone').style.display    = 'block';
+  document.getElementById('previewWrap').style.display = 'none';
+  document.getElementById('saveBtn').disabled = true;
+  pendingFile = null;
+  document.querySelector('.upload-card').scrollIntoView({behavior:'smooth', block:'start'});
   showToast(`SKU seleccionado: ${sku}`);
 }
+
 function setFilter(t, btn) {
   currentFilter = t;
-  document.querySelectorAll('.f-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active'); renderGrid();
 }
+
 function openModal(sku) {
   modalSKU = sku;
   document.getElementById('modalTitle').textContent = sku;
-  document.getElementById('modalImg').src = imgMap[sku]?.url||'';
+  document.getElementById('modalImg').src = imgMap[sku]?.url || '';
   document.getElementById('modalStatus').className = 'status-msg';
   document.getElementById('modalBg').classList.add('open');
 }
 function closeModal() { document.getElementById('modalBg').classList.remove('open'); modalSKU = null; }
-document.getElementById('modalBg').addEventListener('click', e => { if(e.target===document.getElementById('modalBg')) closeModal(); });
+document.getElementById('modalBg').addEventListener('click', e => { if (e.target === document.getElementById('modalBg')) closeModal(); });
+
 function updateStats() {
-  const w = SKUS.filter(s=>imgMap[s]).length;
-  document.getElementById('statWith').textContent = w;
+  const w = SKUS.filter(s => imgMap[s]).length;
+  document.getElementById('statWith').textContent    = w;
   document.getElementById('statWithout').textContent = SKUS.length - w;
 }
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 3000);
+  setTimeout(() => t.classList.remove('show'), 3000);
 }
 function showStatus(id, msg, type) {
   const el = document.getElementById(id);
   el.textContent = msg;
-  el.className = 'status-msg' + (type?' '+type:'');
+  el.className = 'status-msg' + (type ? ' '+type : '');
 }
-
-if (loadToken()) iniciar();
 </script>
 </body>
 </html>
