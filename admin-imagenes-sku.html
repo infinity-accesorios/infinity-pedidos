@@ -225,6 +225,8 @@ header {
 .toast.show { opacity: 1; }
 
 @media(max-width:600px) {
+  #nuevoProductoCard > div { grid-template-columns: 1fr 1fr !important; }
+  #nuevoProductoCard > div > div:last-child { grid-column: 1/-1; }
   #mainPanel { padding: 18px 12px 48px; }
   .stats-row { grid-template-columns: repeat(3,1fr); gap: 8px; }
   .stat-n { font-size: 24px; }
@@ -301,7 +303,15 @@ header {
       <div class="upload-left">
         <div class="field">
           <label class="field-label">SKU de destino</label>
-          <select class="inp" id="skuSelect"></select>
+          <select class="inp" id="skuSelect" onchange="toggleNuevoSKU()"></select>
+        </div>
+        <div class="field" id="nuevoSkuWrap" style="display:none">
+          <label class="field-label">Número del nuevo SKU</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span style="font-size:13px;color:var(--text-mid);white-space:nowrap;font-family:'DM Sans',sans-serif">SKU-</span>
+            <input class="inp" type="number" id="nuevoSkuNum" min="79" max="999" placeholder="079" style="max-width:110px">
+          </div>
+          <div id="nuevoSkuStatus" class="status-msg" style="margin-top:6px"></div>
         </div>
         <div id="uploadStatus" class="status-msg"></div>
         <button class="btn-upload" id="saveBtn" disabled onclick="subirImagen()">↑ Subir imagen</button>
@@ -320,8 +330,39 @@ header {
     </div>
   </div>
 
+  <!-- Nuevo Producto -->
+  <div class="section-title" id="secNuevoProducto">Agregar producto nuevo</div>
+  <div class="upload-card" id="nuevoProductoCard">
+    <div style="padding:24px;display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:16px;align-items:end">
+      <div class="field">
+        <label class="field-label">SKU</label>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:13px;color:var(--text-mid);font-family:'DM Sans',sans-serif;white-space:nowrap">SKU-</span>
+          <input class="inp" type="number" id="npSkuNum" min="79" max="999" placeholder="079" style="max-width:90px">
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Precio ($)</label>
+        <input class="inp" type="number" id="npPrecio" placeholder="10990" value="10990">
+      </div>
+      <div class="field">
+        <label class="field-label">Tipo</label>
+        <select class="inp" id="npEspecial">
+          <option value="false">Normal — $10.990</option>
+          <option value="true">Especial — $14.990</option>
+        </select>
+      </div>
+      <div>
+        <button class="btn-upload" style="margin-top:0;width:auto;padding:11px 20px" onclick="agregarProducto()">
+          + Agregar SKU
+        </button>
+      </div>
+    </div>
+    <div id="npStatus" class="status-msg" style="margin:0 24px 16px"></div>
+  </div>
+
   <!-- Galería -->
-  <div class="section-title">Galería de SKUs</div>
+  <div class="section-title" id="secGaleria">Galería de SKUs</div>
   <div class="gallery-controls">
     <input class="search-inp" type="text" id="searchInput" placeholder="Buscar SKU…" oninput="renderGrid()">
     <div class="filters">
@@ -451,9 +492,79 @@ async function cargarImagenes() {
 async function iniciar() {
   // Poblar select de SKUs
   const sel = document.getElementById('skuSelect');
-  sel.innerHTML = SKUS.map(s => `<option value="${s}">${s}</option>`).join('');
+  sel.innerHTML = SKUS.map(s => `<option value="${s}">${s}</option>`).join('') +
+    '<option value="__nuevo__" style="font-weight:600;color:#4a7c59">+ Nuevo SKU</option>';
   await cargarImagenes();
   updateStats(); renderGrid();
+}
+
+async function agregarProducto() {
+  const numStr = document.getElementById('npSkuNum').value.trim();
+  if (!numStr || isNaN(numStr)) { showStatus('npStatus','Ingresa un número de SKU válido','err'); return; }
+  const sku = 'SKU-' + String(parseInt(numStr)).padStart(3,'0');
+  if (SKUS.includes(sku)) { showStatus('npStatus', sku + ' ya existe en la tienda','err'); return; }
+  const especial = document.getElementById('npEspecial').value === 'true';
+  showStatus('npStatus','Guardando en GitHub…','loading');
+  try {
+    // Leer productos-extra.json si existe
+    let extras = [];
+    let sha = null;
+    const r = await ghFetch(`https://api.github.com/repos/${REPO}/contents/productos-extra.json`);
+    if (r.ok) {
+      const d = await r.json();
+      sha = d.sha;
+      extras = JSON.parse(atob(d.content.replace(/\n/g,'')));
+    }
+    // Agregar nuevo producto
+    if (extras.find(p => p.sku === sku)) { showStatus('npStatus', sku + ' ya está en la lista extra','err'); return; }
+    extras.push({ sku, especial });
+    // Guardar productos-extra.json
+    const body = {
+      message: `Admin: agregar ${sku}`,
+      content: btoa(JSON.stringify(extras, null, 2)),
+      branch: BRANCH,
+      ...(sha ? {sha} : {})
+    };
+    const rPut = await ghFetch(`https://api.github.com/repos/${REPO}/contents/productos-extra.json`, null, {
+      method: 'PUT', body: JSON.stringify(body)
+    });
+    if (!rPut.ok) { const e = await rPut.json(); throw new Error(e.message); }
+    // Agregar a la lista local
+    SKUS.push(sku); SKUS.sort();
+    // Agregar al select
+    const sel = document.getElementById('skuSelect');
+    const opt = document.createElement('option');
+    opt.value = sku; opt.textContent = sku;
+    sel.insertBefore(opt, sel.lastElementChild);
+    showStatus('npStatus', '✓ ' + sku + ' agregado — sube una imagen para verlo en la tienda','ok');
+    showToast('✓ ' + sku + ' creado');
+    document.getElementById('npSkuNum').value = '';
+    updateStats(); renderGrid();
+  } catch(e) {
+    showStatus('npStatus','❌ ' + e.message,'err');
+  }
+}
+
+function toggleNuevoSKU() {
+  const val = document.getElementById('skuSelect').value;
+  document.getElementById('nuevoSkuWrap').style.display = val === '__nuevo__' ? 'block' : 'none';
+  document.getElementById('nuevoSkuStatus').className = 'status-msg';
+}
+
+function getSKUSeleccionado() {
+  const val = document.getElementById('skuSelect').value;
+  if (val !== '__nuevo__') return { sku: val, valido: true };
+  const num = document.getElementById('nuevoSkuNum').value.trim();
+  if (!num || isNaN(num) || parseInt(num) < 1) {
+    showStatus('nuevoSkuStatus', 'Ingresa un número válido', 'err');
+    return { valido: false };
+  }
+  const sku = 'SKU-' + String(parseInt(num)).padStart(3, '0');
+  if (SKUS.includes(sku)) {
+    showStatus('nuevoSkuStatus', `${sku} ya existe — selecciónalo en la lista`, 'err');
+    return { valido: false };
+  }
+  return { sku, valido: true, esNuevo: true };
 }
 
 function fileToBase64(file) {
@@ -467,7 +578,8 @@ function fileToBase64(file) {
 
 async function subirImagen() {
   if (!pendingFile) return;
-  const sku = document.getElementById('skuSelect').value;
+  const { sku, valido, esNuevo } = getSKUSeleccionado();
+  if (!valido) return;
   const ext = pendingFile.name.split('.').pop().toLowerCase().replace('jpeg','jpg');
   const filename = `${sku}.${ext}`;
   const path = `${IMG_FOLDER}/${filename}`;
@@ -495,6 +607,15 @@ async function subirImagen() {
     imgMap[sku] = {sha: data.content.sha, name: filename, url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${path}?t=${Date.now()}`};
     showStatus('uploadStatus','✓ Imagen subida correctamente','ok');
     showToast(`✓ ${sku} actualizado`);
+    if (esNuevo) {
+      SKUS.push(sku); SKUS.sort();
+      const sel = document.getElementById('skuSelect');
+      const opt = document.createElement('option');
+      opt.value = sku; opt.textContent = sku;
+      sel.insertBefore(opt, sel.lastElementChild); // antes de "+ Nuevo SKU"
+      sel.value = sku;
+      document.getElementById('nuevoSkuWrap').style.display = 'none';
+    }
     pendingFile = null;
     document.getElementById('previewWrap').style.display = 'none';
     document.getElementById('previewImg').src = '';

@@ -860,6 +860,28 @@ const PRODUCTOS = [
 const prodMap = Object.fromEntries(PRODUCTOS.map(p => [p.sku, p]));
 let carrito = {};
 
+// ── Cargar productos extra desde GitHub ──────────────────────────────────
+(async function() {
+  try {
+    const BASE = 'https://raw.githubusercontent.com/infinity-accesorios/infinity-pedidos/main/';
+    const r = await fetch(BASE + 'productos-extra.json?t=' + Date.now());
+    if (!r.ok) return;
+    const extras = await r.json();
+    extras.forEach(p => {
+      if (!prodMap[p.sku]) {
+        prodMap[p.sku] = { sku: p.sku, especial: p.especial, img: '' };
+        // Intentar cargar imagen desde GitHub
+        const imgUrl = BASE + 'img/' + p.sku + '.jpg';
+        const img = new Image();
+        img.onload = () => { prodMap[p.sku].img = imgUrl; renderGrid(); };
+        img.src = imgUrl;
+      }
+    });
+    renderGrid();
+  } catch(e) { /* Sin productos extra */ }
+})();
+// ─────────────────────────────────────────────────────────────────────────
+
 function getPrecioBase(sku) {
   return ['SKU-001','SKU-008'].includes(sku) ? 14990 : 10990;
 }
