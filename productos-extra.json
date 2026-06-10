@@ -10,5 +10,9 @@
   {
     "sku": "SKU-081",
     "especial": false
+  },
+  {
+    "sku": "SKU-082",
+    "especial": false
   }
 ]
