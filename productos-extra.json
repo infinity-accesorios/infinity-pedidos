@@ -14,5 +14,9 @@
   {
     "sku": "SKU-082",
     "especial": false
+  },
+  {
+    "sku": "SKU-083",
+    "especial": false
   }
 ]
