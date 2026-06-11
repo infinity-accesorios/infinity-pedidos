@@ -352,7 +352,7 @@ function switchTab(tab, btn) {
   document.getElementById('pane' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
 }
 
-async function toggleAgotadoRapido(sku) {
+async async function toggleAgotadoRapido(sku) {
   try {
     let extras = [...extraSKUs];
     let eSha = null;
