@@ -903,5 +903,32 @@ function printAllPrep(){
 
 <!-- PRINT AREA -->
 <div id="printArea"></div>
+
+<script>
+// Cargar SKUs extra desde productos-extra.json y agregarlos al selector
+(async function() {
+  try {
+    const r = await fetch('https://raw.githubusercontent.com/infinity-accesorios/infinity-pedidos/main/productos-extra.json?t=' + Date.now());
+    if (!r.ok) return;
+    const extras = await r.json();
+    const sel = document.getElementById('MSKU');
+    if (!sel) return;
+    extras.forEach(function(p) {
+      // Verificar que no exista ya
+      var existe = false;
+      for (var i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].value === p.sku) { existe = true; break; }
+      }
+      if (!existe) {
+        var opt = document.createElement('option');
+        opt.value = p.sku;
+        opt.textContent = p.sku + (p.especial ? ' ★' : '');
+        sel.appendChild(opt);
+      }
+    });
+  } catch(e) { /* sin extras */ }
+})();
+</script>
+
 </body>
 </html>
