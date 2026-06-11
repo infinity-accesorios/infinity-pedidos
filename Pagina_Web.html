@@ -1063,11 +1063,17 @@ async function cargarExtrasYRenderizar() {
       const extras = await r.json();
       extras.forEach(p => {
         if (!prodMap[p.sku]) {
+          // SKU nuevo — agregar al mapa
           prodMap[p.sku] = {
             sku: p.sku,
             especial: p.especial,
+            agotado: p.agotado || false,
             img: BASE_RAW + 'img/' + p.sku + '.jpg'
           };
+        } else {
+          // SKU existente — actualizar agotado y especial
+          prodMap[p.sku].agotado = p.agotado || false;
+          if (p.especial !== undefined) prodMap[p.sku].especial = p.especial;
         }
       });
     }
