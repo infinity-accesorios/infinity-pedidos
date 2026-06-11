@@ -344,23 +344,9 @@ function doLogin() {
     document.getElementById('loginPass').value = '';
     return;
   }
-  // Guardar email en sesión para después del token
+  // Login local — el proxy se usa solo para acciones reales
   sessionStorage.setItem('inf_s', JSON.stringify({email, nombre: user.nombre}));
-  btn.disabled = true; btn.textContent = 'Verificando...';
-  showMsg('loginMsg','Conectando…','loading');
-  fetch(PROXY_URL + '?path=productos-extra.json', {
-    headers: {'Content-Type':'application/json','X-Admin-Pass':'Infinity2026'}
-  }).then(function(r) {
-    if (!r.ok) {
-      showMsg('loginMsg','❌ Error de conexión — intenta de nuevo','err');
-      btn.disabled = false; btn.textContent = 'Ingresar →';
-      return;
-    }
-    mostrarPanel(user.nombre);
-  }).catch(function(e) {
-    showMsg('loginMsg','❌ ' + e.message,'err');
-    btn.disabled = false; btn.textContent = 'Ingresar →';
-  });
+  mostrarPanel(user.nombre);
 }
 
 
