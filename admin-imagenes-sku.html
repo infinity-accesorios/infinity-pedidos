@@ -162,7 +162,7 @@ select.inp { cursor: pointer; }
   </div>
   <div class="h-right" id="hRight" style="display:none">
     <span class="h-user" id="hUser"></span>
-    <button class="btn-out" onclick="resetToken()" style="border-color:var(--gold);color:var(--gold-dark)">🔑 Token</button>
+
     <button class="btn-out" onclick="logout()">Cerrar sesión</button>
   </div>
 </header>
@@ -190,7 +190,7 @@ select.inp { cursor: pointer; }
       <div id="loginMsg" class="msg"></div>
       <button class="btn-main" id="loginBtn" onclick="doLogin()">Ingresar →</button>
     </div>
-    <!-- Paso 2: token (solo primera vez) -->
+    <!-- Paso 2: token (no se usa con proxy) -->
     <div class="login-body" id="stepToken" style="display:none">
       <h2>Configuración inicial</h2>
       <p style="font-size:12px;color:var(--text-mid);margin-bottom:16px;line-height:1.6;">
@@ -328,7 +328,7 @@ const BASE_SKUS = Array.from({length:86}, (_,i) => `SKU-${String(i+1).padStart(3
 const USUARIOS = {
   'infinityjaviera@gmail.com': { pass: 'Infinity2026', nombre: 'Javiera' }
 };
-function getToken() { return localStorage.getItem('inf_gh_token') || ''; }
+function getToken() { return ''; } // Token manejado por Vercel proxy
 
 let token = '', imgMap = {}, extraSKUs = [], pendingFile = null, modalSKU = null, currentFilter = 'all';
 
@@ -346,26 +346,16 @@ function doLogin() {
   }
   // Guardar email en sesión para después del token
   sessionStorage.setItem('inf_s', JSON.stringify({email, nombre: user.nombre}));
-  const savedToken = localStorage.getItem('inf_gh_token');
-  if (!savedToken) {
-    // Mostrar pantalla de token
-    document.getElementById('stepLogin').style.display = 'none';
-    document.getElementById('stepToken').style.display = 'block';
-    setTimeout(function(){ document.getElementById('tokenInput').focus(); }, 100);
-    return;
-  }
   btn.disabled = true; btn.textContent = 'Verificando...';
   showMsg('loginMsg','Conectando…','loading');
-  fetch('https://api.github.com/repos/' + REPO, {
-    headers:{'Authorization':'token ' + savedToken,'Accept':'application/vnd.github.v3+json'}
+  fetch(PROXY_URL + '?path=productos-extra.json', {
+    headers: {'Content-Type':'application/json','X-Admin-Pass':'Infinity2026'}
   }).then(function(r) {
     if (!r.ok) {
-      localStorage.removeItem('inf_gh_token');
-      showMsg('loginMsg','❌ Token inválido — vuelve a intentar','err');
+      showMsg('loginMsg','❌ Error de conexión — intenta de nuevo','err');
       btn.disabled = false; btn.textContent = 'Ingresar →';
       return;
     }
-    token = savedToken;
     mostrarPanel(user.nombre);
   }).catch(function(e) {
     showMsg('loginMsg','❌ ' + e.message,'err');
@@ -493,14 +483,21 @@ function logout() { sessionStorage.removeItem('inf_s'); location.reload(); }
 })();
 
 // ── GITHUB ──
+const PROXY_URL = 'https://infinity-api-kappa.vercel.app/api/github-proxy';
+const REPO_BASE = 'https://api.github.com/repos/infinity-accesorios/infinity-pedidos/contents/';
+
 async function ghFetch(url, tok, opts={}) {
-  const t = tok || token || localStorage.getItem('inf_gh_token') || '';
-  return fetch(url, { ...opts, headers: {
-    'Authorization': `token ${t}`,
-    'Accept': 'application/vnd.github.v3+json',
-    'Content-Type': 'application/json',
-    ...(opts.headers||{})
-  }});
+  // Extraer el path relativo de la URL de GitHub
+  const path = url.replace(REPO_BASE, '');
+  const proxyUrl = PROXY_URL + '?path=' + encodeURIComponent(path);
+  return fetch(proxyUrl, {
+    ...opts,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Admin-Pass': 'Infinity2026',
+      ...(opts.headers||{})
+    }
+  });
 }
 
 async function iniciar() {
