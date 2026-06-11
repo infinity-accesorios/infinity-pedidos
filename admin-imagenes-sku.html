@@ -364,11 +364,16 @@ async function toggleAgotadoRapido(sku) {
     } else {
       extras.push({sku, especial: false, agotado: true});
     }
+    const jsonStr = JSON.stringify(extras, null, 2);
+    const b64 = btoa(unescape(encodeURIComponent(jsonStr)));
     const rPut = await ghFetch('https://api.github.com/repos/' + REPO + '/contents/productos-extra.json', {
       method: 'PUT',
-      body: JSON.stringify({message: 'Agotado ' + sku, content: btoa(JSON.stringify(extras,null,2)), branch: BRANCH, ...(eSha?{sha:eSha}:{})})
+      body: JSON.stringify({message: 'Agotado ' + sku, content: b64, branch: BRANCH, ...(eSha?{sha:eSha}:{})})
     });
-    if (!rPut.ok) throw new Error('Error guardando');
+    if (!rPut.ok) {
+      const err = await rPut.json();
+      throw new Error(err.message || 'Error guardando');
+    }
     extraSKUs = extras;
     const ahora = extras.find(p=>p.sku===sku)?.agotado;
     showToast((ahora ? '🔴 ' : '✅ ') + sku + (ahora ? ' marcado agotado' : ' disponible'));
@@ -389,7 +394,7 @@ async function aToggleAgotado(sku) {
   }
   await aGhFetch('https://api.github.com/repos/' + AREPO + '/contents/productos-extra.json', {
     method: 'PUT',
-    body: JSON.stringify({message: 'Estado agotado ' + sku, content: btoa(JSON.stringify(extras,null,2)), branch: ABRANCH, ...(eSha?{sha:eSha}:{})})
+    body: JSON.stringify({message: 'Estado agotado ' + sku, content: btoa(unescape(encodeURIComponent(JSON.stringify(extras,null,2)))), branch: ABRANCH, ...(eSha?{sha:eSha}:{})})
   });
   aExtraSkus = extras;
   showToast((extras.find(p=>p.sku===sku)?.agotado ? '🔴 ' : '✅ ') + sku + ' actualizado');
@@ -515,7 +520,7 @@ async function subirImagen() {
         extras.push({sku, especial, agotado});
       }
       const rPut = await ghFetch(`https://api.github.com/repos/${REPO}/contents/productos-extra.json`, null, {
-        method:'PUT', body: JSON.stringify({message:`Agregar ${sku}`, content: btoa(JSON.stringify(extras,null,2)), branch: BRANCH, ...(extraSha?{sha:extraSha}:{})})
+        method:'PUT', body: JSON.stringify({message:`Agregar ${sku}`, content: btoa(unescape(encodeURIComponent(JSON.stringify(extras,null,2)))), branch: BRANCH, ...(extraSha?{sha:extraSha}:{})})
       });
       if (!rPut.ok) { const e = await rPut.json(); throw new Error(e.message); }
       extraSKUs = extras;
