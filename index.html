@@ -1033,7 +1033,7 @@ function bexPreview() {
   var linkDiv = document.getElementById('BEX_link');
   var linkA   = document.getElementById('BEX_link_a');
   if (num.length >= 4) {
-    var url = 'https://www.blueexpress.com/seguimiento/?numero=' + encodeURIComponent(num);
+    var url = 'https://www.blue.cl/enviar/seguimiento?n_seguimiento=' + num.trim();
     linkA.href = url;
     linkA.textContent = url;
     linkDiv.style.display = 'block';
@@ -1052,7 +1052,7 @@ function enviarBEX() {
   if (phone.length === 9) phone = '56' + phone;
   else if (phone.length === 11 && phone.indexOf('56') !== 0) phone = '56' + phone;
 
-  var trackUrl = 'https://www.blueexpress.com/seguimiento/?numero=' + encodeURIComponent(num);
+  var trackUrl = 'https://www.blue.cl/enviar/seguimiento?n_seguimiento=' + encodeURIComponent(num);
   var skus = (o.skus || []).map(function(s){ return '• ' + s.sku + (s.qty > 1 ? ' x' + s.qty : ''); }).join('
 ');
 
