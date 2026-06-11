@@ -375,6 +375,7 @@ function doLogin() {
 
 
 function mostrarPanel(nombre) {
+  token = localStorage.getItem('inf_gh_token') || '';
   document.getElementById('loginPanel').style.display  = 'none';
   document.getElementById('mainPanel').style.display   = 'block';
   document.getElementById('hRight').style.display      = 'flex';
@@ -473,6 +474,7 @@ function resetToken() {
   if (confirm('¿Actualizar el token de GitHub?\nDeberás ingresar uno nuevo al volver a entrar.')) {
     localStorage.removeItem('inf_gh_token');
     sessionStorage.removeItem('inf_s');
+    token = '';
     location.reload();
   }
 }
@@ -492,8 +494,9 @@ function logout() { sessionStorage.removeItem('inf_s'); location.reload(); }
 
 // ── GITHUB ──
 async function ghFetch(url, tok, opts={}) {
+  const t = tok || token || localStorage.getItem('inf_gh_token') || '';
   return fetch(url, { ...opts, headers: {
-    'Authorization': `token ${tok || token}`,
+    'Authorization': `token ${t}`,
     'Accept': 'application/vnd.github.v3+json',
     'Content-Type': 'application/json',
     ...(opts.headers||{})
