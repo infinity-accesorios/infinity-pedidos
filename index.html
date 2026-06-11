@@ -1013,14 +1013,35 @@ function openBlueExpress(id) {
   var o = findOrder(id);
   if (!o) return;
   if (o.st !== 'S') { alert('El pedido debe estar en estado Enviado'); return; }
-  _bexOrderId = id;
-  document.getElementById('BEX_cliente').textContent = o.cl + ' · ' + (o.ph || 'Sin teléfono');
-  document.getElementById('BEX_num').value = o.bex_tracking || '';
-  document.getElementById('BEX_link').style.display = 'none';
-  var ov = document.getElementById('BEX_OV');
-  ov.style.display = 'flex';
-  setTimeout(function(){ document.getElementById('BEX_num').focus(); }, 100);
-  bexPreview();
+  
+  var num = prompt('📦 TRACKING BLUEEXPRESS\n\nCliente: ' + o.cl + '\nTeléfono: ' + (o.ph || 'Sin teléfono') + '\n\nIngresa el número de seguimiento:', o.bex_tracking || '');
+  
+  if (num === null) return; // canceló
+  num = num.trim();
+  if (!num) { alert('Debes ingresar un número de seguimiento'); return; }
+  
+  var phone = (o.ph || '').replace(/\D/g, '');
+  if (!phone) { alert('Este pedido no tiene teléfono registrado'); return; }
+  if (phone.length === 9) phone = '56' + phone;
+  else if (phone.length === 11 && phone.indexOf('56') !== 0) phone = '56' + phone;
+
+  var trackUrl = 'https://www.blue.cl/enviar/seguimiento?n_seguimiento=' + num;
+  var skus = (o.skus || []).map(function(s){ return '• ' + s.sku + (s.qty > 1 ? ' x' + s.qty : ''); }).join('\n');
+
+  var msg =
+    'Hola ' + (o.cl || '') + '! 🎉\n\n' +
+    'Tu pedido *Infinity Javiera* ya fue despachado por *BlueExpress* 📦✨\n\n' +
+    '📋 *Productos:*\n' + skus + '\n\n' +
+    '🔢 *N° de seguimiento:* ' + num + '\n\n' +
+    '🔍 *Rastrea tu pedido aquí:*\n' + trackUrl + '\n\n' +
+    'Cualquier consulta escríbenos 🤍\n_Infinity Javiera_';
+
+  // Guardar tracking en el pedido
+  o.bex_tracking = num;
+  saveSingle(o);
+
+  var waUrl = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
+  window.open(waUrl, '_blank');
 }
 
 function cerrarBEX() {
