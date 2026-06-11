@@ -1,34 +1,42 @@
 [
   {
     "sku": "SKU-080",
-    "especial": false
+    "especial": false,
+    "agotado": false
   },
   {
     "sku": "SKU-079",
-    "especial": false
+    "especial": false,
+    "agotado": false
   },
   {
     "sku": "SKU-081",
-    "especial": false
+    "especial": false,
+    "agotado": false
   },
   {
     "sku": "SKU-082",
-    "especial": false
+    "especial": false,
+    "agotado": false
   },
   {
     "sku": "SKU-083",
-    "especial": false
+    "especial": false,
+    "agotado": false
   },
   {
     "sku": "SKU-084",
-    "especial": false
+    "especial": false,
+    "agotado": false
   },
   {
     "sku": "SKU-085",
-    "especial": false
+    "especial": false,
+    "agotado": false
   },
   {
     "sku": "SKU-086",
-    "especial": false
+    "especial": false,
+    "agotado": false
   }
 ]
