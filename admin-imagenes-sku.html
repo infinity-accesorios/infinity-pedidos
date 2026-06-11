@@ -61,7 +61,7 @@ select.inp { cursor: pointer; }
 .btn-main:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* MAIN */
-#mainPanel { display: none; max-width: 960px; margin: 0 auto; padding: 28px 20px 60px; }
+#mainPanel { display: none; width: 100%; padding: 0; }
 
 /* Stats */
 .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 28px; }
@@ -147,7 +147,7 @@ select.inp { cursor: pointer; }
 .tab-btn.active { color: var(--brown-dark); border-bottom-color: var(--gold); }
 .tab-pane { display: none; }
 .tab-pane.active { display: block; }
-.pedidos-frame { width: 100%; height: calc(100vh - 120px); border: none; display: block; }
+.pedidos-frame { width: 100%; height: calc(100vh - 108px); border: none; display: block; }
 </style>
 </head>
 <body>
@@ -200,7 +200,7 @@ select.inp { cursor: pointer; }
 <div id="mainPanel">
 
   <!-- TAB IMÁGENES -->
-  <div id="paneImagenes" class="tab-pane active">
+  <div id="paneImagenes" class="tab-pane active" style="max-width:960px;margin:0 auto;padding:28px 20px 60px;">
   <div class="stats">
     <div class="stat">
       <div class="stat-n" id="statTotal">—</div>
@@ -346,6 +346,26 @@ function switchTab(tab, btn) {
   document.getElementById('pane' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
 }
 
+async function aToggleAgotado(sku) {
+  let extras = [...aExtraSkus];
+  let eSha = null;
+  const re = await aGhFetch('https://api.github.com/repos/' + AREPO + '/contents/productos-extra.json');
+  if (re.ok) { const d = await re.json(); eSha = d.sha; extras = JSON.parse(atob(d.content.replace(/\n/g,''))); }
+  const idx = extras.findIndex(p => p.sku === sku);
+  if (idx >= 0) {
+    extras[idx].agotado = !extras[idx].agotado;
+  } else {
+    extras.push({sku, especial: false, agotado: true});
+  }
+  await aGhFetch('https://api.github.com/repos/' + AREPO + '/contents/productos-extra.json', {
+    method: 'PUT',
+    body: JSON.stringify({message: 'Estado agotado ' + sku, content: btoa(JSON.stringify(extras,null,2)), branch: ABRANCH, ...(eSha?{sha:eSha}:{})})
+  });
+  aExtraSkus = extras;
+  showToast((extras.find(p=>p.sku===sku)?.agotado ? '🔴 ' : '✅ ') + sku + ' actualizado');
+  aRenderGallery();
+}
+
 function logout() { sessionStorage.removeItem('inf_s'); location.reload(); }
 
 // Restaurar sesión
@@ -456,7 +476,13 @@ async function subirImagen() {
       let extraSha = null;
       const rEx = await ghFetch(`https://api.github.com/repos/${REPO}/contents/productos-extra.json`);
       if (rEx.ok) { const d = await rEx.json(); extraSha = d.sha; extras = JSON.parse(atob(d.content.replace(/\n/g,''))); }
-      if (!extras.find(p => p.sku === sku)) extras.push({sku, especial});
+      const existIdx = extras.findIndex(p => p.sku === sku);
+      if (existIdx >= 0) {
+        extras[existIdx].especial = especial;
+        extras[existIdx].agotado = agotado;
+      } else {
+        extras.push({sku, especial, agotado});
+      }
       const rPut = await ghFetch(`https://api.github.com/repos/${REPO}/contents/productos-extra.json`, null, {
         method:'PUT', body: JSON.stringify({message:`Agregar ${sku}`, content: btoa(JSON.stringify(extras,null,2)), branch: BRANCH, ...(extraSha?{sha:extraSha}:{})})
       });
