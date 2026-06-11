@@ -177,7 +177,14 @@ select.inp { cursor: pointer; }
           onkeydown="if(event.key==='Enter') doLogin()">
       </div>
       <div id="loginMsg" class="msg"></div>
-      <button class="btn-main" id="loginBtn" onclick="doLogin()">Ingresar →</button>
+      <div id="tokenRow" style="display:none;margin-bottom:12px">
+      <label style="font-size:10px;color:var(--text-light);text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px">Token GitHub (solo primera vez)</label>
+      <div style="display:flex;gap:8px">
+        <input class="inp" type="password" id="tokenField" placeholder="ghp_...">
+        <button class="btn-main" style="width:auto;padding:10px 16px;white-space:nowrap" onclick="saveToken()">Guardar</button>
+      </div>
+    </div>
+    <button class="btn-main" id="loginBtn" onclick="doLogin()">Ingresar →</button>
     </div>
   </div>
 </div>
@@ -288,10 +295,10 @@ const IMG_DIR = 'img';
 const BASE_RAW = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/`;
 const BASE_SKUS = Array.from({length:78}, (_,i) => `SKU-${String(i+1).padStart(3,'0')}`);
 
-const _t = () => String.fromCharCode(103,104,112,95,99,110,113,51,121,67,77,87,56,98,119,108,70,70,119,112,117,67,70,102,108,110,111,88,66,77,48,68,70,99,48,65,109,111,72,51);
 const USUARIOS = {
-  'infinityjaviera@gmail.com': { pass: 'Infinity2026', nombre: 'Javiera', token: _t() }
+  'infinityjaviera@gmail.com': { pass: 'Infinity2026', nombre: 'Javiera' }
 };
+function getStoredToken() { return localStorage.getItem('inf_gh_token') || ''; }
 
 let token = '', imgMap = {}, extraSKUs = [], pendingFile = null, modalSKU = null, currentFilter = 'all';
 
@@ -301,25 +308,45 @@ function doLogin() {
   const pass  = document.getElementById('loginPass').value;
   const btn   = document.getElementById('loginBtn');
   if (!email || !pass) { showMsg('loginMsg','Completa todos los campos','err'); return; }
-  const user  = USUARIOS[email];
+  const user = USUARIOS[email];
   if (!user || user.pass !== pass) {
     showMsg('loginMsg','❌ Correo o contraseña incorrectos','err');
     document.getElementById('loginPass').value = '';
     return;
   }
+  const savedToken = getStoredToken();
+  if (!savedToken) {
+    showStatus('loginMsg','Para la primera vez ingresa tu token de GitHub abajo','err');
+    document.getElementById('tokenRow').style.display = 'block';
+    return;
+  }
   btn.disabled = true; btn.textContent = 'Verificando...';
   showMsg('loginMsg','Conectando…','loading');
-  ghFetch(`https://api.github.com/repos/${REPO}`, user.token)
-    .then(r => {
-      if (!r.ok) throw new Error('Sin acceso al repositorio');
-      token = user.token;
-      sessionStorage.setItem('inf_s', JSON.stringify({email, nombre: user.nombre}));
-      mostrarPanel(user.nombre);
-    })
-    .catch(e => {
-      showMsg('loginMsg','❌ ' + e.message,'err');
+  fetch('https://api.github.com/repos/' + REPO, {
+    headers: {'Authorization': 'token ' + savedToken, 'Accept': 'application/vnd.github.v3+json'}
+  }).then(r => {
+    if (!r.ok) { 
+      localStorage.removeItem('inf_gh_token');
+      showMsg('loginMsg','❌ Token inválido — ingresa uno nuevo abajo','err');
+      document.getElementById('tokenRow').style.display = 'block';
       btn.disabled = false; btn.textContent = 'Ingresar →';
-    });
+      return;
+    }
+    token = savedToken;
+    sessionStorage.setItem('inf_s', JSON.stringify({email, nombre: user.nombre}));
+    mostrarPanel(user.nombre);
+  }).catch(e => {
+    showMsg('loginMsg','❌ ' + e.message,'err');
+    btn.disabled = false; btn.textContent = 'Ingresar →';
+  });
+}
+
+function saveToken() {
+  const t = document.getElementById('tokenField').value.trim();
+  if (!t) return;
+  localStorage.setItem('inf_gh_token', t);
+  document.getElementById('tokenRow').style.display = 'none';
+  document.getElementById('loginBtn').click();
 }
 
 function mostrarPanel(nombre) {
@@ -337,7 +364,11 @@ function switchTab(tab, btn) {
   document.getElementById('pane' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
 }
 
-function logout() { sessionStorage.removeItem('inf_s'); location.reload(); }
+function logout() { 
+  sessionStorage.removeItem('inf_s'); 
+  token = '';
+  location.reload(); 
+}
 
 // Restaurar sesión
 (function(){
@@ -346,14 +377,16 @@ function logout() { sessionStorage.removeItem('inf_s'); location.reload(); }
   const {email, nombre} = JSON.parse(s);
   const user = USUARIOS[email];
   if (!user) return;
-  token = user.token;
+  token = getStoredToken();
+  if (!token) return;
   mostrarPanel(nombre);
 })();
 
 // ── GITHUB ──
 async function ghFetch(url, tok, opts={}) {
+  const t = tok || token || getStoredToken();
   return fetch(url, { ...opts, headers: {
-    'Authorization': `token ${tok || token}`,
+    'Authorization': `token ${t}`,
     'Accept': 'application/vnd.github.v3+json',
     'Content-Type': 'application/json',
     ...(opts.headers||{})
