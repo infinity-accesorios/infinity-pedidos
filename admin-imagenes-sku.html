@@ -162,6 +162,7 @@ select.inp { cursor: pointer; }
   </div>
   <div class="h-right" id="hRight" style="display:none">
     <span class="h-user" id="hUser"></span>
+    <button class="btn-out" onclick="resetToken()" style="border-color:var(--gold);color:var(--gold-dark)">🔑 Token</button>
     <button class="btn-out" onclick="logout()">Cerrar sesión</button>
   </div>
 </header>
@@ -466,6 +467,14 @@ function showMsg(id, msg, type) {
   if (!el) return;
   el.textContent = msg;
   el.className = 'msg' + (type ? ' '+type : '');
+}
+
+function resetToken() {
+  if (confirm('¿Actualizar el token de GitHub?\nDeberás ingresar uno nuevo al volver a entrar.')) {
+    localStorage.removeItem('inf_gh_token');
+    sessionStorage.removeItem('inf_s');
+    location.reload();
+  }
 }
 
 function logout() { sessionStorage.removeItem('inf_s'); location.reload(); }
