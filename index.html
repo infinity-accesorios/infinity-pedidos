@@ -967,7 +967,7 @@ function printAllPrep(){
 
 
 <!-- MODAL BLUEEXPRESS -->
-<div id="BEX_OV" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(44,31,18,0.6);z-index:10000;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+<div id="BEX_OV" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(44,31,18,0.6);z-index:99999;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
   <div style="background:white;border-radius:16px;padding:28px;width:94%;max-width:440px;box-shadow:0 24px 48px rgba(44,31,18,0.2);">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:14px;border-bottom:1.5px solid var(--border-light);">
       <div style="width:42px;height:42px;background:#003087;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">📦</div>
@@ -1011,37 +1011,18 @@ var _bexOrderId = null;
 
 function openBlueExpress(id) {
   var o = findOrder(id);
-  if (!o) return;
-  if (o.st !== 'S') { alert('El pedido debe estar en estado Enviado'); return; }
+  if (!o) { alert('Pedido no encontrado'); return; }
   
-  var num = prompt('📦 TRACKING BLUEEXPRESS\n\nCliente: ' + o.cl + '\nTeléfono: ' + (o.ph || 'Sin teléfono') + '\n\nIngresa el número de seguimiento:', o.bex_tracking || '');
-  
-  if (num === null) return; // canceló
-  num = num.trim();
-  if (!num) { alert('Debes ingresar un número de seguimiento'); return; }
-  
-  var phone = (o.ph || '').replace(/\D/g, '');
-  if (!phone) { alert('Este pedido no tiene teléfono registrado'); return; }
-  if (phone.length === 9) phone = '56' + phone;
-  else if (phone.length === 11 && phone.indexOf('56') !== 0) phone = '56' + phone;
-
-  var trackUrl = 'https://www.blue.cl/enviar/seguimiento?n_seguimiento=' + num;
-  var skus = (o.skus || []).map(function(s){ return '• ' + s.sku + (s.qty > 1 ? ' x' + s.qty : ''); }).join('\n');
-
-  var msg =
-    'Hola ' + (o.cl || '') + '! 🎉\n\n' +
-    'Tu pedido *Infinity Javiera* ya fue despachado por *BlueExpress* 📦✨\n\n' +
-    '📋 *Productos:*\n' + skus + '\n\n' +
-    '🔢 *N° de seguimiento:* ' + num + '\n\n' +
-    '🔍 *Rastrea tu pedido aquí:*\n' + trackUrl + '\n\n' +
-    'Cualquier consulta escríbenos 🤍\n_Infinity Javiera_';
-
-  // Guardar tracking en el pedido
-  o.bex_tracking = num;
-  saveSingle(o);
-
-  var waUrl = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
-  window.open(waUrl, '_blank');
+  // Mostrar modal BEX
+  _bexOrderId = id;
+  var bexOv = document.getElementById('BEX_OV');
+  if (!bexOv) { alert('Error: modal no encontrado'); return; }
+  document.getElementById('BEX_cliente').textContent = (o.cl||'') + ' · ' + (o.ph||'Sin teléfono');
+  document.getElementById('BEX_num').value = o.bex_tracking || '';
+  document.getElementById('BEX_link').style.display = 'none';
+  bexOv.style.display = 'flex';
+  setTimeout(function(){ document.getElementById('BEX_num').focus(); }, 150);
+  if (o.bex_tracking) bexPreview();
 }
 
 function cerrarBEX() {
