@@ -275,9 +275,28 @@ header p.subtitle {
 }
 .card-img-wrap img {
   width: 100%; height: 100%; object-fit: cover;
-  transition: transform 0.5s ease; display: block;
+  transition: transform 0.5s ease, filter 0.3s ease; display: block;
 }
 .card:hover .card-img-wrap img { transform: scale(1.06); }
+/* Agotado */
+.card.agotado .card-img-wrap img {
+  filter: grayscale(80%) brightness(0.55);
+}
+.card.agotado .card-img-wrap::after {
+  content: 'AGOTADO';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  font-weight: 700; letter-spacing: 0.25em;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+.card.agotado .add-btn {
+  background: #9e9e9e; cursor: not-allowed; opacity: 0.6;
+}
+.card.agotado .add-btn:hover { background: #9e9e9e; }
 .sku-badge {
   position: absolute; bottom: 0; left: 0; right: 0;
   background: linear-gradient(to top, rgba(44,31,18,0.78) 0%, transparent 100%);
@@ -1110,7 +1129,7 @@ function renderGrid() {
     const cant = carrito[p.sku] || 1;
     const enCar = !!carrito[p.sku];
     return `
-    <div class="card${p.especial?' special':''}" data-sku="${p.sku}">
+    <div class="card${p.especial?' special':''}${p.agotado?' agotado':''}" data-sku="${p.sku}">
       ${p.especial?'<div class="special-badge">✦ Precio Especial</div>':''}
       <div class="card-img-wrap">
         <img src="${p.img}" alt="${p.sku}" loading="lazy">
@@ -1124,8 +1143,8 @@ function renderGrid() {
                  value="${cant}" min="1" max="999" oninput="validarInput('${p.sku}')">
           <button class="card-qty-btn" onclick="cambiarInputCant('${p.sku}',1)">+</button>
         </div>
-        <button class="add-btn${enCar?' en-carrito':''}" onclick="agregar('${p.sku}')">
-          ${enCar ? '✓ Actualizar carrito' : '+ Agregar al carrito'}
+        <button class="add-btn${enCar?' en-carrito':''}" onclick="${p.agotado?'':"agregar('"+ p.sku +"')"}" ${p.agotado?'disabled':''}>
+          ${p.agotado ? 'Agotado' : enCar ? '✓ Actualizar carrito' : '+ Agregar al carrito'}
         </button>
       </div>
     </div>`;
