@@ -352,13 +352,12 @@ function switchTab(tab, btn) {
   document.getElementById('pane' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
 }
 
-async async function toggleAgotadoRapido(sku) {
+async function toggleAgotadoRapido(sku) {
   try {
     let extras = [...extraSKUs];
     let eSha = null;
     const re = await ghFetch('https://api.github.com/repos/' + REPO + '/contents/productos-extra.json');
-    if (re.ok) { const d = await re.json(); eSha = d.sha; extras = JSON.parse(atob(d.content.replace(/
-/g,''))); }
+    if (re.ok) { const d = await re.json(); eSha = d.sha; extras = JSON.parse(atob(d.content.split('\n').join(''))); }
     const idx = extras.findIndex(p => p.sku === sku);
     if (idx >= 0) {
       extras[idx].agotado = !extras[idx].agotado;
