@@ -1630,7 +1630,10 @@ async function aCargarExtras() {
 }
 
 function aTodosSkus() {
-  return [...new Set([...ASKUS,...aExtraSkus.map(p=>p.sku)])].sort();
+  // Incluir: 78 base + extras del JSON + cualquier imagen detectada en GitHub
+  const imgSkus = Object.keys(aImgMap).filter(s => !ASKUS.includes(s));
+  const extraSkus = aExtraSkus.map(p => p.sku);
+  return [...new Set([...ASKUS, ...extraSkus, ...imgSkus])].sort();
 }
 
 function aFileToB64(file){
