@@ -743,7 +743,7 @@ function render(){
       '<td style="max-width:100px;font-size:.78rem;color:#888">'+esc(o.no||'-')+'</td>'+
       '<td><div class="abtn">'+
         '<button class="ibtn grn" data-id="'+id+'" data-act="wsp">💬</button>'+
-        (o.st===\'S\'?\'<button class="ibtn" style="background:#003087;color:#fff;border-color:#003087" data-id="\'+id+\'" data-act="bex">📦</button>\':\'\')+
+        (o.st==="S" ? '<button class="ibtn" style="background:#003087;color:#fff;border-color:#003087" data-id="'+id+'" data-act="bex">📦</button>' : '')+
         '<button class="ibtn" data-id="'+id+'" data-act="prt">🖨️</button>'+
         '<button class="ibtn" data-id="'+id+'" data-act="edt">✏️</button>'+
         '<button class="ibtn red" data-id="'+id+'" data-act="del">🗑️</button>'+
@@ -967,29 +967,45 @@ function printAllPrep(){
 function openBlueExpress(id) {
   var o = findOrder(id);
   if (!o) return;
-  var savedNum = o.bex_tracking || '';
-  var num = window.prompt('Número de seguimiento BlueExpress\n\nCliente: ' + (o.cl || '') + '\nTeléfono: ' + (o.ph || 'Sin teléfono'), savedNum);
-  if (num === null) return;
-  num = (num || '').trim();
-  if (!num) return;
-  var phone = (o.ph || '').replace(/\D/g, '');
-  if (!phone) { alert('Este pedido no tiene teléfono registrado'); return; }
+  var num = window.prompt('Número de seguimiento BlueExpress para ' + (o.cl || '') + ':', o.bex_tracking || '');
+  if (num === null || num.trim() === '') return;
+  num = num.trim();
+  var phone = (o.ph || '').replace(/[^0-9]/g, '');
+  if (!phone) { alert('Sin teléfono'); return; }
   if (phone.length === 9) phone = '56' + phone;
-  else if (phone.length === 11 && phone.slice(0,2) !== '56') phone = '56' + phone;
-  var skus = (o.skus || []).map(function(s) {
-    return '• ' + s.sku + (s.qty > 1 ? ' x' + s.qty : '');
-  }).join('\n');
-  var trackUrl = 'https://www.blue.cl/enviar/seguimiento?n_seguimiento=' + num;
-  var msg = 'Hola ' + (o.cl || '') + '! \n\n'
-    + 'Tu pedido *Infinity Javiera* ya fue despachado por *BlueExpress* \n\n'
-    + '*Productos:*\n' + skus + '\n\n'
-    + '*N de seguimiento:* ' + num + '\n\n'
-    + '*Rastrea tu pedido:*\n' + trackUrl + '\n\n'
-    + 'Cualquier consulta escribenos \n_Infinity Javiera_';
+  var items = (o.skus || []).map(function(s) { return String.fromCharCode(8226) + ' ' + s.sku + (s.qty > 1 ? ' x' + s.qty : ''); }).join('\n');
+  var link = 'https://www.blue.cl/enviar/seguimiento?n_seguimiento=' + num;
+  var txt = 'Hola ' + (o.cl || '') + '!\n\n'
+    + 'Tu pedido Infinity Javiera fue despachado por BlueExpress \n\n'
+    + 'Productos:\n' + items + '\n\n'
+    + 'N de seguimiento: ' + num + '\n\n'
+    + 'Rastrea tu pedido:\n' + link + '\n\n'
+    + 'Cualquier consulta escribenos\nInfinity Javiera';
   o.bex_tracking = num;
   saveSingle(o);
-  window.open('https://wa.me/' + phone + '?text=' + encodeURIComponent(msg), '_blank');
+  window.open('https://wa.me/' + phone + '?text=' + encodeURIComponent(txt), '_blank');
 }
+</script>
+
+<script>
+(async function() {
+  try {
+    var r = await fetch('https://raw.githubusercontent.com/infinity-accesorios/infinity-pedidos/main/productos-extra.json?t=' + Date.now());
+    if (!r.ok) return;
+    var extras = await r.json();
+    var sel = document.getElementById('MSKU');
+    if (!sel) return;
+    extras.forEach(function(p) {
+      for (var i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].value === p.sku) return;
+      }
+      var opt = document.createElement('option');
+      opt.value = p.sku;
+      opt.textContent = p.sku;
+      sel.appendChild(opt);
+    });
+  } catch(e) {}
+})();
 </script>
 
 </body>
