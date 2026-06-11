@@ -73,6 +73,9 @@ tr:hover td{background:var(--cream);}
 .ibtn.red:hover{background:#fde8e8;border-color:#e74c3c;color:#c0392b;}
 .ibtn.grn{background:#25d366;color:#fff;border-color:#25d366;}
 .ibtn.grn:hover{background:#1ebe5d;}
+.ibtn.bex{background:#003087;color:#fff;border-color:#003087;font-size:13px;}
+.ibtn.bex:hover{background:#002070;}
+.ibtn.grn:hover{background:#1ebe5d;}
 .empty{text-align:center;padding:48px;color:var(--text-light);}
 
 /* SKU PANEL */
@@ -743,6 +746,7 @@ function render(){
       '<td style="max-width:100px;font-size:.78rem;color:#888">'+esc(o.no||'-')+'</td>'+
       '<td><div class="abtn">'+
         '<button class="ibtn grn" data-id="'+id+'" data-act="wsp">💬</button>'+
+        (o.st==='S'?'<button class="ibtn bex" data-id="'+id+'" data-act="bex" title="Enviar tracking BlueExpress">📦</button>':'')+
         '<button class="ibtn" data-id="'+id+'" data-act="prt">🖨️</button>'+
         '<button class="ibtn" data-id="'+id+'" data-act="edt">✏️</button>'+
         '<button class="ibtn red" data-id="'+id+'" data-act="del">🗑️</button>'+
@@ -762,6 +766,7 @@ $id('TB').addEventListener('click',function(e){
   if(act==='edt') openModal(id);
   if(act==='del') delOrder(id);
   if(act==='wsp') sendWhatsApp(id);
+  if(act==='bex') openBlueExpress(id);
   if(act==='prt') printTicket(id);
 });
 
@@ -958,6 +963,133 @@ function printAllPrep(){
     });
   } catch(e) { /* sin extras */ }
 })();
+</script>
+
+
+<!-- MODAL BLUEEXPRESS -->
+<div id="BEX_OV" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(44,31,18,0.6);z-index:10000;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+  <div style="background:white;border-radius:16px;padding:28px;width:94%;max-width:440px;box-shadow:0 24px 48px rgba(44,31,18,0.2);">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:14px;border-bottom:1.5px solid var(--border-light);">
+      <div style="width:42px;height:42px;background:#003087;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">📦</div>
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--text)">Envío BlueExpress</div>
+        <div id="BEX_cliente" style="font-size:12px;color:var(--text-light);margin-top:2px;"></div>
+      </div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="display:block;font-size:10px;color:var(--text-light);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Número de seguimiento</label>
+      <input id="BEX_num" type="text" placeholder="Ej: 12345678"
+        style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;letter-spacing:0.05em;"
+        oninput="bexPreview()"
+        onkeydown="if(event.key==='Enter') enviarBEX()">
+      <div id="BEX_link" style="margin-top:8px;font-size:11px;color:var(--text-light);display:none;">
+        🔗 <a id="BEX_link_a" href="" target="_blank" style="color:#003087;text-decoration:underline;word-break:break-all;"></a>
+      </div>
+    </div>
+    <div style="background:var(--warm);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--brown);line-height:1.7;">
+      <strong>Se enviará por WhatsApp:</strong><br>
+      — Número de seguimiento<br>
+      — Link para rastrear el paquete<br>
+      — Resumen del pedido
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="enviarBEX()"
+        style="flex:2;background:#003087;color:white;border:none;border-radius:8px;padding:12px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;"
+        onmouseover="this.style.background='#002070'" onmouseout="this.style.background='#003087'">
+        💬 Enviar por WhatsApp
+      </button>
+      <button onclick="cerrarBEX()"
+        style="flex:1;background:white;border:1.5px solid var(--border);color:var(--text-mid);border-radius:8px;padding:12px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;">
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+var _bexOrderId = null;
+
+function openBlueExpress(id) {
+  var o = findOrder(id);
+  if (!o) return;
+  if (o.st !== 'S') { alert('El pedido debe estar en estado Enviado'); return; }
+  _bexOrderId = id;
+  document.getElementById('BEX_cliente').textContent = o.cl + ' · ' + (o.ph || 'Sin teléfono');
+  document.getElementById('BEX_num').value = o.bex_tracking || '';
+  document.getElementById('BEX_link').style.display = 'none';
+  var ov = document.getElementById('BEX_OV');
+  ov.style.display = 'flex';
+  setTimeout(function(){ document.getElementById('BEX_num').focus(); }, 100);
+  bexPreview();
+}
+
+function cerrarBEX() {
+  document.getElementById('BEX_OV').style.display = 'none';
+  _bexOrderId = null;
+}
+
+function bexPreview() {
+  var num = document.getElementById('BEX_num').value.trim();
+  var linkDiv = document.getElementById('BEX_link');
+  var linkA   = document.getElementById('BEX_link_a');
+  if (num.length >= 4) {
+    var url = 'https://www.blueexpress.com/seguimiento/?numero=' + encodeURIComponent(num);
+    linkA.href = url;
+    linkA.textContent = url;
+    linkDiv.style.display = 'block';
+  } else {
+    linkDiv.style.display = 'none';
+  }
+}
+
+function enviarBEX() {
+  var num = document.getElementById('BEX_num').value.trim();
+  if (!num) { alert('Ingresa el número de seguimiento'); return; }
+  var o = findOrder(_bexOrderId);
+  if (!o) return;
+  var phone = (o.ph || '').replace(/\D/g, '');
+  if (!phone) { alert('Este pedido no tiene teléfono registrado'); return; }
+  if (phone.length === 9) phone = '56' + phone;
+  else if (phone.length === 11 && phone.indexOf('56') !== 0) phone = '56' + phone;
+
+  var trackUrl = 'https://www.blueexpress.com/seguimiento/?numero=' + encodeURIComponent(num);
+  var skus = (o.skus || []).map(function(s){ return '• ' + s.sku + (s.qty > 1 ? ' x' + s.qty : ''); }).join('
+');
+
+  var msg =
+    'Hola ' + (o.cl || '') + '! 🎉
+
+' +
+    'Tu pedido *Infinity Javiera* ya fue despachado por *BlueExpress* 📦✨
+
+' +
+    '📋 *Productos:*
+' + skus + '
+
+' +
+    '🔢 *N° de seguimiento:* ' + num + '
+
+' +
+    '🔍 *Rastrea tu pedido aquí:*
+' + trackUrl + '
+
+' +
+    'Cualquier consulta escríbenos 🤍
+_Infinity Javiera_';
+
+  // Guardar tracking en el pedido
+  o.bex_tracking = num;
+  saveSingle(o);
+
+  var url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
+  window.open(url, '_blank');
+  cerrarBEX();
+}
+
+// Cerrar al hacer clic fuera
+document.getElementById('BEX_OV').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('BEX_OV')) cerrarBEX();
+});
 </script>
 
 </body>
