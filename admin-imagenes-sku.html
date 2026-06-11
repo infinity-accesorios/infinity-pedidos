@@ -235,6 +235,12 @@ select.inp { cursor: pointer; }
           <option value="14990">$14.990 — Especial</option>
         </select>
       </div>
+      <div style="display:flex;align-items:center;padding-top:22px;">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <input type="checkbox" id="fAgotado" style="width:17px;height:17px;accent-color:#8b3a2a;cursor:pointer;">
+          <span style="font-size:12px;color:var(--text-mid);font-family:'DM Sans',sans-serif;white-space:nowrap">Marcar <strong>agotado</strong></span>
+        </label>
+      </div>
       <div>
         <label class="field" style="display:block;font-size:10px;color:var(--text-light);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">Foto</label>
         <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
@@ -346,6 +352,31 @@ function switchTab(tab, btn) {
   document.getElementById('pane' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
 }
 
+async function toggleAgotadoRapido(sku) {
+  try {
+    let extras = [...extraSKUs];
+    let eSha = null;
+    const re = await ghFetch('https://api.github.com/repos/' + REPO + '/contents/productos-extra.json');
+    if (re.ok) { const d = await re.json(); eSha = d.sha; extras = JSON.parse(atob(d.content.replace(/
+/g,''))); }
+    const idx = extras.findIndex(p => p.sku === sku);
+    if (idx >= 0) {
+      extras[idx].agotado = !extras[idx].agotado;
+    } else {
+      extras.push({sku, especial: false, agotado: true});
+    }
+    const rPut = await ghFetch('https://api.github.com/repos/' + REPO + '/contents/productos-extra.json', {
+      method: 'PUT',
+      body: JSON.stringify({message: 'Agotado ' + sku, content: btoa(JSON.stringify(extras,null,2)), branch: BRANCH, ...(eSha?{sha:eSha}:{})})
+    });
+    if (!rPut.ok) throw new Error('Error guardando');
+    extraSKUs = extras;
+    const ahora = extras.find(p=>p.sku===sku)?.agotado;
+    showToast((ahora ? '🔴 ' : '✅ ') + sku + (ahora ? ' marcado agotado' : ' disponible'));
+    renderGrid();
+  } catch(e) { showToast('❌ ' + e.message); }
+}
+
 async function aToggleAgotado(sku) {
   let extras = [...aExtraSkus];
   let eSha = null;
@@ -438,6 +469,7 @@ async function subirImagen() {
   const sku    = 'SKU-' + String(parseInt(numStr)).padStart(3,'0');
   const precio = parseInt(document.getElementById('fPrecio').value);
   const especial = precio >= 14990;
+  const agotado = document.getElementById('fAgotado').checked;
   const ext    = pendingFile.name.split('.').pop().toLowerCase().replace('jpeg','jpg');
   const filename = `${sku}.${ext}`;
   const path     = `${IMG_DIR}/${filename}`;
@@ -588,6 +620,9 @@ function renderGrid() {
 function seleccionar(sku) {
   const num = sku.replace('SKU-','');
   document.getElementById('fSkuNum').value = parseInt(num).toString();
+  // Cargar estado agotado actual del SKU
+  const extraData = extraSKUs.find(p => p.sku === sku);
+  document.getElementById('fAgotado').checked = extraData ? !!extraData.agotado : false;
   document.querySelector('.form-card').scrollIntoView({behavior:'smooth', block:'start'});
   showToast('SKU ' + sku + ' seleccionado — ahora sube la foto');
 }
