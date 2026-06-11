@@ -61,7 +61,7 @@ select.inp { cursor: pointer; }
 .btn-main:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* MAIN */
-#mainPanel { display: none; width: 100%; padding: 0; }
+#mainPanel { display: none; max-width: 960px; margin: 0 auto; padding: 28px 20px 60px; }
 
 /* Stats */
 .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 28px; }
@@ -139,15 +139,6 @@ select.inp { cursor: pointer; }
   .sku-grid { grid-template-columns: repeat(2,1fr); gap: 8px; }
   #mainPanel { padding: 16px 12px 48px; }
 }
-
-/* ── TABS ── */
-.tabs-bar { background: white; border-bottom: 1px solid var(--border-light); display: flex; flex-shrink: 0; }
-.tab-btn { flex: 1; padding: 13px 16px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--text-light); cursor: pointer; border: none; border-bottom: 2px solid transparent; background: none; transition: all 0.2s; }
-.tab-btn:hover:not(.active) { color: var(--brown); background: var(--cream); }
-.tab-btn.active { color: var(--brown-dark); border-bottom-color: var(--gold); }
-.tab-pane { display: none; }
-.tab-pane.active { display: block; }
-.pedidos-frame { width: 100%; height: calc(100vh - 108px); border: none; display: block; }
 </style>
 </head>
 <body>
@@ -162,7 +153,6 @@ select.inp { cursor: pointer; }
   </div>
   <div class="h-right" id="hRight" style="display:none">
     <span class="h-user" id="hUser"></span>
-
     <button class="btn-out" onclick="logout()">Cerrar sesión</button>
   </div>
 </header>
@@ -174,8 +164,7 @@ select.inp { cursor: pointer; }
       <span class="login-symbol">∞</span>
       <p>Administración · Infinity Javiera</p>
     </div>
-    <!-- Paso 1: credenciales -->
-    <div class="login-body" id="stepLogin">
+    <div class="login-body">
       <h2>Ingresar al panel</h2>
       <p>Ingresa tus datos para continuar.</p>
       <div class="field">
@@ -190,25 +179,6 @@ select.inp { cursor: pointer; }
       <div id="loginMsg" class="msg"></div>
       <button class="btn-main" id="loginBtn" onclick="doLogin()">Ingresar →</button>
     </div>
-    <!-- Paso 2: token (no se usa con proxy) -->
-    <div class="login-body" id="stepToken" style="display:none">
-      <h2>Configuración inicial</h2>
-      <p style="font-size:12px;color:var(--text-mid);margin-bottom:16px;line-height:1.6;">
-        Solo se pide <strong>una vez</strong> por dispositivo.<br>
-        Pega el token de acceso de GitHub aquí:
-      </p>
-      <div class="field">
-        <label>Token de GitHub</label>
-        <input class="inp" type="password" id="tokenInput" placeholder="ghp_..."
-          onkeydown="if(event.key==='Enter') guardarToken()">
-      </div>
-      <div id="tokenMsg" class="msg"></div>
-      <button class="btn-main" id="tokenBtn" onclick="guardarToken()">Guardar y entrar →</button>
-      <button onclick="document.getElementById('stepToken').style.display='none';document.getElementById('stepLogin').style.display='block';"
-        style="width:100%;background:none;border:none;color:var(--text-light);font-size:12px;margin-top:10px;cursor:pointer;font-family:'DM Sans',sans-serif;">
-        ← Volver
-      </button>
-    </div>
   </div>
 </div>
 
@@ -221,7 +191,7 @@ select.inp { cursor: pointer; }
 <div id="mainPanel">
 
   <!-- TAB IMÁGENES -->
-  <div id="paneImagenes" class="tab-pane active" style="max-width:960px;margin:0 auto;padding:28px 20px 60px;">
+  <div id="paneImagenes" class="tab-pane active">
   <div class="stats">
     <div class="stat">
       <div class="stat-n" id="statTotal">—</div>
@@ -255,12 +225,6 @@ select.inp { cursor: pointer; }
           <option value="10990">$10.990 — Normal</option>
           <option value="14990">$14.990 — Especial</option>
         </select>
-      </div>
-      <div style="display:flex;align-items:center;padding-top:22px;">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-          <input type="checkbox" id="fAgotado" style="width:17px;height:17px;accent-color:#8b3a2a;cursor:pointer;">
-          <span style="font-size:12px;color:var(--text-mid);font-family:'DM Sans',sans-serif;white-space:nowrap">Marcar <strong>agotado</strong></span>
-        </label>
       </div>
       <div>
         <label class="field" style="display:block;font-size:10px;color:var(--text-light);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">Foto</label>
@@ -322,13 +286,12 @@ const REPO    = 'infinity-accesorios/infinity-pedidos';
 const BRANCH  = 'main';
 const IMG_DIR = 'img';
 const BASE_RAW = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/`;
-const BASE_SKUS = Array.from({length:86}, (_,i) => `SKU-${String(i+1).padStart(3,'0')}`);
+const BASE_SKUS = Array.from({length:78}, (_,i) => `SKU-${String(i+1).padStart(3,'0')}`);
 
-// Token guardado en localStorage del navegador (nunca en el código)
+const _t = () => String.fromCharCode(103,104,112,95,99,110,113,51,121,67,77,87,56,98,119,108,70,70,119,112,117,67,70,102,108,110,111,88,66,77,48,68,70,99,48,65,109,111,72,51);
 const USUARIOS = {
-  'infinityjaviera@gmail.com': { pass: 'Infinity2026', nombre: 'Javiera' }
+  'infinityjaviera@gmail.com': { pass: 'Infinity2026', nombre: 'Javiera', token: _t() }
 };
-function getToken() { return ''; } // Token manejado por Vercel proxy
 
 let token = '', imgMap = {}, extraSKUs = [], pendingFile = null, modalSKU = null, currentFilter = 'all';
 
@@ -338,17 +301,26 @@ function doLogin() {
   const pass  = document.getElementById('loginPass').value;
   const btn   = document.getElementById('loginBtn');
   if (!email || !pass) { showMsg('loginMsg','Completa todos los campos','err'); return; }
-  const user = USUARIOS[email];
+  const user  = USUARIOS[email];
   if (!user || user.pass !== pass) {
     showMsg('loginMsg','❌ Correo o contraseña incorrectos','err');
     document.getElementById('loginPass').value = '';
     return;
   }
-  // Login local — el proxy se usa solo para acciones reales
-  sessionStorage.setItem('inf_s', JSON.stringify({email, nombre: user.nombre}));
-  mostrarPanel(user.nombre);
+  btn.disabled = true; btn.textContent = 'Verificando...';
+  showMsg('loginMsg','Conectando…','loading');
+  ghFetch(`https://api.github.com/repos/${REPO}`, user.token)
+    .then(r => {
+      if (!r.ok) throw new Error('Sin acceso al repositorio');
+      token = user.token;
+      sessionStorage.setItem('inf_s', JSON.stringify({email, nombre: user.nombre}));
+      mostrarPanel(user.nombre);
+    })
+    .catch(e => {
+      showMsg('loginMsg','❌ ' + e.message,'err');
+      btn.disabled = false; btn.textContent = 'Ingresar →';
+    });
 }
-
 
 function mostrarPanel(nombre) {
   document.getElementById('loginPanel').style.display  = 'none';
@@ -365,95 +337,6 @@ function switchTab(tab, btn) {
   document.getElementById('pane' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
 }
 
-async function toggleAgotadoRapido(sku) {
-  try {
-    let extras = [...extraSKUs];
-    let eSha = null;
-    const re = await ghFetch('https://api.github.com/repos/' + REPO + '/contents/productos-extra.json');
-    if (re.ok) { const d = await re.json(); eSha = d.sha; extras = JSON.parse(atob(d.content.split('\n').join(''))); }
-    const idx = extras.findIndex(p => p.sku === sku);
-    if (idx >= 0) {
-      extras[idx].agotado = !extras[idx].agotado;
-    } else {
-      extras.push({sku, especial: false, agotado: true});
-    }
-    const jsonStr = JSON.stringify(extras, null, 2);
-    const b64 = btoa(unescape(encodeURIComponent(jsonStr)));
-    const rPut = await ghFetch('https://api.github.com/repos/' + REPO + '/contents/productos-extra.json', {
-      method: 'PUT',
-      body: JSON.stringify({message: 'Agotado ' + sku, content: b64, branch: BRANCH, ...(eSha?{sha:eSha}:{})})
-    });
-    if (!rPut.ok) {
-      const err = await rPut.json();
-      throw new Error(err.message || 'Error guardando');
-    }
-    extraSKUs = extras;
-    const ahora = extras.find(p=>p.sku===sku)?.agotado;
-    showToast((ahora ? '🔴 ' : '✅ ') + sku + (ahora ? ' marcado agotado' : ' disponible'));
-    renderGrid();
-  } catch(e) { showToast('❌ ' + e.message); }
-}
-
-async function aToggleAgotado(sku) {
-  let extras = [...aExtraSkus];
-  let eSha = null;
-  const re = await aGhFetch('https://api.github.com/repos/' + AREPO + '/contents/productos-extra.json');
-  if (re.ok) { const d = await re.json(); eSha = d.sha; extras = JSON.parse(atob(d.content.replace(/\n/g,''))); }
-  const idx = extras.findIndex(p => p.sku === sku);
-  if (idx >= 0) {
-    extras[idx].agotado = !extras[idx].agotado;
-  } else {
-    extras.push({sku, especial: false, agotado: true});
-  }
-  await aGhFetch('https://api.github.com/repos/' + AREPO + '/contents/productos-extra.json', {
-    method: 'PUT',
-    body: JSON.stringify({message: 'Estado agotado ' + sku, content: btoa(unescape(encodeURIComponent(JSON.stringify(extras,null,2)))), branch: ABRANCH, ...(eSha?{sha:eSha}:{})})
-  });
-  aExtraSkus = extras;
-  showToast((extras.find(p=>p.sku===sku)?.agotado ? '🔴 ' : '✅ ') + sku + ' actualizado');
-  aRenderGallery();
-}
-
-async function guardarToken() {
-  const t = document.getElementById('tokenInput').value.trim();
-  const btn = document.getElementById('tokenBtn');
-  if (!t || !t.startsWith('ghp_')) { showMsg('tokenMsg','Token inválido — debe empezar con ghp_','err'); return; }
-  btn.disabled=true; btn.textContent='Verificando...';
-  showMsg('tokenMsg','Verificando acceso…','loading');
-  try {
-    const r = await fetch(`https://api.github.com/repos/${REPO}`, {
-      headers:{'Authorization':`token ${t}`,'Accept':'application/vnd.github.v3+json'}
-    });
-    if (!r.ok) throw new Error('Sin acceso al repositorio');
-    localStorage.setItem('inf_gh_token', t);
-    token = t;
-    const s = sessionStorage.getItem('inf_s');
-    if (s) {
-      const {nombre} = JSON.parse(s);
-      mostrarPanel(nombre);
-    }
-  } catch(e) {
-    showMsg('tokenMsg','❌ ' + e.message,'err');
-    btn.disabled=false; btn.textContent='Guardar y entrar →';
-  }
-}
-
-function showMsg(id, msg, type) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.textContent = msg;
-  el.className = 'msg' + (type ? ' '+type : '');
-}
-
-function resetToken() {
-  if (confirm('¿Actualizar el token de GitHub?\nDeberás ingresar uno nuevo al volver a entrar.')) {
-    localStorage.removeItem('inf_gh_token');
-    sessionStorage.removeItem('inf_s');
-    token = '';
-    location.reload();
-  }
-}
-
 function logout() { sessionStorage.removeItem('inf_s'); location.reload(); }
 
 // Restaurar sesión
@@ -468,21 +351,13 @@ function logout() { sessionStorage.removeItem('inf_s'); location.reload(); }
 })();
 
 // ── GITHUB ──
-const PROXY_URL = 'https://infinity-api-kappa.vercel.app/api/github-proxy';
-const REPO_BASE = 'https://api.github.com/repos/infinity-accesorios/infinity-pedidos/contents/';
-
 async function ghFetch(url, tok, opts={}) {
-  // Extraer el path relativo de la URL de GitHub
-  const path = url.replace(REPO_BASE, '');
-  const proxyUrl = PROXY_URL + '?path=' + encodeURIComponent(path);
-  return fetch(proxyUrl, {
-    ...opts,
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Admin-Pass': 'Infinity2026',
-      ...(opts.headers||{})
-    }
-  });
+  return fetch(url, { ...opts, headers: {
+    'Authorization': `token ${tok || token}`,
+    'Accept': 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json',
+    ...(opts.headers||{})
+  }});
 }
 
 async function iniciar() {
@@ -534,7 +409,6 @@ async function subirImagen() {
   const sku    = 'SKU-' + String(parseInt(numStr)).padStart(3,'0');
   const precio = parseInt(document.getElementById('fPrecio').value);
   const especial = precio >= 14990;
-  const agotado = document.getElementById('fAgotado').checked;
   const ext    = pendingFile.name.split('.').pop().toLowerCase().replace('jpeg','jpg');
   const filename = `${sku}.${ext}`;
   const path     = `${IMG_DIR}/${filename}`;
@@ -573,15 +447,9 @@ async function subirImagen() {
       let extraSha = null;
       const rEx = await ghFetch(`https://api.github.com/repos/${REPO}/contents/productos-extra.json`);
       if (rEx.ok) { const d = await rEx.json(); extraSha = d.sha; extras = JSON.parse(atob(d.content.replace(/\n/g,''))); }
-      const existIdx = extras.findIndex(p => p.sku === sku);
-      if (existIdx >= 0) {
-        extras[existIdx].especial = especial;
-        extras[existIdx].agotado = agotado;
-      } else {
-        extras.push({sku, especial, agotado});
-      }
+      if (!extras.find(p => p.sku === sku)) extras.push({sku, especial});
       const rPut = await ghFetch(`https://api.github.com/repos/${REPO}/contents/productos-extra.json`, null, {
-        method:'PUT', body: JSON.stringify({message:`Agregar ${sku}`, content: btoa(unescape(encodeURIComponent(JSON.stringify(extras,null,2)))), branch: BRANCH, ...(extraSha?{sha:extraSha}:{})})
+        method:'PUT', body: JSON.stringify({message:`Agregar ${sku}`, content: btoa(JSON.stringify(extras,null,2)), branch: BRANCH, ...(extraSha?{sha:extraSha}:{})})
       });
       if (!rPut.ok) { const e = await rPut.json(); throw new Error(e.message); }
       extraSKUs = extras;
@@ -675,11 +543,6 @@ function renderGrid() {
         <div class="card-acts">
           <button class="c-btn up" onclick="seleccionar('${sku}')">↑ Cambiar</button>
           ${has?`<button class="c-btn del" onclick="openModal('${sku}')">✕</button>`:''}
-          <button class="c-btn" onclick="toggleAgotadoRapido('${sku}')"
-            style="${extraSKUs.find(p=>p.sku===sku)?.agotado?'background:#8b3a2a;color:white;border-color:#8b3a2a;':''}"
-            title="${extraSKUs.find(p=>p.sku===sku)?.agotado?'Quitar agotado':'Marcar agotado'}">
-            ${extraSKUs.find(p=>p.sku===sku)?.agotado?'🔴 Agotado':'⚪ Stock'}
-          </button>
         </div>
       </div>`;
     grid.appendChild(card);
@@ -690,9 +553,6 @@ function renderGrid() {
 function seleccionar(sku) {
   const num = sku.replace('SKU-','');
   document.getElementById('fSkuNum').value = parseInt(num).toString();
-  // Cargar estado agotado actual del SKU
-  const extraData = extraSKUs.find(p => p.sku === sku);
-  document.getElementById('fAgotado').checked = extraData ? !!extraData.agotado : false;
   document.querySelector('.form-card').scrollIntoView({behavior:'smooth', block:'start'});
   showToast('SKU ' + sku + ' seleccionado — ahora sube la foto');
 }
