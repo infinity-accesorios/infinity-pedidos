@@ -1525,24 +1525,33 @@ const AUSERS  = {'infinityjaviera@gmail.com':{pass:'Infinity2026',nombre:'Javier
 let aToken='', aImgMap={}, aExtraSkus=[], aPendingFile=null, aModalSku=null;
 
 function abrirAdmin() {
-  const overlay = document.getElementById('adminOverlay');
-  overlay.classList.add('open');
-  // Si ya tiene sesión, ir directo al panel
-  const s = sessionStorage.getItem('adm_s');
-  if (s) {
-    const {email,nombre} = JSON.parse(s);
-    const u = AUSERS[email];
-    if (u) { aToken = u.token; mostrarAdminPanel(nombre); return; }
+  try {
+    var overlay = document.getElementById('adminOverlay');
+    overlay.classList.add('open');
+    var s = sessionStorage.getItem('adm_s');
+    if (s) {
+      var sd = JSON.parse(s);
+      var u = AUSERS[sd.email];
+      if (u) { aToken = u.token; mostrarAdminPanel(sd.nombre); return; }
+    }
+    document.getElementById('adminLoginBox').style.display = 'block';
+    document.getElementById('adminPanelBox').style.display = 'none';
+  } catch(err) {
+    alert('Error abriendo admin: ' + err.message);
   }
-  document.getElementById('adminLoginBox').style.display = 'block';
-  document.getElementById('adminPanelBox').style.display = 'none';
 }
 
 function cerrarAdmin() {
   document.getElementById('adminOverlay').classList.remove('open');
 }
-document.getElementById('adminOverlay').addEventListener('click', e => {
-  if (e.target === document.getElementById('adminOverlay')) cerrarAdmin();
+// Cerrar al hacer clic fuera del modal
+window.addEventListener('DOMContentLoaded', function() {
+  var ov = document.getElementById('adminOverlay');
+  if (ov) {
+    ov.addEventListener('click', function(e) {
+      if (e.target === ov) cerrarAdmin();
+    });
+  }
 });
 
 function adminLogin() {
