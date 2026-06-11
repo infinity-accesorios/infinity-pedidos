@@ -337,26 +337,41 @@ function doLogin() {
   const pass  = document.getElementById('loginPass').value;
   const btn   = document.getElementById('loginBtn');
   if (!email || !pass) { showMsg('loginMsg','Completa todos los campos','err'); return; }
-  const user  = USUARIOS[email];
+  const user = USUARIOS[email];
   if (!user || user.pass !== pass) {
     showMsg('loginMsg','❌ Correo o contraseña incorrectos','err');
     document.getElementById('loginPass').value = '';
     return;
   }
+  // Guardar email en sesión para después del token
+  sessionStorage.setItem('inf_s', JSON.stringify({email, nombre: user.nombre}));
+  const savedToken = localStorage.getItem('inf_gh_token');
+  if (!savedToken) {
+    // Mostrar pantalla de token
+    document.getElementById('stepLogin').style.display = 'none';
+    document.getElementById('stepToken').style.display = 'block';
+    setTimeout(function(){ document.getElementById('tokenInput').focus(); }, 100);
+    return;
+  }
   btn.disabled = true; btn.textContent = 'Verificando...';
   showMsg('loginMsg','Conectando…','loading');
-  ghFetch(`https://api.github.com/repos/${REPO}`, user.token)
-    .then(r => {
-      if (!r.ok) throw new Error('Sin acceso al repositorio');
-      token = user.token;
-      sessionStorage.setItem('inf_s', JSON.stringify({email, nombre: user.nombre}));
-      mostrarPanel(user.nombre);
-    })
-    .catch(e => {
-      showMsg('loginMsg','❌ ' + e.message,'err');
+  fetch('https://api.github.com/repos/' + REPO, {
+    headers:{'Authorization':'token ' + savedToken,'Accept':'application/vnd.github.v3+json'}
+  }).then(function(r) {
+    if (!r.ok) {
+      localStorage.removeItem('inf_gh_token');
+      showMsg('loginMsg','❌ Token inválido — vuelve a intentar','err');
       btn.disabled = false; btn.textContent = 'Ingresar →';
-    });
+      return;
+    }
+    token = savedToken;
+    mostrarPanel(user.nombre);
+  }).catch(function(e) {
+    showMsg('loginMsg','❌ ' + e.message,'err');
+    btn.disabled = false; btn.textContent = 'Ingresar →';
+  });
 }
+
 
 function mostrarPanel(nombre) {
   document.getElementById('loginPanel').style.display  = 'none';
