@@ -173,7 +173,8 @@ select.inp { cursor: pointer; }
       <span class="login-symbol">∞</span>
       <p>Administración · Infinity Javiera</p>
     </div>
-    <div class="login-body">
+    <!-- Paso 1: credenciales -->
+    <div class="login-body" id="stepLogin">
       <h2>Ingresar al panel</h2>
       <p>Ingresa tus datos para continuar.</p>
       <div class="field">
@@ -187,6 +188,25 @@ select.inp { cursor: pointer; }
       </div>
       <div id="loginMsg" class="msg"></div>
       <button class="btn-main" id="loginBtn" onclick="doLogin()">Ingresar →</button>
+    </div>
+    <!-- Paso 2: token (solo primera vez) -->
+    <div class="login-body" id="stepToken" style="display:none">
+      <h2>Configuración inicial</h2>
+      <p style="font-size:12px;color:var(--text-mid);margin-bottom:16px;line-height:1.6;">
+        Solo se pide <strong>una vez</strong> por dispositivo.<br>
+        Pega el token de acceso de GitHub aquí:
+      </p>
+      <div class="field">
+        <label>Token de GitHub</label>
+        <input class="inp" type="password" id="tokenInput" placeholder="ghp_..."
+          onkeydown="if(event.key==='Enter') guardarToken()">
+      </div>
+      <div id="tokenMsg" class="msg"></div>
+      <button class="btn-main" id="tokenBtn" onclick="guardarToken()">Guardar y entrar →</button>
+      <button onclick="document.getElementById('stepToken').style.display='none';document.getElementById('stepLogin').style.display='block';"
+        style="width:100%;background:none;border:none;color:var(--text-light);font-size:12px;margin-top:10px;cursor:pointer;font-family:'DM Sans',sans-serif;">
+        ← Volver
+      </button>
     </div>
   </div>
 </div>
@@ -400,6 +420,37 @@ async function aToggleAgotado(sku) {
   aExtraSkus = extras;
   showToast((extras.find(p=>p.sku===sku)?.agotado ? '🔴 ' : '✅ ') + sku + ' actualizado');
   aRenderGallery();
+}
+
+async function guardarToken() {
+  const t = document.getElementById('tokenInput').value.trim();
+  const btn = document.getElementById('tokenBtn');
+  if (!t || !t.startsWith('ghp_')) { showMsg('tokenMsg','Token inválido — debe empezar con ghp_','err'); return; }
+  btn.disabled=true; btn.textContent='Verificando...';
+  showMsg('tokenMsg','Verificando acceso…','loading');
+  try {
+    const r = await fetch(`https://api.github.com/repos/${REPO}`, {
+      headers:{'Authorization':`token ${t}`,'Accept':'application/vnd.github.v3+json'}
+    });
+    if (!r.ok) throw new Error('Sin acceso al repositorio');
+    localStorage.setItem('inf_gh_token', t);
+    token = t;
+    const s = sessionStorage.getItem('inf_s');
+    if (s) {
+      const {nombre} = JSON.parse(s);
+      mostrarPanel(nombre);
+    }
+  } catch(e) {
+    showMsg('tokenMsg','❌ ' + e.message,'err');
+    btn.disabled=false; btn.textContent='Guardar y entrar →';
+  }
+}
+
+function showMsg(id, msg, type) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'msg' + (type ? ' '+type : '');
 }
 
 function logout() { sessionStorage.removeItem('inf_s'); location.reload(); }
