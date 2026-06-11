@@ -610,6 +610,11 @@ function renderGrid() {
         <div class="card-acts">
           <button class="c-btn up" onclick="seleccionar('${sku}')">↑ Cambiar</button>
           ${has?`<button class="c-btn del" onclick="openModal('${sku}')">✕</button>`:''}
+          <button class="c-btn" onclick="toggleAgotadoRapido('${sku}')"
+            style="${extraSKUs.find(p=>p.sku===sku)?.agotado?'background:#8b3a2a;color:white;border-color:#8b3a2a;':''}"
+            title="${extraSKUs.find(p=>p.sku===sku)?.agotado?'Quitar agotado':'Marcar agotado'}">
+            ${extraSKUs.find(p=>p.sku===sku)?.agotado?'🔴 Agotado':'⚪ Stock'}
+          </button>
         </div>
       </div>`;
     grid.appendChild(card);
