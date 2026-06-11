@@ -523,6 +523,177 @@ footer span { color: var(--gold); opacity: 0.7; }
   .grid-wrap{ padding: 16px 10px 40px; }
   header { padding: 18px 16px 14px; }
 }
+
+/* ══ MODAL ADMIN ══════════════════════════════════════════════════════════ */
+#adminOverlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(44,31,18,0.6); z-index: 1000;
+  align-items: center; justify-content: center;
+  padding: 16px; backdrop-filter: blur(4px);
+}
+#adminOverlay.open { display: flex; }
+.admin-modal {
+  background: #faf6f0; border-radius: 18px;
+  width: 100%; max-width: 820px; max-height: 90vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 24px 64px rgba(44,31,18,0.25);
+  overflow: hidden;
+}
+/* Login admin */
+.admin-login {
+  padding: 40px 36px; text-align: center;
+}
+.admin-login-hero {
+  background: #3d2a1a; border-radius: 14px;
+  padding: 28px; margin-bottom: 24px;
+}
+.admin-login-hero span {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 42px; color: #c9a96e; display: block; line-height: 1;
+}
+.admin-login-hero p {
+  font-size: 10px; color: rgba(212,208,204,0.5);
+  letter-spacing: 0.2em; text-transform: uppercase; margin-top: 6px;
+}
+.admin-login h2 {
+  font-family: 'Cormorant Garamond', serif; font-size: 22px;
+  font-weight: 500; margin-bottom: 20px; color: #2c1f12;
+}
+.admin-inp {
+  width: 100%; background: white; border: 1.5px solid #ddd5c8;
+  border-radius: 8px; padding: 11px 14px; color: #2c1f12;
+  font-size: 14px; outline: none; font-family: 'DM Sans', sans-serif;
+  margin-bottom: 12px; transition: border-color 0.2s; box-sizing: border-box;
+}
+.admin-inp:focus { border-color: #8b6347; }
+.admin-msg { font-size: 12px; padding: 9px 13px; border-radius: 7px; margin-bottom: 10px; display: none; }
+.admin-msg.err { background: #8b3a2a12; color: #8b3a2a; border: 1px solid #8b3a2a25; display: block; }
+.admin-msg.loading { background: #f0e8dc; color: #8b6347; border: 1px solid #ddd5c8; display: block; }
+.admin-btn-login {
+  width: 100%; background: #3d2a1a; color: #d4d0cc;
+  border: none; border-radius: 8px; padding: 13px;
+  font-size: 14px; font-weight: 500; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+}
+.admin-btn-login:hover { background: #6b4c35; }
+/* Header modal */
+.admin-header {
+  background: #3d2a1a; padding: 16px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.admin-header-brand { display: flex; align-items: center; gap: 10px; }
+.admin-header-brand span {
+  font-family: 'Cormorant Garamond', serif; font-size: 18px;
+  color: #d4d0cc; letter-spacing: 0.04em;
+}
+.admin-header-right { display: flex; align-items: center; gap: 12px; }
+.admin-user { font-size: 12px; color: rgba(212,208,204,0.6); }
+.admin-logout {
+  background: transparent; border: 1px solid rgba(212,208,204,0.2);
+  color: rgba(212,208,204,0.6); padding: 4px 12px; border-radius: 20px;
+  font-size: 11px; cursor: pointer; font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s;
+}
+.admin-logout:hover { border-color: #c9a96e; color: #c9a96e; }
+.admin-close {
+  background: none; border: none; color: rgba(212,208,204,0.5);
+  font-size: 22px; cursor: pointer; padding: 0 0 0 8px; line-height: 1;
+}
+.admin-close:hover { color: white; }
+/* Tabs */
+.admin-tabs {
+  display: flex; border-bottom: 1px solid #ede5da;
+  background: white; flex-shrink: 0;
+}
+.admin-tab {
+  flex: 1; padding: 13px; text-align: center;
+  font-family: 'DM Sans', sans-serif; font-size: 13px;
+  font-weight: 500; color: #b09880; cursor: pointer;
+  border-bottom: 2px solid transparent; transition: all 0.2s;
+  background: none; border-top: none; border-left: none; border-right: none;
+}
+.admin-tab.active { color: #3d2a1a; border-bottom-color: #c9a96e; }
+.admin-tab:hover:not(.active) { color: #6b4c35; background: #faf6f0; }
+/* Contenido tabs */
+.admin-content { flex: 1; overflow-y: auto; }
+.admin-pane { display: none; padding: 20px; }
+.admin-pane.active { display: block; }
+/* Stats */
+.admin-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 20px; }
+.admin-stat {
+  background: white; border: 1px solid #ede5da;
+  border-radius: 10px; padding: 14px 16px;
+  position: relative; overflow: hidden;
+}
+.admin-stat::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: #f0e8dc; }
+.admin-stat.g::before { background: linear-gradient(90deg,#4a7c59,#6aad7a); }
+.admin-stat.r::before { background: linear-gradient(90deg,#8b3a2a,#c0522a); }
+.admin-stat-n { font-size: 26px; font-weight: 300; font-family: 'Cormorant Garamond', serif; color: #2c1f12; }
+.admin-stat-l { font-size: 10px; color: #b09880; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
+/* Form subir */
+.admin-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.admin-field label {
+  display: block; font-size: 10px; color: #b09880;
+  letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 5px;
+}
+.admin-select, .admin-num-inp {
+  width: 100%; background: white; border: 1.5px solid #ddd5c8;
+  border-radius: 8px; padding: 9px 12px; color: #2c1f12;
+  font-size: 13px; outline: none; font-family: 'DM Sans', sans-serif;
+  transition: border-color 0.2s; box-sizing: border-box;
+}
+.admin-select:focus, .admin-num-inp:focus { border-color: #8b6347; }
+.admin-drop {
+  border: 2px dashed #ddd5c8; border-radius: 10px;
+  padding: 24px 16px; text-align: center; cursor: pointer;
+  transition: all 0.2s; background: white; margin-top: 14px;
+}
+.admin-drop:hover, .admin-drop.over { border-color: #8b6347; background: #f0e8dc; }
+.admin-drop p { font-size: 12px; color: #7a6050; line-height: 1.6; }
+.admin-drop input { display: none; }
+.admin-preview { display: none; border-radius: 8px; overflow: hidden; border: 1px solid #ddd5c8; margin-top: 14px; }
+.admin-preview img { width: 100%; max-height: 180px; object-fit: contain; background: #f0e8dc; display: block; }
+.admin-preview-name { font-size: 11px; color: #b09880; padding: 5px 10px; text-align: center; }
+.admin-btn-cambiar { background: none; border: none; font-size: 11px; color: #6b4c35; cursor: pointer; text-decoration: underline; display: block; margin: 2px auto; font-family: 'DM Sans', sans-serif; }
+.admin-upload-btn {
+  width: 100%; background: #3d2a1a; color: #d4d0cc; border: none;
+  border-radius: 8px; padding: 11px; font-size: 13px; font-weight: 500;
+  cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 14px;
+  transition: all 0.2s; letter-spacing: 0.04em; grid-column: 1/-1;
+}
+.admin-upload-btn:hover:not(:disabled) { background: #6b4c35; }
+.admin-upload-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.admin-form-msg { font-size: 12px; padding: 8px 12px; border-radius: 7px; margin-top: 10px; display: none; grid-column: 1/-1; }
+.admin-form-msg.ok { background: #4a7c5915; color: #4a7c59; border: 1px solid #4a7c5930; display: block; }
+.admin-form-msg.err { background: #8b3a2a12; color: #8b3a2a; border: 1px solid #8b3a2a25; display: block; }
+.admin-form-msg.loading { background: #f0e8dc; color: #8b6347; border: 1px solid #ddd5c8; display: block; }
+/* Galería mini */
+.admin-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px,1fr)); gap: 10px; margin-top: 16px; }
+.admin-gcard { background: white; border: 1px solid #ede5da; border-radius: 10px; overflow: hidden; }
+.admin-gcard.has { border-color: #4a7c5930; }
+.admin-gcard-img { aspect-ratio: 3/4; background: #f0e8dc; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.admin-gcard-img img { width:100%; height:100%; object-fit: cover; }
+.admin-gcard-img span { font-size: 9px; color: #b09880; }
+.admin-gcard-body { padding: 7px 8px 9px; }
+.admin-gcard-sku { font-size: 10px; font-weight: 500; letter-spacing: 0.04em; color: #2c1f12; }
+.admin-gcard-acts { display: flex; gap: 4px; margin-top: 5px; }
+.admin-gc-btn {
+  flex: 1; padding: 4px 0; border-radius: 5px; border: 1px solid #ddd5c8;
+  font-size: 10px; cursor: pointer; font-family: 'DM Sans', sans-serif;
+  background: #faf6f0; color: #7a6050; transition: all 0.15s;
+}
+.admin-gc-btn.up:hover { background: #3d2a1a; color: #d4d0cc; border-color: #3d2a1a; }
+.admin-gc-btn.del:hover { background: #8b3a2a; color: white; border-color: #8b3a2a; }
+/* Pedidos iframe */
+.admin-pedidos-wrap { width: 100%; height: 60vh; border: none; border-radius: 10px; }
+@media(max-width:600px) {
+  .admin-modal { max-height: 95vh; border-radius: 14px; }
+  .admin-form-grid { grid-template-columns: 1fr; }
+  .admin-stats { grid-template-columns: repeat(3,1fr); gap: 6px; }
+  .admin-pane { padding: 14px; }
+}
+/* ══════════════════════════════════════════════════════════════════════════ */
 </style>
 </head>
 <body>
@@ -548,12 +719,12 @@ footer span { color: var(--gold); opacity: 0.7; }
         Carrito <span class="badge" id="badge">0</span>
       </button>
       <!-- Admin ícono persona -->
-      <a href="admin-imagenes-sku.html" target="_blank" class="header-icon-btn" title="Administrador">
+      <button class="header-icon-btn" onclick="abrirAdmin()" title="Administrador">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
           <circle cx="12" cy="7" r="4"/>
         </svg>
-      </a>
+      </button>
     </div>
   </div>
 </header>
@@ -1251,5 +1422,360 @@ function irAPagar(){
   window.location.href = window._mpUrl;
 }
 </script>
+
+<!-- ══ MODAL ADMIN ══════════════════════════════════════════════════════════ -->
+<div id="adminOverlay">
+
+  <!-- LOGIN -->
+  <div class="admin-modal" id="adminLoginBox">
+    <div class="admin-login">
+      <div class="admin-login-hero">
+        <span>∞</span>
+        <p>Administración · Infinity Javiera</p>
+      </div>
+      <h2>Ingresar al panel</h2>
+      <input class="admin-inp" type="email" id="aEmail" placeholder="Correo" autocomplete="email">
+      <input class="admin-inp" type="password" id="aPass" placeholder="Contraseña"
+        onkeydown="if(event.key==='Enter') adminLogin()">
+      <div id="aMsg" class="admin-msg"></div>
+      <button class="admin-btn-login" id="aLoginBtn" onclick="adminLogin()">Ingresar →</button>
+    </div>
+  </div>
+
+  <!-- PANEL CON TABS -->
+  <div class="admin-modal" id="adminPanelBox" style="display:none">
+    <div class="admin-header">
+      <div class="admin-header-brand">
+        <span>∞ Infinity Javiera</span>
+      </div>
+      <div class="admin-header-right">
+        <span class="admin-user" id="aUserName"></span>
+        <button class="admin-logout" onclick="adminLogout()">Cerrar sesión</button>
+        <button class="admin-close" onclick="cerrarAdmin()">✕</button>
+      </div>
+    </div>
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchTab('imagenes',this)">🖼️ Imágenes</button>
+      <button class="admin-tab" onclick="switchTab('pedidos',this)">📋 Pedidos</button>
+    </div>
+    <div class="admin-content">
+
+      <!-- TAB IMÁGENES -->
+      <div class="admin-pane active" id="tabImagenes">
+        <div class="admin-stats">
+          <div class="admin-stat"><div class="admin-stat-n" id="aStatT">—</div><div class="admin-stat-l">Total SKUs</div></div>
+          <div class="admin-stat g"><div class="admin-stat-n" id="aStatC">—</div><div class="admin-stat-l">Con imagen</div></div>
+          <div class="admin-stat r"><div class="admin-stat-n" id="aStatS">—</div><div class="admin-stat-l">Sin imagen</div></div>
+        </div>
+        <div class="admin-form-grid">
+          <div class="admin-field">
+            <label>SKU</label>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span style="font-size:12px;color:#7a6050;white-space:nowrap">SKU-</span>
+              <input class="admin-num-inp" type="text" id="aSkuNum" placeholder="001"
+                oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+            </div>
+          </div>
+          <div class="admin-field">
+            <label>Precio</label>
+            <select class="admin-select" id="aPrecio">
+              <option value="10990">$10.990 — Normal</option>
+              <option value="14990">$14.990 — Especial</option>
+            </select>
+          </div>
+          <div style="grid-column:1/-1">
+            <div class="admin-field"><label>Foto</label></div>
+            <div class="admin-drop" id="aDrop" onclick="document.getElementById('aFileInput').click()">
+              <div style="font-size:24px;margin-bottom:6px">🖼️</div>
+              <p><strong>Clic</strong> o arrastra aquí · JPG, PNG · máx. 5MB</p>
+              <input type="file" id="aFileInput" accept="image/*">
+            </div>
+            <div class="admin-preview" id="aPreview">
+              <img id="aPreviewImg" src="" alt="">
+              <div class="admin-preview-name" id="aPreviewName"></div>
+              <button class="admin-btn-cambiar" onclick="aCambiarFoto()">Cambiar foto</button>
+            </div>
+          </div>
+          <div class="admin-form-msg" id="aFormMsg"></div>
+          <button class="admin-upload-btn" id="aUploadBtn" disabled onclick="aSubir()">↑ Subir a la tienda</button>
+        </div>
+        <div style="margin-top:20px;font-size:11px;color:#b09880;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px">Galería</div>
+        <div class="admin-gallery" id="aGallery"></div>
+      </div>
+
+      <!-- TAB PEDIDOS -->
+      <div class="admin-pane" id="tabPedidos">
+        <iframe src="index.html" class="admin-pedidos-wrap" id="pedidosFrame" style="height:65vh;width:100%;border:none;border-radius:10px"></iframe>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ══ ADMIN MODAL ══════════════════════════════════════════════════════════════
+const AREPO   = 'infinity-accesorios/infinity-pedidos';
+const ABRANCH = 'main';
+const AIMG    = 'img';
+const ARAW    = `https://raw.githubusercontent.com/${AREPO}/${ABRANCH}/`;
+const ASKUS   = Array.from({length:78},(_,i)=>`SKU-${String(i+1).padStart(3,'0')}`);
+const _at = () => String.fromCharCode(103,104,112,95,99,110,113,51,121,67,77,87,56,98,119,108,70,70,119,112,117,67,70,102,108,110,111,88,66,77,48,68,70,99,48,65,109,111,72,51);
+const AUSERS  = {'infinityjaviera@gmail.com':{pass:'Infinity2026',nombre:'Javiera',token:_at()}};
+
+let aToken='', aImgMap={}, aExtraSkus=[], aPendingFile=null, aModalSku=null;
+
+function abrirAdmin() {
+  const overlay = document.getElementById('adminOverlay');
+  overlay.classList.add('open');
+  // Si ya tiene sesión, ir directo al panel
+  const s = sessionStorage.getItem('adm_s');
+  if (s) {
+    const {email,nombre} = JSON.parse(s);
+    const u = AUSERS[email];
+    if (u) { aToken = u.token; mostrarAdminPanel(nombre); return; }
+  }
+  document.getElementById('adminLoginBox').style.display = 'block';
+  document.getElementById('adminPanelBox').style.display = 'none';
+}
+
+function cerrarAdmin() {
+  document.getElementById('adminOverlay').classList.remove('open');
+}
+document.getElementById('adminOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('adminOverlay')) cerrarAdmin();
+});
+
+function adminLogin() {
+  const email = document.getElementById('aEmail').value.trim().toLowerCase();
+  const pass  = document.getElementById('aPass').value;
+  const btn   = document.getElementById('aLoginBtn');
+  if (!email||!pass) { aShowMsg('aMsg','Completa todos los campos','err'); return; }
+  const u = AUSERS[email];
+  if (!u||u.pass!==pass) {
+    aShowMsg('aMsg','❌ Correo o contraseña incorrectos','err');
+    document.getElementById('aPass').value=''; return;
+  }
+  btn.disabled=true; btn.textContent='Verificando...';
+  aShowMsg('aMsg','Conectando…','loading');
+  fetch(`https://api.github.com/repos/${AREPO}`,{headers:{'Authorization':`token ${u.token}`,'Accept':'application/vnd.github.v3+json'}})
+    .then(r=>{
+      if(!r.ok) throw new Error('Sin acceso');
+      aToken = u.token;
+      sessionStorage.setItem('adm_s', JSON.stringify({email,nombre:u.nombre}));
+      mostrarAdminPanel(u.nombre);
+    })
+    .catch(e=>{
+      aShowMsg('aMsg','❌ '+e.message,'err');
+      btn.disabled=false; btn.textContent='Ingresar →';
+    });
+}
+
+function mostrarAdminPanel(nombre) {
+  document.getElementById('adminLoginBox').style.display = 'none';
+  document.getElementById('adminPanelBox').style.display = 'flex';
+  document.getElementById('adminPanelBox').style.flexDirection = 'column';
+  document.getElementById('aUserName').textContent = nombre;
+  aIniciar();
+}
+
+function adminLogout() {
+  sessionStorage.removeItem('adm_s');
+  aToken=''; aImgMap={}; aExtraSkus=[];
+  document.getElementById('adminLoginBox').style.display = 'block';
+  document.getElementById('adminPanelBox').style.display = 'none';
+  document.getElementById('aEmail').value='';
+  document.getElementById('aPass').value='';
+  document.getElementById('aMsg').className='admin-msg';
+  const btn=document.getElementById('aLoginBtn');
+  btn.disabled=false; btn.textContent='Ingresar →';
+}
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.admin-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.admin-pane').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
+}
+
+async function aGhFetch(url,opts={}) {
+  return fetch(url,{...opts,headers:{'Authorization':`token ${aToken}`,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json',...(opts.headers||{})}});
+}
+
+async function aIniciar() {
+  await Promise.all([aCargarImagenes(), aCargarExtras()]);
+  aUpdateStats(); aRenderGallery();
+}
+
+async function aCargarImagenes() {
+  try {
+    const r = await aGhFetch(`https://api.github.com/repos/${AREPO}/contents/${AIMG}`);
+    if(!r.ok){aImgMap={};return;}
+    const files = await r.json();
+    aImgMap={};
+    files.forEach(f=>{
+      const sku=f.name.replace(/\.[^.]+$/,'').toUpperCase();
+      aImgMap[sku]={sha:f.sha,name:f.name,url:ARAW+AIMG+'/'+f.name+'?t='+Date.now()};
+    });
+  } catch(e){aImgMap={};}
+}
+
+async function aCargarExtras() {
+  try {
+    const r = await aGhFetch(`https://api.github.com/repos/${AREPO}/contents/productos-extra.json`);
+    if(!r.ok){aExtraSkus=[];return;}
+    const d=await r.json();
+    aExtraSkus=JSON.parse(atob(d.content.replace(/
+/g,'')));
+  } catch(e){aExtraSkus=[];}
+}
+
+function aTodosSkus() {
+  return [...new Set([...ASKUS,...aExtraSkus.map(p=>p.sku)])].sort();
+}
+
+function aFileToB64(file){
+  return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file);});
+}
+
+async function aSubir() {
+  if(!aPendingFile) return;
+  const num=document.getElementById('aSkuNum').value.trim();
+  if(!num){aShowMsg('aFormMsg','Ingresa el número de SKU','err');return;}
+  const sku='SKU-'+String(parseInt(num)).padStart(3,'0');
+  const precio=parseInt(document.getElementById('aPrecio').value);
+  const especial=precio>=14990;
+  const ext=aPendingFile.name.split('.').pop().toLowerCase().replace('jpeg','jpg');
+  const filename=`${sku}.${ext}`;
+  const path=`${AIMG}/${filename}`;
+  document.getElementById('aUploadBtn').disabled=true;
+  aShowMsg('aFormMsg','Subiendo imagen…','loading');
+  try {
+    const b64=await aFileToB64(aPendingFile);
+    let sha=aImgMap[sku]?.sha;
+    if(!sha){const c=await aGhFetch(`https://api.github.com/repos/${AREPO}/contents/${path}`);if(c.ok){const d=await c.json();sha=d.sha;}}
+    if(aImgMap[sku]&&aImgMap[sku].name!==filename){
+      await aGhFetch(`https://api.github.com/repos/${AREPO}/contents/${AIMG}/${aImgMap[sku].name}`,{method:'DELETE',body:JSON.stringify({message:`Reemplazar ${sku}`,sha:aImgMap[sku].sha,branch:ABRANCH})});
+      sha=undefined;
+    }
+    const r=await aGhFetch(`https://api.github.com/repos/${AREPO}/contents/${path}`,{method:'PUT',body:JSON.stringify({message:`Imagen ${sku}`,content:b64,branch:ABRANCH,...(sha?{sha}:{})})});
+    if(!r.ok){const e=await r.json();throw new Error(e.message);}
+    const data=await r.json();
+    aImgMap[sku]={sha:data.content.sha,name:filename,url:ARAW+path+'?t='+Date.now()};
+    if(!ASKUS.includes(sku)){
+      let extras=[...aExtraSkus],eSha=null;
+      const re=await aGhFetch(`https://api.github.com/repos/${AREPO}/contents/productos-extra.json`);
+      if(re.ok){const d=await re.json();eSha=d.sha;extras=JSON.parse(atob(d.content.replace(/
+/g,'')));}
+      if(!extras.find(p=>p.sku===sku)) extras.push({sku,especial});
+      await aGhFetch(`https://api.github.com/repos/${AREPO}/contents/productos-extra.json`,{method:'PUT',body:JSON.stringify({message:`Agregar ${sku}`,content:btoa(JSON.stringify(extras,null,2)),branch:ABRANCH,...(eSha?{sha:eSha}:{})})});
+      aExtraSkus=extras;
+      // Actualizar prodMap de la tienda
+      if(!prodMap[sku]) prodMap[sku]={sku,especial,img:ARAW+path};
+    } else {
+      // Actualizar imagen en la tienda
+      if(prodMap[sku]) prodMap[sku].img=ARAW+path+'?t='+Date.now();
+    }
+    aShowMsg('aFormMsg','✓ '+sku+' subido — ya aparece en la tienda','ok');
+    aPendingFile=null;
+    document.getElementById('aSkuNum').value='';
+    document.getElementById('aPreview').style.display='none';
+    document.getElementById('aDrop').style.display='block';
+    document.getElementById('aUploadBtn').disabled=true;
+    aUpdateStats(); aRenderGallery(); renderGrid();
+  } catch(e) {
+    aShowMsg('aFormMsg','❌ '+e.message,'err');
+    document.getElementById('aUploadBtn').disabled=false;
+  }
+}
+
+// Drag & Drop
+const aDrop=document.getElementById('aDrop');
+const aFI=document.getElementById('aFileInput');
+aDrop.addEventListener('dragover',e=>{e.preventDefault();aDrop.classList.add('over');});
+aDrop.addEventListener('dragleave',()=>aDrop.classList.remove('over'));
+aDrop.addEventListener('drop',e=>{e.preventDefault();aDrop.classList.remove('over');if(e.dataTransfer.files[0])aHandleFile(e.dataTransfer.files[0]);});
+aFI.addEventListener('change',()=>{if(aFI.files[0])aHandleFile(aFI.files[0]);});
+
+function aHandleFile(file){
+  if(!file.type.startsWith('image/')){return;}
+  if(file.size>5*1024*1024){return;}
+  aPendingFile=file;
+  const r=new FileReader();
+  r.onload=e=>{
+    document.getElementById('aPreviewImg').src=e.target.result;
+    document.getElementById('aPreviewName').textContent=file.name;
+    document.getElementById('aPreview').style.display='block';
+    document.getElementById('aDrop').style.display='none';
+    document.getElementById('aUploadBtn').disabled=false;
+    document.getElementById('aFormMsg').className='admin-form-msg';
+  };
+  r.readAsDataURL(file);
+}
+
+function aCambiarFoto(){
+  aPendingFile=null;
+  document.getElementById('aPreview').style.display='none';
+  document.getElementById('aDrop').style.display='block';
+  document.getElementById('aUploadBtn').disabled=true;
+  aFI.value='';
+}
+
+function aRenderGallery(){
+  const skus=aTodosSkus();
+  const g=document.getElementById('aGallery');
+  g.innerHTML=skus.map(sku=>{
+    const has=!!aImgMap[sku];
+    return `<div class="admin-gcard ${has?'has':''}">
+      <div class="admin-gcard-img">
+        ${has?`<img src="${aImgMap[sku].url}" loading="lazy">`:'<span>Sin img</span>'}
+      </div>
+      <div class="admin-gcard-body">
+        <div class="admin-gcard-sku">${sku}</div>
+        <div class="admin-gcard-acts">
+          <button class="admin-gc-btn up" onclick="aSelSku('${sku}')">↑</button>
+          ${has?`<button class="admin-gc-btn del" onclick="aConfBorrar('${sku}')">✕</button>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function aSelSku(sku){
+  document.getElementById('aSkuNum').value=parseInt(sku.replace('SKU-',''));
+  document.getElementById('aDrop').style.display='block';
+  document.getElementById('aPreview').style.display='none';
+  document.getElementById('aUploadBtn').disabled=true;
+  aPendingFile=null; aFI.value='';
+  document.getElementById('tabImagenes').scrollTo({top:0,behavior:'smooth'});
+}
+
+async function aConfBorrar(sku){
+  if(!confirm(`¿Eliminar imagen de ${sku}?`)) return;
+  if(!aImgMap[sku]) return;
+  try {
+    const {sha,name}=aImgMap[sku];
+    const r=await aGhFetch(`https://api.github.com/repos/${AREPO}/contents/${AIMG}/${name}`,{method:'DELETE',body:JSON.stringify({message:`Borrar ${sku}`,sha,branch:ABRANCH})});
+    if(!r.ok){const e=await r.json();throw new Error(e.message);}
+    delete aImgMap[sku];
+    aUpdateStats(); aRenderGallery();
+  } catch(e){alert('Error: '+e.message);}
+}
+
+function aUpdateStats(){
+  const skus=aTodosSkus();
+  const w=skus.filter(s=>aImgMap[s]).length;
+  document.getElementById('aStatT').textContent=skus.length;
+  document.getElementById('aStatC').textContent=w;
+  document.getElementById('aStatS').textContent=skus.length-w;
+}
+
+function aShowMsg(id,msg,type){
+  const el=document.getElementById(id);
+  el.textContent=msg;
+  el.className='admin-msg'+(type?' '+type:'');
+}
+// ══════════════════════════════════════════════════════════════════════════════
+</script>
+
 </body>
 </html>
