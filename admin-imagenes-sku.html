@@ -144,6 +144,28 @@ select.inp { cursor: pointer; }
 #panePedidos { padding: 0 !important; }
 .tab-pane { display: none !important; }
 .tab-pane.active { display: block !important; }
+
+.tabs-bar {
+  display: flex;
+  border-bottom: 1px solid var(--border-light);
+  background: white;
+  padding: 0 20px;
+}
+.tab-btn {
+  padding: 12px 24px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--text-light);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  margin-bottom: -1px;
+  transition: all 0.2s;
+}
+.tab-btn:hover:not(.active) { color: var(--brown); }
+.tab-btn.active { color: var(--brown-dark); border-bottom-color: var(--gold); }
 </style>
 </head>
 <body>
