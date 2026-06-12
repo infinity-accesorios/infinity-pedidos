@@ -1658,8 +1658,7 @@ async function aCargarExtras() {
     const r = await aGhFetch(`https://api.github.com/repos/${AREPO}/contents/productos-extra.json`);
     if(!r.ok){aExtraSkus=[];return;}
     const d=await r.json();
-    aExtraSkus=JSON.parse(atob(d.content.replace(/
-/g,'')));
+    aExtraSkus=JSON.parse(atob(d.content.split('\n').join('')));
   } catch(e){aExtraSkus=[];}
 }
 
