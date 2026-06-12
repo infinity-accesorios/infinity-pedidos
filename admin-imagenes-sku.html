@@ -61,7 +61,7 @@ select.inp { cursor: pointer; }
 .btn-main:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* MAIN */
-#mainPanel { display: none; max-width: 960px; margin: 0 auto; padding: 28px 20px 60px; }
+#mainPanel { display: none; }
 
 /* Stats */
 .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 28px; }
@@ -186,15 +186,14 @@ select.inp { cursor: pointer; }
 </div>
 
 <!-- MAIN -->
+<div id="mainPanel">
 <div class="tabs-bar">
   <button class="tab-btn active" onclick="switchTab('imagenes', this)">🖼️ Imágenes</button>
   <button class="tab-btn" onclick="switchTab('pedidos', this)">📋 Pedidos</button>
 </div>
 
-<div id="mainPanel">
-
   <!-- TAB IMÁGENES -->
-  <div id="paneImagenes" class="tab-pane active">
+  <div id="paneImagenes" class="tab-pane active" style="max-width:960px;margin:0 auto;padding:28px 20px 60px;">
   <div class="stats">
     <div class="stat">
       <div class="stat-n" id="statTotal">—</div>
