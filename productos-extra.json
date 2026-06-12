@@ -38,5 +38,20 @@
     "sku": "SKU-086",
     "especial": false,
     "agotado": false
+  },
+  {
+    "sku": "SKU-059",
+    "especial": false,
+    "agotado": true
+  },
+  {
+    "sku": "SKU-072",
+    "especial": false,
+    "agotado": true
+  },
+  {
+    "sku": "SKU-035",
+    "especial": false,
+    "agotado": true
   }
 ]
