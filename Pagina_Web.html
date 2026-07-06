@@ -760,7 +760,7 @@ footer span { color: var(--gold); opacity: 0.7; }
 <div class="ticker-wrap">
   <div class="ticker-track">
     
-    <span class="ticker-item">🛍️ <strong>¡Promo!</strong> 2 bandanas por <strong>$19.990</strong></span>
+    <span class="ticker-item">🛍️ <strong>¡Promo!</strong> 2 bandanas por <strong>$17.990</strong></span>
     <span class="ticker-dot">✦</span>
     <span class="ticker-item">✨ Diseños únicos hechos a pedido</span>
     <span class="ticker-dot">✦</span>
@@ -773,7 +773,7 @@ footer span { color: var(--gold); opacity: 0.7; }
     <span class="ticker-item">🛍️ Combina libremente · Excluye SKU-001 y SKU-008</span>
     <span class="ticker-dot">✦</span>
     
-    <span class="ticker-item">🛍️ <strong>¡Promo!</strong> 2 bandanas por <strong>$19.990</strong></span>
+    <span class="ticker-item">🛍️ <strong>¡Promo!</strong> 2 bandanas por <strong>$17.990</strong></span>
     <span class="ticker-dot">✦</span>
     <span class="ticker-item">✨ Diseños únicos hechos a pedido</span>
     <span class="ticker-dot">✦</span>
@@ -1089,9 +1089,9 @@ function getPrecio(sku) { return getPrecioBase(sku); }
 
 function totalUnid() { return Object.values(carrito).reduce((a,b)=>a+b,0); }
 
-/* ── PROMO 2x$16.990 ──────────────────────────────────────────────
+/* ── PROMO 2x$17.990 ──────────────────────────────────────────────
    SKU-001 y SKU-008: precio fijo $14.990 c/u, sin promo.
-   Resto: cada par = $19.990, unidad suelta = $10.990.
+   Resto: cada par = $17.990, unidad suelta = $10.990.
    El pool de unidades promocionales es el total de unidades
    de todos los SKU promocionales en el carrito.
 ──────────────────────────────────────────────────────────────── */
@@ -1111,10 +1111,10 @@ function totalPrecio() {
     if (!especiales.includes(sku)) unidadesPromo += carrito[sku];
   });
 
-  // Pares = $19.990, sueltas = $10.990
+  // Pares = $17.990, sueltas = $10.990
   const pares = Math.floor(unidadesPromo / 2);
   const sueltas = unidadesPromo % 2;
-  total += pares * 19990 + sueltas * 10990;
+  total += pares * 17990 + sueltas * 10990;
 
   return total;
 }
@@ -1193,7 +1193,7 @@ function renderPanel(){
   }).join('');
   const _unidP=Object.keys(carrito).filter(s=>!['SKU-001','SKU-008'].includes(s)).reduce((a,k)=>a+carrito[k],0);
   const _pares=Math.floor(_unidP/2);
-  const _promoTxt=_pares>0?' · '+_pares+' promo 2x$19.990':'';
+  const _promoTxt=_pares>0?' · '+_pares+' promo 2x$17.990':'';
   document.getElementById('totalUnid').textContent=totalUnid()+' unidades'+_promoTxt;
   document.getElementById('totalPrice').textContent='$'+totalPrecio().toLocaleString('es-CL');
   footer.style.display='block';
@@ -1232,12 +1232,12 @@ async function iniciarPago(){
     }
   });
 
-  // SKUs promocionales: calcular precio real con promo 2x$19.990
+  // SKUs promocionales: calcular precio real con promo 2x$17.990
   let skusPromo = Object.keys(carrito).filter(sku => !especiales.includes(sku) && carrito[sku] > 0);
   let unidadesPromo = skusPromo.reduce((a, sku) => a + carrito[sku], 0);
   let pares = Math.floor(unidadesPromo / 2);
   let sueltas = unidadesPromo % 2;
-  let totalPromo = pares * 19990 + sueltas * 10990;
+  let totalPromo = pares * 17990 + sueltas * 10990;
 
   // Distribuir el total promo proporcionalmente entre los SKUs
   if (skusPromo.length > 0 && unidadesPromo > 0) {
